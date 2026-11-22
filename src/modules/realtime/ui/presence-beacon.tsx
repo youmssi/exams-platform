@@ -1,6 +1,6 @@
 "use client";
 
-import { ChannelProvider, usePresence } from "ably/react";
+import { ChannelProvider, usePresence } from "@ably/pubsub-device/react";
 import { useRealtimeChannels } from "./realtime-provider";
 
 /** Marks the signed-in candidate as online while the app is open. */

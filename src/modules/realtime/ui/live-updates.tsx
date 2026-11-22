@@ -5,7 +5,7 @@ import {
   useChannel,
   useConnectionStateListener,
   usePresenceListener,
-} from "ably/react";
+} from "@ably/pubsub-device/react";
 import { type ReactNode, useState } from "react";
 import type { RealtimeChannels } from "../channels";
 import { useRealtimeChannels } from "./realtime-provider";

@@ -1,10 +1,11 @@
 import "server-only";
 import { createHmac } from "node:crypto";
-import * as Ably from "ably";
+import { createHttpClient } from "@ably/pubsub-server";
 import { env } from "@/server/env";
 import { realtimeChannels } from "../channels";
 
-const ably = env.ABLY_API_KEY ? new Ably.Rest(env.ABLY_API_KEY) : null;
+/** Server client: authenticated with the API key, so Ably counts it as a server, not a user (MAU pricing). */
+const ably = env.ABLY_API_KEY ? createHttpClient(env.ABLY_API_KEY) : null;
 
 export const isRealtimeEnabled = ably !== null;
 
