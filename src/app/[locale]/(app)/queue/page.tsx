@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { routes } from "@/config/routes";
 import { redirect } from "@/i18n/navigation";
 import { requireOnboardedUser } from "@/modules/identity";
+import { OperationPanel } from "@/modules/operations";
 import { QueueBoard } from "@/modules/requests";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
 
@@ -15,9 +16,10 @@ async function QueueData({ params }: PageProps<"/[locale]/queue">) {
   ]);
   if (user.activeRole !== "assistant") redirect({ href: routes.home, locale });
   prefetch(trpc.requests.queue.queryOptions());
+  prefetch(trpc.operations.current.queryOptions());
   return (
     <HydrateClient>
-      <QueueBoard />
+      <QueueBoard operation={<OperationPanel />} />
     </HydrateClient>
   );
 }

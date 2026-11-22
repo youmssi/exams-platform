@@ -24,7 +24,7 @@ export async function listQueue(assistantId: string) {
       status: "OPEN",
       publishAt: { lte: now },
       ownerId: { not: assistantId },
-      credentialsRejectedAt: null,
+      issue: null,
       operations: { none: activeOperation(now) },
       session: {
         examDate: { gte: new Date(now.toISOString().slice(0, 10)) },

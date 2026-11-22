@@ -118,7 +118,6 @@
   },
   "app": {
     "nav": {
-      "home": "Home",
       "account": "My account",
       "main": "Navigation",
       "admin": "Administration",
@@ -126,8 +125,7 @@
       "beneficiaries": "Beneficiaries",
       "sessions": "Sessions",
       "requests": "My requests",
-      "queue": "Queue",
-      "operation": "Operation"
+      "queue": "Queue"
     },
     "signOut": "Sign out",
     "roleLabel": {
@@ -138,33 +136,6 @@
       "label": "Active role",
       "candidate": "Candidate",
       "assistant": "Assistant"
-    }
-  },
-  "homePage": {
-    "title": "Hello {name}",
-    "candidate": {
-      "setup": {
-        "title": "Complete your candidate profile",
-        "description": "Name, birth details, phone and centre account.",
-        "action": "Complete my profile"
-      },
-      "ready": {
-        "title": "Publish your request",
-        "description": "It goes out when registrations open.",
-        "action": "See sessions"
-      }
-    },
-    "assistant": {
-      "setup": {
-        "title": "Complete your assistant profile",
-        "description": "Phone and Mobile Money account.",
-        "action": "Complete my profile"
-      },
-      "ready": {
-        "title": "Requests are waiting",
-        "description": "They arrive live.",
-        "action": "Open the queue"
-      }
     }
   },
   "account": {
@@ -535,7 +506,12 @@
       "submit": "Send the request",
       "sent": "Request sent. The team will add it to the catalogue."
     },
-    "published": "Published"
+    "published": "Published",
+    "profile": {
+      "title": "Complete your candidate profile",
+      "description": "Name, birth details, phone and centre account: needed to publish.",
+      "action": "Complete my profile"
+    }
   },
   "publish": {
     "who": "For whom?",
@@ -575,9 +551,9 @@
       "toConfirm": "To confirm",
       "booked": "Booked",
       "disputed": "Disputed",
-      "credentials": "Credentials refused",
       "elsewhere": "Booked elsewhere",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "toFix": "To fix"
     },
     "publishesAt": "posted on {date}",
     "cancel": "Cancel the request",
@@ -595,7 +571,6 @@
     "withdrawTitle": "Take the request back from this assistant?",
     "withdrawBody": "It goes back to the queue for another assistant.",
     "withdrawn": "Request back in the queue.",
-    "fixCredentials": "Fix the password",
     "elsewhere": "Booked elsewhere",
     "elsewhereTitle": "Did {name} get a seat another way?",
     "elsewhereBody": "The request is closed and leaves the queue.",
@@ -623,6 +598,22 @@
       },
       "checkAll": "Tick every point to report.",
       "dispute": "Report the missing email"
+    },
+    "fixProfile": "Fix the profile",
+    "resolved": "It's fixed",
+    "backInQueue": "Request back in the queue.",
+    "issue": {
+      "CREDENTIALS": "Credentials refused by the centre's website",
+      "WRONG_DETAILS": "Incorrect details",
+      "ACCOUNT_BLOCKED": "Centre account blocked or to verify",
+      "OTHER": "Problem reported by the assistant",
+      "hint": "Fix the profile or sort it out on the centre's website, then put the request back in the queue."
+    },
+    "edit": {
+      "action": "Edit",
+      "title": "Edit the request",
+      "save": "Save",
+      "saved": "Request updated."
     }
   },
   "queue": {
@@ -642,11 +633,6 @@
     "publishedAgo": "Published {ago}",
     "bonus": "Bonus {bonus}",
     "claim": "Take",
-    "busy": {
-      "title": "Finish your current operation",
-      "description": "One client at a time.",
-      "action": "View the operation"
-    },
     "errors": {
       "alreadyTaken": "Already taken by another assistant.",
       "busy": "You already have an operation in progress."
@@ -666,11 +652,6 @@
     "offline": "Offline"
   },
   "operation": {
-    "none": {
-      "title": "No operation in progress",
-      "description": "Take a request from the queue.",
-      "action": "Open the queue"
-    },
     "fullExam": "Full exam",
     "timeLeft": "Time to book",
     "deadlineRule": "Without a booking when time runs out, the request goes back to the queue.",
@@ -702,14 +683,26 @@
     "reserveBody": "The candidate will check the centre's email. You are free as soon as they answer, or automatically.",
     "notYet": "Not yet",
     "reserved": "Booking declared.",
-    "reject": "Credentials refused",
-    "rejectTitle": "Does the site refuse these credentials?",
-    "rejectBody": "The request goes back to the candidate to fix their password. No penalty.",
-    "rejected": "Request returned to the candidate.",
     "waiting": {
       "title": "Waiting for the candidate",
       "description": "They are checking the centre's email.",
       "freeIn": "Automatically free in"
+    },
+    "report": {
+      "action": "Report a problem",
+      "title": "Report a problem",
+      "description": "The request goes back to the candidate to fix. No penalty.",
+      "reason": "Reason",
+      "reasons": {
+        "CREDENTIALS": "Credentials refused",
+        "WRONG_DETAILS": "Incorrect details",
+        "ACCOUNT_BLOCKED": "Account blocked or to verify",
+        "OTHER": "Other"
+      },
+      "note": "Details",
+      "noteHint": "A few words, no personal data.",
+      "submit": "Hand back to the candidate",
+      "sent": "Request handed back to the candidate."
     }
   },
   "candidateProfile": {

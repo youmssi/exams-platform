@@ -12,7 +12,7 @@ import { activeOperation, centerFeeDeadline } from "@/modules/operations";
 import { presenceKey } from "@/modules/realtime";
 import { db } from "@/server/db";
 import { publishAtFor, requestVisibility } from "../domain/visibility";
-import type { PublishInput } from "../schemas";
+import type { PublishInput, UpdateRequestInput } from "../schemas";
 
 /**
  * Creates one request per beneficiary, with the price frozen from the offer.
@@ -121,7 +121,8 @@ export async function listMyRequests(ownerId: string) {
       bonus: true,
       total: true,
       modules: true,
-      credentialsRejectedAt: true,
+      issue: true,
+      issueNote: true,
       beneficiary: { select: { firstName: true, lastName: true, email: true } },
       operations: {
         // The claim in progress, or the booking the candidate answers or pays.
@@ -149,6 +150,8 @@ export async function listMyRequests(ownerId: string) {
             select: {
               level: true,
               modules: true,
+              bonusStep: true,
+              bonusCap: true,
               centerFeeDays: true,
               center: {
                 select: {
@@ -185,6 +188,79 @@ export async function listMyRequests(ownerId: string) {
       visibility: requestVisibility(request.publishAt),
     }),
   );
+}
+
+/**
+ * Modules can change and the bonus can only go up (it moves the request up the queue).
+ * The standard price stays the one frozen at publication; the split follows the offer's rules.
+ */
+export async function updateRequest(
+  ownerId: string,
+  input: UpdateRequestInput,
+) {
+  const request = await db.request.findFirst({
+    where: {
+      id: input.id,
+      ownerId,
+      status: "OPEN",
+      operations: { none: activeOperation() },
+    },
+    select: {
+      version: true,
+      bonus: true,
+      standardPrice: true,
+      session: {
+        select: {
+          offer: {
+            select: {
+              modules: true,
+              commissionRateBp: true,
+              commissionMin: true,
+              bonusStep: true,
+              bonusCap: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  if (!request) throw new TRPCError({ code: "NOT_FOUND" });
+  const { offer } = request.session;
+  if (input.bonus < request.bonus || !isValidBonus(offer, input.bonus))
+    throw new TRPCError({ code: "BAD_REQUEST", message: "invalidBonus" });
+  const modules = bookedModules(offer.modules, input.modules);
+  if (!modules)
+    throw new TRPCError({ code: "BAD_REQUEST", message: "invalidModules" });
+  const price = priceBreakdown(
+    { ...offer, standardPrice: request.standardPrice },
+    input.bonus,
+  );
+  const { count } = await db.request.updateMany({
+    where: { id: input.id, version: request.version, status: "OPEN" },
+    data: {
+      modules,
+      bonus: input.bonus,
+      total: price.total,
+      commission: price.commission,
+      assistantShare: price.assistantShare,
+      version: { increment: 1 },
+    },
+  });
+  if (!count) throw new TRPCError({ code: "CONFLICT", message: "changed" });
+}
+
+/** The candidate fixed what the assistant reported: the request goes back to the queue. */
+export async function resolveIssue(ownerId: string, id: string) {
+  const { count } = await db.request.updateMany({
+    where: { id, ownerId, status: "OPEN", issue: { not: null } },
+    data: {
+      issue: null,
+      issueNote: null,
+      issueAt: null,
+      version: { increment: 1 },
+    },
+  });
+  if (!count) throw new TRPCError({ code: "NOT_FOUND" });
 }
 
 /** The candidate got a seat another way: closes an open request nobody is working on. */

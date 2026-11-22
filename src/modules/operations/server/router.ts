@@ -7,12 +7,13 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "@/trpc/init";
+import { reportInput } from "../schemas";
 import {
   answerBooking,
   claimRequest,
   currentOperation,
-  rejectCredentials,
   releaseOperation,
+  reportProblem,
   reserveOperation,
   revealDetail,
   withdrawOperation,
@@ -47,13 +48,10 @@ export const operationsRouter = createTRPCRouter({
     const { ownerId } = await reserveOperation(ctx.session.user.id, input.id);
     notify([ownerId, ctx.session.user.id]);
   }),
-  rejectCredentials: assistantProcedure
-    .input(byId)
+  report: assistantProcedure
+    .input(reportInput)
     .mutation(async ({ ctx, input }) => {
-      const { ownerId } = await rejectCredentials(
-        ctx.session.user.id,
-        input.id,
-      );
+      const { ownerId } = await reportProblem(ctx.session.user.id, input);
       notify([ownerId, ctx.session.user.id]);
     }),
   withdraw: protectedProcedure.input(byId).mutation(async ({ ctx, input }) => {

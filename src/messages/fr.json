@@ -118,7 +118,6 @@
   },
   "app": {
     "nav": {
-      "home": "Accueil",
       "account": "Mon compte",
       "main": "Navigation",
       "admin": "Administration",
@@ -126,8 +125,7 @@
       "beneficiaries": "Bénéficiaires",
       "sessions": "Sessions",
       "requests": "Mes demandes",
-      "queue": "File",
-      "operation": "Opération"
+      "queue": "File"
     },
     "signOut": "Se déconnecter",
     "roleLabel": {
@@ -138,33 +136,6 @@
       "label": "Rôle actif",
       "candidate": "Candidat",
       "assistant": "Assistant"
-    }
-  },
-  "homePage": {
-    "title": "Bonjour {name}",
-    "candidate": {
-      "setup": {
-        "title": "Complétez votre profil candidat",
-        "description": "Nom, naissance, téléphone et compte du centre.",
-        "action": "Compléter mon profil"
-      },
-      "ready": {
-        "title": "Publiez votre demande",
-        "description": "Elle partira à l'ouverture des inscriptions.",
-        "action": "Voir les sessions"
-      }
-    },
-    "assistant": {
-      "setup": {
-        "title": "Complétez votre profil assistant",
-        "description": "Téléphone et compte Mobile Money.",
-        "action": "Compléter mon profil"
-      },
-      "ready": {
-        "title": "Des demandes vous attendent",
-        "description": "Elles arrivent en direct.",
-        "action": "Voir la file"
-      }
     }
   },
   "account": {
@@ -535,7 +506,12 @@
       "submit": "Envoyer la demande",
       "sent": "Demande envoyée. L'équipe l'ajoutera au catalogue."
     },
-    "published": "Publiée"
+    "published": "Publiée",
+    "profile": {
+      "title": "Complétez votre profil candidat",
+      "description": "Nom, naissance, téléphone et compte du centre : nécessaires pour publier.",
+      "action": "Compléter mon profil"
+    }
   },
   "publish": {
     "who": "Pour qui ?",
@@ -575,9 +551,9 @@
       "toConfirm": "À confirmer",
       "booked": "Réservée",
       "disputed": "Contestée",
-      "credentials": "Identifiants refusés",
       "elsewhere": "Inscrit autrement",
-      "cancelled": "Annulée"
+      "cancelled": "Annulée",
+      "toFix": "À corriger"
     },
     "publishesAt": "publiée le {date}",
     "cancel": "Annuler la demande",
@@ -595,7 +571,6 @@
     "withdrawTitle": "Retirer la demande à cet assistant ?",
     "withdrawBody": "Elle revient dans la file pour un autre assistant.",
     "withdrawn": "Demande remise dans la file.",
-    "fixCredentials": "Corriger le mot de passe",
     "elsewhere": "Inscrit autrement",
     "elsewhereTitle": "{name} a obtenu une place autrement ?",
     "elsewhereBody": "La demande est close et quitte la file.",
@@ -623,6 +598,22 @@
       },
       "checkAll": "Coche chaque point pour signaler.",
       "dispute": "Signaler l'absence de mail"
+    },
+    "fixProfile": "Corriger le profil",
+    "resolved": "C'est réglé",
+    "backInQueue": "Demande remise dans la file.",
+    "issue": {
+      "CREDENTIALS": "Identifiants refusés par le site du centre",
+      "WRONG_DETAILS": "Informations incorrectes",
+      "ACCOUNT_BLOCKED": "Compte du centre bloqué ou à vérifier",
+      "OTHER": "Problème signalé par l'assistant",
+      "hint": "Corrige le profil ou règle-le sur le site du centre, puis remets la demande dans la file."
+    },
+    "edit": {
+      "action": "Modifier",
+      "title": "Modifier la demande",
+      "save": "Enregistrer",
+      "saved": "Demande modifiée."
     }
   },
   "queue": {
@@ -642,11 +633,6 @@
     "publishedAgo": "Publiée {ago}",
     "bonus": "Bonus {bonus}",
     "claim": "Prendre",
-    "busy": {
-      "title": "Terminez votre opération en cours",
-      "description": "Un client à la fois.",
-      "action": "Voir l'opération"
-    },
     "errors": {
       "alreadyTaken": "Déjà prise par un autre assistant.",
       "busy": "Vous avez déjà une opération en cours."
@@ -666,11 +652,6 @@
     "offline": "Hors ligne"
   },
   "operation": {
-    "none": {
-      "title": "Aucune opération en cours",
-      "description": "Prenez une demande dans la file.",
-      "action": "Voir la file"
-    },
     "fullExam": "Complet",
     "timeLeft": "Temps pour réserver",
     "deadlineRule": "Sans réservation à la fin du temps, la demande revient dans la file.",
@@ -702,14 +683,26 @@
     "reserveBody": "Le candidat va vérifier le mail du centre. Vous serez libéré dès sa réponse, ou automatiquement.",
     "notYet": "Pas encore",
     "reserved": "Réservation déclarée.",
-    "reject": "Identifiants refusés",
-    "rejectTitle": "Le site refuse ces identifiants ?",
-    "rejectBody": "La demande est rendue au candidat pour qu'il corrige son mot de passe. Aucune pénalité.",
-    "rejected": "Demande rendue au candidat.",
     "waiting": {
       "title": "En attente du candidat",
       "description": "Il vérifie le mail du centre.",
       "freeIn": "Libéré automatiquement dans"
+    },
+    "report": {
+      "action": "Signaler un problème",
+      "title": "Signaler un problème",
+      "description": "La demande est rendue au candidat pour correction. Aucune pénalité.",
+      "reason": "Raison",
+      "reasons": {
+        "CREDENTIALS": "Identifiants refusés",
+        "WRONG_DETAILS": "Informations incorrectes",
+        "ACCOUNT_BLOCKED": "Compte bloqué ou à vérifier",
+        "OTHER": "Autre"
+      },
+      "note": "Précisez",
+      "noteHint": "Quelques mots, sans données personnelles.",
+      "submit": "Rendre au candidat",
+      "sent": "Demande rendue au candidat."
     }
   },
   "candidateProfile": {

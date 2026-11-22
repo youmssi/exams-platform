@@ -28,21 +28,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyTitle,
-} from "@/components/ui/empty";
 import { FieldGroup, FieldLegend, FieldSet } from "@/components/ui/field";
 import { InputGroupButton } from "@/components/ui/input-group";
-import { routes } from "@/config/routes";
-import { Link, useRouter } from "@/i18n/navigation";
 import { type LiveState, LiveUpdates } from "@/modules/realtime/client";
 import { track } from "@/shared/analytics";
 import { useTRPC } from "@/trpc/client";
 import { CopyField } from "./copy-field";
+import { ReportProblem } from "./report-problem";
 
 const POLL_MS = 15_000;
 
@@ -52,9 +44,15 @@ export function OperationPanel() {
   const queryClient = useQueryClient();
   const refresh = useCallback(
     () =>
-      queryClient.invalidateQueries({
-        queryKey: trpc.operations.current.queryKey(),
-      }),
+      // The queue page decides between the operation and the queue: refresh both.
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: trpc.operations.current.queryKey(),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: trpc.requests.queue.queryKey(),
+        }),
+      ]),
     [queryClient, trpc],
   );
   return (
@@ -68,7 +66,6 @@ function Panel({ state, refresh }: { state: LiveState; refresh: () => void }) {
   const t = useTranslations("operation");
   const tCommon = useTranslations("common");
   const format = useFormatter();
-  const router = useRouter();
   const trpc = useTRPC();
   const { data: operation } = useSuspenseQuery({
     ...trpc.operations.current.queryOptions(),
@@ -86,7 +83,7 @@ function Panel({ state, refresh }: { state: LiveState; refresh: () => void }) {
     trpc.operations.release.mutationOptions(
       done(t("released"), () => {
         track({ name: "operation_released" });
-        router.push(routes.queue);
+        refresh();
       }),
     ),
   );
@@ -98,27 +95,9 @@ function Panel({ state, refresh }: { state: LiveState; refresh: () => void }) {
       }),
     ),
   );
-  const reject = useMutation(
-    trpc.operations.rejectCredentials.mutationOptions(
-      done(t("rejected"), () => router.push(routes.queue)),
-    ),
-  );
 
-  if (!operation) {
-    return (
-      <Empty className="border">
-        <EmptyHeader>
-          <EmptyTitle>{t("none.title")}</EmptyTitle>
-          <EmptyDescription>{t("none.description")}</EmptyDescription>
-        </EmptyHeader>
-        <EmptyContent>
-          <Button render={<Link href={routes.queue} />}>
-            {t("none.action")}
-          </Button>
-        </EmptyContent>
-      </Empty>
-    );
-  }
+  // Ended (released, expired, answered): the page switches back to the queue.
+  if (!operation) return null;
 
   const { request } = operation;
   const { offer } = request.session;
@@ -222,16 +201,7 @@ function Panel({ state, refresh }: { state: LiveState; refresh: () => void }) {
             >
               {t("release")}
             </ConfirmAction>
-            <ConfirmAction
-              trigger={<Button variant="outline" />}
-              title={t("rejectTitle")}
-              description={t("rejectBody")}
-              confirm={t("reject")}
-              cancel={t("keep")}
-              onConfirm={() => reject.mutate({ id: operation.id })}
-            >
-              {t("reject")}
-            </ConfirmAction>
+            <ReportProblem operationId={operation.id} onDone={refresh} />
           </div>
         )}
         <div className="flex flex-wrap gap-2">

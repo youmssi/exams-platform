@@ -9,7 +9,7 @@ export type OperationStatus =
   | "RELEASED"
   | "WITHDRAWN"
   | "EXPIRED"
-  | "INVALID_CREDENTIALS"
+  | "REPORTED"
   | "RESERVED"
   | "CONFIRMED"
   | "DISPUTED";
@@ -17,7 +17,7 @@ export type OperationEvent =
   | "release"
   | "withdraw"
   | "expire"
-  | "rejectCredentials"
+  | "report"
   | "reserve"
   | "confirm"
   | "dispute";
@@ -30,14 +30,14 @@ const TRANSITIONS: Record<
     release: "RELEASED",
     withdraw: "WITHDRAWN",
     expire: "EXPIRED",
-    rejectCredentials: "INVALID_CREDENTIALS",
+    report: "REPORTED",
     reserve: "RESERVED",
   },
   RESERVED: { confirm: "CONFIRMED", dispute: "DISPUTED" },
   RELEASED: {},
   WITHDRAWN: {},
   EXPIRED: {},
-  INVALID_CREDENTIALS: {},
+  REPORTED: {},
   CONFIRMED: {},
   DISPUTED: {},
 };

@@ -37,6 +37,7 @@ import { Link } from "@/i18n/navigation";
 import { type LiveState, LiveUpdates } from "@/modules/realtime/client";
 import { track } from "@/shared/analytics";
 import { useTRPC } from "@/trpc/client";
+import { BonusPicker, ModulesPicker } from "./pickers";
 import type { MyRequest } from "./types";
 
 const POLL_MS = 15_000;
@@ -112,7 +113,7 @@ type Status =
   | "toConfirm"
   | "booked"
   | "disputed"
-  | "credentials"
+  | "toFix"
   | "elsewhere"
   | "cancelled";
 
@@ -125,7 +126,7 @@ function statusOf(request: MyRequest): Status {
   if (operation?.status === "CONFIRMED") return "booked";
   if (operation?.status === "DISPUTED") return "disputed";
   if (operation) return "inProgress";
-  if (request.credentialsRejectedAt) return "credentials";
+  if (request.issue) return "toFix";
   return request.visibility;
 }
 
@@ -139,7 +140,7 @@ const BADGE: Record<
   toConfirm: "default",
   booked: "secondary",
   disputed: "destructive",
-  credentials: "destructive",
+  toFix: "destructive",
   elsewhere: "outline",
   cancelled: "outline",
 };
@@ -167,6 +168,9 @@ function RequestItem({
   });
   const cancel = useMutation(
     trpc.requests.cancel.mutationOptions(handlers(t("cancelled"))),
+  );
+  const resolve = useMutation(
+    trpc.requests.resolveIssue.mutationOptions(handlers(t("backInQueue"))),
   );
   const elsewhere = useMutation(
     trpc.requests.bookedElsewhere.mutationOptions(
@@ -240,16 +244,34 @@ function RequestItem({
             </AlertDescription>
           </Alert>
         )}
+        {status === "toFix" && request.issue && (
+          <Alert variant="destructive">
+            <AlertTitle>{t(`issue.${request.issue}`)}</AlertTitle>
+            <AlertDescription>
+              {request.issueNote ?? t("issue.hint")}
+            </AlertDescription>
+          </Alert>
+        )}
         {status === "disputed" && (
           <p className="text-muted-foreground text-sm">{t("disputedHint")}</p>
         )}
       </ItemContent>
 
       <ItemActions className="flex-wrap">
-        {status === "credentials" && (
-          <Button size="sm" render={<Link href={routes.beneficiaries} />}>
-            {t("fixCredentials")}
-          </Button>
+        {status === "toFix" && (
+          <>
+            <Button size="sm" render={<Link href={routes.beneficiaries} />}>
+              {t("fixProfile")}
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={resolve.isPending}
+              onClick={() => resolve.mutate({ id: request.id })}
+            >
+              {t("resolved")}
+            </Button>
+          </>
         )}
         {operation && status === "inProgress" && (
           <ConfirmAction
@@ -265,6 +287,9 @@ function RequestItem({
         )}
         {request.status === "OPEN" && !operation && (
           <>
+            {status !== "toFix" && (
+              <EditRequest request={request} refresh={refresh} />
+            )}
             <ConfirmAction
               trigger={<Button variant="ghost" size="sm" />}
               title={t("elsewhereTitle", { name })}
@@ -406,5 +431,75 @@ function BookingAnswer({
         </form>
       </ResponsiveDialog>
     </Alert>
+  );
+}
+
+/** Change the modules or raise the bonus of an open request nobody is working on. */
+function EditRequest({
+  request,
+  refresh,
+}: {
+  request: MyRequest;
+  refresh: () => void;
+}) {
+  const t = useTranslations("myRequests.edit");
+  const tCommon = useTranslations("common");
+  const format = useFormatter();
+  const trpc = useTRPC();
+  const { offer } = request.session;
+  const [open, setOpen] = useState(false);
+  const [modules, setModules] = useState(request.modules);
+  const [bonus, setBonus] = useState(request.bonus);
+  const money = (amount: number) =>
+    format.number(amount, {
+      style: "currency",
+      currency: request.currency,
+      maximumFractionDigits: 0,
+    });
+  const update = useMutation(
+    trpc.requests.update.mutationOptions({
+      onSuccess: async () => {
+        setOpen(false);
+        await refresh();
+        toast.success(t("saved"));
+      },
+      onError: () => toast.error(tCommon("error")),
+    }),
+  );
+  const unchanged =
+    bonus === request.bonus &&
+    modules.length === request.modules.length &&
+    modules.every((module) => request.modules.includes(module));
+
+  return (
+    <>
+      <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
+        {t("action")}
+      </Button>
+      <ResponsiveDialog open={open} onOpenChange={setOpen} title={t("title")}>
+        <FieldGroup>
+          <ModulesPicker
+            available={offer.modules}
+            value={modules}
+            onChange={setModules}
+          />
+          {offer.bonusCap > 0 && (
+            <BonusPicker
+              offer={offer}
+              value={bonus}
+              onChange={setBonus}
+              money={money}
+              min={request.bonus}
+            />
+          )}
+          <Button
+            disabled={unchanged || !modules.length || update.isPending}
+            onClick={() => update.mutate({ id: request.id, modules, bonus })}
+          >
+            {t("save")}
+          </Button>
+        </FieldGroup>
+      </ResponsiveDialog>
+    </>
   );
 }
