@@ -534,7 +534,8 @@
       "officialUrl": "Official link (optional)",
       "submit": "Send the request",
       "sent": "Request sent. The team will add it to the catalogue."
-    }
+    },
+    "published": "Published"
   },
   "publish": {
     "who": "For whom?",
@@ -561,7 +562,8 @@
     "completeProfile": "Complete the profile",
     "modules": "Modules",
     "fullExam": "Full exam.",
-    "pickModules": "Only the selected modules."
+    "pickModules": "Only the selected modules.",
+    "alreadyRequested": "Request already published for this session."
   },
   "myRequests": {
     "title": "My requests",

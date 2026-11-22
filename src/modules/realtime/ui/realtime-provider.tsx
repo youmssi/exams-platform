@@ -1,7 +1,7 @@
 "use client";
 
-import * as Ably from "ably";
-import { AblyProvider } from "ably/react";
+import { createClient } from "@ably/pubsub-device";
+import { PubSubClientProvider } from "@ably/pubsub-device/react";
 import { createContext, type ReactNode, use, useState } from "react";
 import type { RealtimeChannels } from "../channels";
 
@@ -20,7 +20,7 @@ export function RealtimeProvider({
 }) {
   const [client] = useState(() =>
     channels
-      ? new Ably.Realtime({
+      ? createClient({
           authUrl: "/api/realtime/token",
           autoConnect: typeof window !== "undefined",
         })
@@ -28,8 +28,8 @@ export function RealtimeProvider({
   );
   if (!client) return children;
   return (
-    <AblyProvider client={client}>
+    <PubSubClientProvider client={client}>
       <ChannelsContext value={channels}>{children}</ChannelsContext>
-    </AblyProvider>
+    </PubSubClientProvider>
   );
 }

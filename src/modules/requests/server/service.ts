@@ -113,6 +113,8 @@ export async function listMyRequests(ownerId: string) {
     orderBy: [{ createdAt: "desc" }],
     select: {
       id: true,
+      sessionId: true,
+      beneficiaryId: true,
       status: true,
       publishAt: true,
       currency: true,

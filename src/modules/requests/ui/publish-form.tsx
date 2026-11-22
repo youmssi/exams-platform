@@ -39,6 +39,7 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { bonusOptions, priceBreakdown } from "@/modules/catalog/client";
 import { track } from "@/shared/analytics";
 import { useTRPC } from "@/trpc/client";
+import { requestedFor } from "../domain/live";
 import type { UpcomingSession } from "./types";
 
 const ERRORS = new Set([
@@ -69,7 +70,13 @@ export function PublishForm({
   const { offer } = session;
   const { currency, timeZone } = offer.center.country;
 
-  const ready = beneficiaries.filter((beneficiary) => beneficiary.isReady);
+  const { data: requests } = useSuspenseQuery(
+    trpc.requests.mine.queryOptions(),
+  );
+  const requested = requestedFor(requests, session.id);
+  const available = (beneficiary: { id: string; isReady: boolean }) =>
+    beneficiary.isReady && !requested.has(beneficiary.id);
+  const ready = beneficiaries.filter(available);
   const [selected, setSelected] = useState<string[]>(
     ready.length === 1 ? [ready[0].id] : [],
   );
@@ -160,19 +167,22 @@ export function PublishForm({
               <Field
                 key={beneficiary.id}
                 orientation="horizontal"
-                data-disabled={!beneficiary.isReady}
+                data-disabled={!available(beneficiary)}
               >
                 <Checkbox
                   id={`beneficiary-${beneficiary.id}`}
                   checked={selected.includes(beneficiary.id)}
-                  disabled={!beneficiary.isReady}
+                  disabled={!available(beneficiary)}
                   onCheckedChange={(checked) => toggle(beneficiary.id, checked)}
                 />
                 <FieldContent>
                   <FieldLabel htmlFor={`beneficiary-${beneficiary.id}`}>
                     {beneficiary.name || beneficiary.email}
                   </FieldLabel>
-                  {!beneficiary.isReady && (
+                  {requested.has(beneficiary.id) && (
+                    <FieldDescription>{t("alreadyRequested")}</FieldDescription>
+                  )}
+                  {!beneficiary.isReady && !requested.has(beneficiary.id) && (
                     <FieldDescription>
                       <Link href={routes.beneficiaries}>
                         {t("completeProfile")}
