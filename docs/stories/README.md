@@ -10,6 +10,7 @@ Chaque story vit dans sa branche `exm-<code>-<titre>`, part de `develop` et y re
 | [EXM-004](EXM-004-beneficiaries.md) | Bénéficiaires et identifiants chiffrés | 002 | M |
 | [EXM-014](EXM-014-assistant-verification.md) | Vérification des assistants | 002 | M |
 | [EXM-015](EXM-015-brand-and-analytics.md) | Identité visuelle, partage et mesure d'audience | 002 | S |
+| [EXM-016](EXM-016-auth-hardening.md) | Durcissement de la connexion | 002 | S |
 | [EXM-005](EXM-005-sessions-and-requests.md) | Sessions et publication des demandes | 003, 004 | L |
 | [EXM-006](EXM-006-live-queue.md) | File publique en temps réel et présence | 005 | M |
 | [EXM-007](EXM-007-claim.md) | Prendre une demande : un assistant, un client | 006 | L |
@@ -20,4 +21,4 @@ Chaque story vit dans sa branche `exm-<code>-<titre>`, part de `develop` et y re
 | [EXM-012](EXM-012-admin.md) | Back-office | 010 | L |
 | [EXM-013](EXM-013-launch.md) | Déploiement, pages système et lancement | 001–012 | M |
 
-Release 1 (MVP) = EXM-001 à EXM-015, puis fusion de `develop` dans `main`.
+Release 1 (MVP) = EXM-001 à EXM-016, puis fusion de `develop` dans `main`.
