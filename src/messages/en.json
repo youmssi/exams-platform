@@ -18,7 +18,18 @@
     "required": "This field is required.",
     "tooLong": "This text is too long.",
     "termsRequired": "Accept the terms to continue.",
-    "invalid": "Invalid value."
+    "invalid": "Invalid value.",
+    "integer": "Enter a whole number.",
+    "number": "Enter a number.",
+    "positive": "Enter a number greater than 0.",
+    "nonNegative": "Enter 0 or more.",
+    "percent": "Enter a percentage between 0 and 100.",
+    "countryCode": "2-letter uppercase country code, for example CM.",
+    "currencyCode": "3-letter uppercase currency code, for example XAF.",
+    "timeZone": "Unknown time zone, for example Africa/Douala.",
+    "url": "Enter a full web address, for example https://…",
+    "modules": "Enter at least one module.",
+    "bonusCapStep": "The cap must be a multiple of the bonus step."
   },
   "auth": {
     "title": "Sign in to Exams",
@@ -48,7 +59,21 @@
       "INVALID_EMAIL_OR_PASSWORD": "Wrong email or password.",
       "BANNED_USER": "This account is suspended. Contact support.",
       "RATE_LIMITED": "Too many attempts. Try again in a minute.",
-      "default": "Sign-in failed. Try again."
+      "default": "Sign-in failed. Try again.",
+      "INVALID_CODE": "Wrong code. Enter the code shown in your app.",
+      "INVALID_BACKUP_CODE": "Wrong or already used backup code.",
+      "INVALID_TWO_FACTOR_COOKIE": "This step has expired. Sign in again."
+    },
+    "secondFactor": {
+      "title": "Two-step verification",
+      "hint": "Enter the 6-digit code from your authenticator app.",
+      "backupHint": "Enter one of your backup codes. Each code works once.",
+      "code": "App code",
+      "backupCode": "Backup code",
+      "verify": "Verify",
+      "useBackupCode": "Use a backup code",
+      "useApp": "Use the app",
+      "cancel": "Cancel"
     }
   },
   "resetPassword": {
@@ -92,7 +117,9 @@
     "nav": {
       "home": "Home",
       "account": "My account",
-      "main": "Navigation"
+      "main": "Navigation",
+      "admin": "Administration",
+      "catalog": "Catalogue"
     },
     "signOut": "Sign out",
     "roleLabel": {
@@ -130,7 +157,25 @@
     "confirmTitle": "Sign out this device?",
     "confirmBody": "Whoever uses it will have to sign in again.",
     "cancel": "Cancel",
-    "deviceSignedOut": "Device signed out."
+    "deviceSignedOut": "Device signed out.",
+    "security": {
+      "title": "Two-step verification",
+      "hint": "Required for administration: sign in with your password + a code from your authenticator app (Google Authenticator, Microsoft Authenticator, Authy…).",
+      "enabled": "Enabled",
+      "enabledHint": "To access administration, sign in with your password, then the app code.",
+      "password": "Your password",
+      "noPassword": "No password yet? Set one first.",
+      "start": "Enable",
+      "scanTitle": "1. Scan this QR code with your app",
+      "manualKey": "Or enter this key: {key}",
+      "backupTitle": "2. Keep these backup codes somewhere safe",
+      "backupHint": "Each one lets you sign in if you lose your phone. They will not be shown again.",
+      "copyBackup": "Copy codes",
+      "copied": "Codes copied.",
+      "confirmTitle": "3. Enter the code shown in the app",
+      "confirm": "Confirm",
+      "done": "Two-step verification enabled."
+    }
   },
   "emails": {
     "otp": {
@@ -173,6 +218,108 @@
       }
     ],
     "back": "Back to home"
+  },
+  "admin": {
+    "secondFactorRequired": {
+      "title": "Two-step verification required",
+      "description": "Administration is only available after signing in with your password and a code from your authenticator app.",
+      "steps": [
+        "Turn on two-step verification in “My account”.",
+        "Sign out.",
+        "Sign in again with your password, then the app code."
+      ],
+      "action": "Go to my account"
+    },
+    "catalog": {
+      "title": "Catalogue",
+      "subtitle": "Countries, centres and levels, with each one's price and rules.",
+      "tabs": {
+        "offers": "Levels",
+        "centers": "Centres",
+        "countries": "Countries"
+      },
+      "add": {
+        "offer": "Add a level",
+        "center": "Add a centre",
+        "country": "Add a country"
+      },
+      "edit": "Edit",
+      "saved": "Saved.",
+      "duplicate": "This item already exists.",
+      "active": "Active",
+      "inactive": "Inactive",
+      "empty": {
+        "offers": "No level yet. Add a centre first.",
+        "centers": "No centre yet. Add a country first.",
+        "countries": "No country yet."
+      },
+      "columns": {
+        "center": "Centre",
+        "level": "Level",
+        "price": "Price",
+        "commission": "Commission",
+        "bonusCap": "Max bonus",
+        "status": "Status",
+        "country": "Country",
+        "city": "City",
+        "currency": "Currency",
+        "timeZone": "Time zone",
+        "actions": "Actions"
+      },
+      "commissionValue": "{percent}% (min. {min})",
+      "country": {
+        "title": "Country",
+        "code": "Country code (ISO)",
+        "codeHint": "2 letters, for example CM for Cameroon.",
+        "currency": "Currency (ISO)",
+        "currencyHint": "3 letters, for example XAF.",
+        "timeZone": "Time zone",
+        "timeZoneHint": "For example Africa/Douala. Times are shown in this zone.",
+        "active": "Visible to users"
+      },
+      "center": {
+        "title": "Centre",
+        "country": "Country",
+        "name": "Centre name",
+        "city": "City",
+        "officialUrl": "Official registration page",
+        "active": "Visible to users"
+      },
+      "offer": {
+        "title": "Level",
+        "center": "Centre",
+        "level": "Level",
+        "levelHint": "For example B1, B2, C1.",
+        "modules": "Modules",
+        "modulesHint": "Separated by commas.",
+        "pricing": "Price and commission",
+        "standardPrice": "Standard price",
+        "commission": "Platform commission",
+        "commissionMin": "Minimum commission",
+        "bonusStep": "Bonus step",
+        "bonusCap": "Maximum bonus",
+        "timers": "Time limits",
+        "claimTimeout": "Time to book after taking a request",
+        "confirmOnline": "Confirmation time (candidate online)",
+        "confirmOffline": "Confirmation time (candidate offline)",
+        "paymentDeadline": "Payment deadline",
+        "active": "Visible to users",
+        "units": {
+          "min": "min",
+          "h": "h",
+          "percent": "%"
+        },
+        "preview": "Split preview",
+        "previewBase": "Without bonus",
+        "previewMax": "With the maximum bonus",
+        "total": "Total paid",
+        "assistant": "Assistant",
+        "platform": "Platform",
+        "newRequestsOnly": "Price and time-limit changes only apply to new requests. Published requests keep their terms."
+      },
+      "save": "Save",
+      "cancel": "Cancel"
+    }
   },
   "share": {
     "title": "Book your exam seat, simply.",

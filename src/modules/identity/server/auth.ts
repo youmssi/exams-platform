@@ -90,6 +90,26 @@ export const auth = betterAuth({
       termsAcceptedAt: { type: "date", required: false, input: false },
     },
   },
+  session: {
+    additionalFields: {
+      secondFactorAt: { type: "date", required: false, input: false },
+    },
+  },
+  databaseHooks: {
+    session: {
+      create: {
+        // Marks sessions opened with password + authenticator app: only those can use admin features.
+        before: async (session, ctx) => ({
+          data: {
+            ...session,
+            secondFactorAt: ctx?.path?.startsWith("/two-factor/verify-")
+              ? new Date()
+              : null,
+          },
+        }),
+      },
+    },
+  },
   rateLimit: {
     enabled: true,
     storage: "database",
@@ -100,6 +120,8 @@ export const auth = betterAuth({
       "/sign-in/email": { window: 60, max: 5 },
       "/sign-in/email-otp": { window: 60, max: 5 },
       "/email-otp/request-password-reset": { window: 60, max: 3 },
+      "/two-factor/verify-totp": { window: 60, max: 5 },
+      "/two-factor/verify-backup-code": { window: 60, max: 5 },
     },
   },
   plugins: [
@@ -111,13 +133,7 @@ export const auth = betterAuth({
       sendVerificationOTP: ({ email, otp, type }, ctx) =>
         sendOtp(email, otp, type, ctx?.request?.headers),
     }),
-    twoFactor({
-      issuer: "Exams",
-      otpOptions: {
-        sendOTP: ({ user, otp }, ctx) =>
-          sendOtp(user.email, otp, "two-factor", ctx?.request?.headers),
-      },
-    }),
+    twoFactor({ issuer: "Exams" }),
     admin(),
     nextCookies(),
   ],

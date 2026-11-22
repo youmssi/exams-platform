@@ -18,7 +18,18 @@
     "required": "Ce champ est obligatoire.",
     "tooLong": "Ce texte est trop long.",
     "termsRequired": "Acceptez les conditions pour continuer.",
-    "invalid": "Valeur invalide."
+    "invalid": "Valeur invalide.",
+    "integer": "Saisissez un nombre entier.",
+    "number": "Saisissez un nombre.",
+    "positive": "Saisissez un nombre supérieur à 0.",
+    "nonNegative": "Saisissez 0 ou plus.",
+    "percent": "Saisissez un pourcentage entre 0 et 100.",
+    "countryCode": "Code pays à 2 lettres majuscules, par exemple CM.",
+    "currencyCode": "Code devise à 3 lettres majuscules, par exemple XAF.",
+    "timeZone": "Fuseau horaire inconnu, par exemple Africa/Douala.",
+    "url": "Saisissez une adresse web complète, par exemple https://…",
+    "modules": "Indiquez au moins un module.",
+    "bonusCapStep": "Le plafond doit être un multiple du pas du bonus."
   },
   "auth": {
     "title": "Connexion à Exams",
@@ -48,7 +59,21 @@
       "INVALID_EMAIL_OR_PASSWORD": "Email ou mot de passe incorrect.",
       "BANNED_USER": "Ce compte est suspendu. Contactez le support.",
       "RATE_LIMITED": "Trop de tentatives. Réessayez dans une minute.",
-      "default": "La connexion a échoué. Réessayez."
+      "default": "La connexion a échoué. Réessayez.",
+      "INVALID_CODE": "Code incorrect. Saisissez le code affiché dans votre application.",
+      "INVALID_BACKUP_CODE": "Code de secours incorrect ou déjà utilisé.",
+      "INVALID_TWO_FACTOR_COOKIE": "Cette étape a expiré. Reconnectez-vous."
+    },
+    "secondFactor": {
+      "title": "Vérification en deux étapes",
+      "hint": "Saisissez le code à 6 chiffres de votre application d'authentification.",
+      "backupHint": "Saisissez un de vos codes de secours. Chaque code ne sert qu'une fois.",
+      "code": "Code de l'application",
+      "backupCode": "Code de secours",
+      "verify": "Vérifier",
+      "useBackupCode": "Utiliser un code de secours",
+      "useApp": "Utiliser l'application",
+      "cancel": "Annuler"
     }
   },
   "resetPassword": {
@@ -92,7 +117,9 @@
     "nav": {
       "home": "Accueil",
       "account": "Mon compte",
-      "main": "Navigation"
+      "main": "Navigation",
+      "admin": "Administration",
+      "catalog": "Catalogue"
     },
     "signOut": "Se déconnecter",
     "roleLabel": {
@@ -130,7 +157,25 @@
     "confirmTitle": "Déconnecter cet appareil ?",
     "confirmBody": "La personne qui l'utilise devra se reconnecter.",
     "cancel": "Annuler",
-    "deviceSignedOut": "Appareil déconnecté."
+    "deviceSignedOut": "Appareil déconnecté.",
+    "security": {
+      "title": "Vérification en deux étapes",
+      "hint": "Obligatoire pour l'administration : connexion par mot de passe + code de votre application d'authentification (Google Authenticator, Microsoft Authenticator, Authy…).",
+      "enabled": "Activée",
+      "enabledHint": "Pour accéder à l'administration, connectez-vous avec votre mot de passe puis le code de l'application.",
+      "password": "Votre mot de passe",
+      "noPassword": "Pas encore de mot de passe ? Définissez-en un d'abord.",
+      "start": "Activer",
+      "scanTitle": "1. Scannez ce QR code avec votre application",
+      "manualKey": "Ou saisissez cette clé : {key}",
+      "backupTitle": "2. Gardez ces codes de secours en lieu sûr",
+      "backupHint": "Chacun permet une connexion si vous perdez votre téléphone. Ils ne seront plus affichés.",
+      "copyBackup": "Copier les codes",
+      "copied": "Codes copiés.",
+      "confirmTitle": "3. Saisissez le code affiché par l'application",
+      "confirm": "Confirmer l'activation",
+      "done": "Vérification en deux étapes activée."
+    }
   },
   "emails": {
     "otp": {
@@ -173,6 +218,108 @@
       }
     ],
     "back": "Retour à l'accueil"
+  },
+  "admin": {
+    "secondFactorRequired": {
+      "title": "Vérification en deux étapes requise",
+      "description": "L'administration n'est accessible qu'après une connexion par mot de passe et code de votre application d'authentification.",
+      "steps": [
+        "Activez la vérification en deux étapes dans « Mon compte ».",
+        "Déconnectez-vous.",
+        "Reconnectez-vous avec votre mot de passe, puis le code de l'application."
+      ],
+      "action": "Aller à mon compte"
+    },
+    "catalog": {
+      "title": "Catalogue",
+      "subtitle": "Pays, centres et niveaux, avec le prix et les règles de chacun.",
+      "tabs": {
+        "offers": "Niveaux",
+        "centers": "Centres",
+        "countries": "Pays"
+      },
+      "add": {
+        "offer": "Ajouter un niveau",
+        "center": "Ajouter un centre",
+        "country": "Ajouter un pays"
+      },
+      "edit": "Modifier",
+      "saved": "Enregistré.",
+      "duplicate": "Cet élément existe déjà.",
+      "active": "Actif",
+      "inactive": "Inactif",
+      "empty": {
+        "offers": "Aucun niveau. Ajoutez d'abord un centre.",
+        "centers": "Aucun centre. Ajoutez d'abord un pays.",
+        "countries": "Aucun pays pour l'instant."
+      },
+      "columns": {
+        "center": "Centre",
+        "level": "Niveau",
+        "price": "Prix",
+        "commission": "Commission",
+        "bonusCap": "Bonus max",
+        "status": "Statut",
+        "country": "Pays",
+        "city": "Ville",
+        "currency": "Devise",
+        "timeZone": "Fuseau horaire",
+        "actions": "Actions"
+      },
+      "commissionValue": "{percent} % (min. {min})",
+      "country": {
+        "title": "Pays",
+        "code": "Code pays (ISO)",
+        "codeHint": "2 lettres, par exemple CM pour le Cameroun.",
+        "currency": "Devise (ISO)",
+        "currencyHint": "3 lettres, par exemple XAF.",
+        "timeZone": "Fuseau horaire",
+        "timeZoneHint": "Par exemple Africa/Douala. Les heures sont affichées dans ce fuseau.",
+        "active": "Visible par les utilisateurs"
+      },
+      "center": {
+        "title": "Centre",
+        "country": "Pays",
+        "name": "Nom du centre",
+        "city": "Ville",
+        "officialUrl": "Page officielle des inscriptions",
+        "active": "Visible par les utilisateurs"
+      },
+      "offer": {
+        "title": "Niveau",
+        "center": "Centre",
+        "level": "Niveau",
+        "levelHint": "Par exemple B1, B2, C1.",
+        "modules": "Modules",
+        "modulesHint": "Séparés par des virgules.",
+        "pricing": "Prix et commission",
+        "standardPrice": "Prix standard",
+        "commission": "Commission de la plateforme",
+        "commissionMin": "Commission minimale",
+        "bonusStep": "Pas du bonus",
+        "bonusCap": "Bonus maximum",
+        "timers": "Délais",
+        "claimTimeout": "Délai pour réserver après la prise",
+        "confirmOnline": "Délai de confirmation (candidat en ligne)",
+        "confirmOffline": "Délai de confirmation (candidat hors ligne)",
+        "paymentDeadline": "Délai de paiement",
+        "active": "Visible par les utilisateurs",
+        "units": {
+          "min": "min",
+          "h": "h",
+          "percent": "%"
+        },
+        "preview": "Aperçu de la répartition",
+        "previewBase": "Sans bonus",
+        "previewMax": "Avec le bonus maximum",
+        "total": "Total payé",
+        "assistant": "Assistant",
+        "platform": "Plateforme",
+        "newRequestsOnly": "Les changements de prix et de délais ne s'appliquent qu'aux nouvelles demandes. Les demandes déjà publiées gardent leurs conditions."
+      },
+      "save": "Enregistrer",
+      "cancel": "Annuler"
+    }
   },
   "share": {
     "title": "Réservez votre place d'examen, simplement.",

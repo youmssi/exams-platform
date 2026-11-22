@@ -6,6 +6,7 @@ export { auth, enabledSocialProviders, type Session } from "./server/auth";
 export { identityRouter } from "./server/router";
 export {
   getSession,
+  requireAdmin,
   requireOnboardedUser,
   requireUser,
 } from "./server/session";

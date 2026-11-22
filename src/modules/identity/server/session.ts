@@ -1,5 +1,6 @@
 import "server-only";
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { cache } from "react";
 import { routes } from "@/config/routes";
@@ -26,4 +27,15 @@ export async function requireOnboardedUser() {
   if (!user.termsAcceptedAt)
     return redirect({ href: routes.welcome, locale: await getLocale() });
   return user;
+}
+
+/**
+ * Admin access. Returns whether the session was opened with the second factor,
+ * which admin pages require before showing anything.
+ */
+export async function requireAdmin() {
+  const user = await requireOnboardedUser();
+  if (user.role !== "admin") notFound();
+  const session = await getSession();
+  return { user, hasSecondFactor: Boolean(session?.session.secondFactorAt) };
 }

@@ -30,12 +30,30 @@ const PROVIDERS = {
 
 type Props = { providers: SocialProvider[]; next: string };
 
+type Step =
+  | { kind: "email" }
+  | { kind: "code"; email: string }
+  | { kind: "second-factor" };
+
 export function SignInForm({ providers, next }: Props) {
-  const [email, setEmail] = useState<string | null>(null);
-  return email ? (
-    <CodeStep email={email} next={next} onChangeEmail={() => setEmail(null)} />
-  ) : (
-    <EmailStep providers={providers} next={next} onCodeSent={setEmail} />
+  const [step, setStep] = useState<Step>({ kind: "email" });
+  const backToEmail = () => setStep({ kind: "email" });
+
+  if (step.kind === "code") {
+    return (
+      <CodeStep email={step.email} next={next} onChangeEmail={backToEmail} />
+    );
+  }
+  if (step.kind === "second-factor") {
+    return <SecondFactorStep next={next} onCancel={backToEmail} />;
+  }
+  return (
+    <EmailStep
+      providers={providers}
+      next={next}
+      onCodeSent={(email) => setStep({ kind: "code", email })}
+      onSecondFactor={() => setStep({ kind: "second-factor" })}
+    />
   );
 }
 
@@ -43,7 +61,11 @@ function EmailStep({
   providers,
   next,
   onCodeSent,
-}: Props & { onCodeSent: (email: string) => void }) {
+  onSecondFactor,
+}: Props & {
+  onCodeSent: (email: string) => void;
+  onSecondFactor: () => void;
+}) {
   const t = useTranslations("auth");
   const errorMessage = useAuthErrorMessage();
   const router = useRouter();
@@ -59,20 +81,22 @@ function EmailStep({
     onSubmit: async ({ value }) => {
       const method = withPassword ? "password" : "code";
       track({ name: "auth_started", data: { method } });
-      const { error } = withPassword
-        ? await authClient.signIn.email({
-            email: value.email,
-            password: value.password,
-          })
-        : await authClient.emailOtp.sendVerificationOtp({
-            email: value.email,
-            type: "sign-in",
-          });
-      if (error) return toast.error(errorMessage(error));
       if (withPassword) {
+        const { data, error } = await authClient.signIn.email({
+          email: value.email,
+          password: value.password,
+        });
+        if (error) return toast.error(errorMessage(error));
+        if (data && "twoFactorRedirect" in data && data.twoFactorRedirect)
+          return onSecondFactor();
         track({ name: "auth_completed", data: { method } });
         return router.replace(next);
       }
+      const { error } = await authClient.emailOtp.sendVerificationOtp({
+        email: value.email,
+        type: "sign-in",
+      });
+      if (error) return toast.error(errorMessage(error));
       onCodeSent(value.email);
     },
   });
@@ -241,6 +265,88 @@ function CodeStep({
           </Button>
           <Button type="button" variant="link" onClick={onChangeEmail}>
             {t("changeEmail")}
+          </Button>
+        </Field>
+      </FieldGroup>
+    </form>
+  );
+}
+
+function SecondFactorStep({
+  next,
+  onCancel,
+}: {
+  next: string;
+  onCancel: () => void;
+}) {
+  const t = useTranslations("auth.secondFactor");
+  const errorMessage = useAuthErrorMessage();
+  const router = useRouter();
+  const [withBackupCode, setWithBackupCode] = useState(false);
+
+  const form = useAppForm({
+    defaultValues: { code: "" },
+    validators: {
+      onSubmit: z.object({
+        code: withBackupCode ? z.string().trim().min(1, "required") : otpSchema,
+      }),
+    },
+    onSubmit: async ({ value }) => {
+      const { error } = withBackupCode
+        ? await authClient.twoFactor.verifyBackupCode({
+            code: value.code.trim(),
+          })
+        : await authClient.twoFactor.verifyTotp({ code: value.code });
+      if (error) return toast.error(errorMessage(error));
+      track({ name: "auth_completed", data: { method: "password" } });
+      router.replace(next);
+    },
+  });
+
+  return (
+    <form
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        form.handleSubmit();
+      }}
+    >
+      <FieldGroup>
+        <div className="flex flex-col items-center gap-2 text-center">
+          <h1 className="font-bold text-xl">{t("title")}</h1>
+          <FieldDescription>
+            {withBackupCode ? t("backupHint") : t("hint")}
+          </FieldDescription>
+        </div>
+        <form.AppField name="code">
+          {(field) =>
+            withBackupCode ? (
+              <field.TextField
+                label={t("backupCode")}
+                autoComplete="off"
+                autoFocus
+              />
+            ) : (
+              <field.OtpField label={t("code")} length={OTP_LENGTH} />
+            )
+          }
+        </form.AppField>
+        <Field>
+          <form.AppForm>
+            <form.SubmitButton>{t("verify")}</form.SubmitButton>
+          </form.AppForm>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              form.reset();
+              setWithBackupCode((v) => !v);
+            }}
+          >
+            {withBackupCode ? t("useApp") : t("useBackupCode")}
+          </Button>
+          <Button type="button" variant="link" onClick={onCancel}>
+            {t("cancel")}
           </Button>
         </Field>
       </FieldGroup>
