@@ -6,7 +6,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Analytics } from "@/components/analytics";
 import { AppProviders } from "@/components/providers/app-providers";
 import { routing } from "@/i18n/routing";
-import { env } from "@/server/env";
 import "../globals.css";
 
 const geistSans = Geist({ variable: "--font-sans", subsets: ["latin"] });
@@ -14,6 +13,9 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+const appUrl =
+  process.env.APP_URL ??
+  `https://${process.env.VERCEL_BRANCH_URL ?? process.env.VERCEL_URL ?? "localhost:3000"}`;
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -27,7 +29,9 @@ export async function generateMetadata({
   const title = t("title");
   const description = t("description");
   return {
-    metadataBase: new URL(env.APP_URL),
+    metadataBase: new URL(
+      appUrl.startsWith("https://") ? appUrl : `http://${appUrl}`,
+    ),
     applicationName: "Exams",
     title,
     description,

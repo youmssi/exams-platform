@@ -13,7 +13,9 @@ Chaque story vit dans sa branche `exm-<code>-<titre>`, part de `develop` et y re
 | [EXM-016](EXM-016-auth-hardening.md) | Durcissement de la connexion | 002 | S |
 | [EXM-017](EXM-017-emails-privacy-polish.md) | Emails, confidentialité, écrans allégés | 002, 005 | S |
 | [EXM-018](EXM-018-beneficiary-profile-and-modules.md) | Profil complet du bénéficiaire et choix des modules | 004, 005 | M |
-| [EXM-019](EXM-019-roles-and-assistant-profile.md) | Rôles visibles et profil assistant | 002, 007 | M |
+| [EXM-019](EXM-019-marketing-landing-page.md) | Landing page marketing | 001, 003 | M |
+| [EXM-020](EXM-020-landing-template-fidelity.md) | Landing fidèle au template Optimus | 019 | M |
+| [EXM-021](EXM-021-roles-and-assistant-profile.md) | Rôles visibles et profil assistant | 002, 007 | M |
 | [EXM-022](EXM-022-carry-over.md) | Report des demandes non réservées | 005, 008 | M |
 | [EXM-023](EXM-023-session-dates-helper.md) | Aide automatique pour les dates de session | 005 | M |
 | [EXM-024](EXM-024-third-party-consent.md) | Consentement des camarades par email | 004 | S |
@@ -27,4 +29,4 @@ Chaque story vit dans sa branche `exm-<code>-<titre>`, part de `develop` et y re
 | [EXM-012](EXM-012-admin.md) | Back-office | 010 | L |
 | [EXM-013](EXM-013-launch.md) | Déploiement, pages système et lancement | 001–012 | M |
 
-Release 1 (MVP) = EXM-001 à EXM-019, puis fusion de `develop` dans `main`.
+Release 1 (MVP) = EXM-001 à EXM-024, puis fusion de `develop` dans `main`.

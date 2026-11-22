@@ -1,4 +1,6 @@
-### EXM-019 — Rôles visibles et profil assistant
+### EXM-021 — Rôles visibles et profil assistant
+
+> Livrée sous le préfixe de commit `EXM-019`, renumérotée car EXM-019 désigne la landing page marketing.
 
 **Type :** feature · **Dépendances :** EXM-002, EXM-007 · **Taille :** M
 
