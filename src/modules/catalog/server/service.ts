@@ -1,9 +1,11 @@
 import "server-only";
 import { TRPCError } from "@trpc/server";
+import { revalidateTag } from "next/cache";
 import { Prisma } from "@/generated/prisma/client";
 import { recordAudit } from "@/server/audit";
 import { db } from "@/server/db";
 import type { CenterInput, CountryInput, OfferInput } from "../schemas";
+import { CATALOG_TAG } from "./public";
 
 /** Countries with their centers and offers, for the back office. */
 export function listCatalog() {
@@ -33,7 +35,7 @@ async function audited<T extends Row>(
   write: (tx: Tx) => Promise<T>,
 ) {
   try {
-    return await db.$transaction(async (tx) => {
+    const saved = await db.$transaction(async (tx) => {
       const before = id ? await find(tx, id) : null;
       if (id && !before) throw new TRPCError({ code: "NOT_FOUND" });
       const after = await write(tx);
@@ -47,6 +49,9 @@ async function audited<T extends Row>(
       });
       return after;
     });
+    // Public pages (landing prices, centres) show the change.
+    revalidateTag(CATALOG_TAG, "max");
+    return saved;
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
