@@ -1,0 +1,329 @@
+{
+  "metadata": {
+    "title": "Exams — Réservez votre place d'examen sans stress",
+    "description": "Une plateforme simple, transparente et au prix standard pour réserver vos examens de langue."
+  },
+  "home": {
+    "title": "Réservez votre place d'examen, simplement.",
+    "subtitle": "Prix standard, aucun intermédiaire inconnu, suivi en temps réel.",
+    "cta": "Se connecter"
+  },
+  "common": {
+    "error": "Une erreur est survenue."
+  },
+  "validation": {
+    "email": "Saisissez une adresse email valide, par exemple nom@exemple.com.",
+    "otp": "Saisissez les 6 chiffres reçus par email.",
+    "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+    "required": "Ce champ est obligatoire.",
+    "tooLong": "Ce texte est trop long.",
+    "termsRequired": "Acceptez les conditions pour continuer.",
+    "invalid": "Valeur invalide.",
+    "integer": "Saisissez un nombre entier.",
+    "number": "Saisissez un nombre.",
+    "positive": "Saisissez un nombre supérieur à 0.",
+    "nonNegative": "Saisissez 0 ou plus.",
+    "percent": "Saisissez un pourcentage entre 0 et 100.",
+    "countryCode": "Code pays à 2 lettres majuscules, par exemple CM.",
+    "currencyCode": "Code devise à 3 lettres majuscules, par exemple XAF.",
+    "timeZone": "Fuseau horaire inconnu, par exemple Africa/Douala.",
+    "url": "Saisissez une adresse web complète, par exemple https://…",
+    "modules": "Indiquez au moins un module.",
+    "bonusCapStep": "Le plafond doit être un multiple du pas du bonus."
+  },
+  "auth": {
+    "title": "Connexion à Exams",
+    "subtitle": "Pas encore de compte ? Il est créé automatiquement à la première connexion.",
+    "continueWith": "Continuer avec {provider}",
+    "or": "Ou",
+    "email": "Adresse email",
+    "sendCode": "Recevoir un code par email",
+    "usePassword": "Me connecter avec mon mot de passe",
+    "useCode": "Recevoir plutôt un code",
+    "password": "Mot de passe",
+    "signIn": "Se connecter",
+    "forgotPassword": "Mot de passe oublié ou pas encore défini ?",
+    "codeTitle": "Vérifiez vos emails",
+    "codeSentTo": "Nous avons envoyé un code à 6 chiffres à {email}.",
+    "code": "Code de vérification",
+    "verify": "Valider le code",
+    "resendIn": "Renvoyer un code dans {seconds} s",
+    "resend": "Renvoyer un code",
+    "changeEmail": "Changer d'adresse email",
+    "codeResent": "Nouveau code envoyé.",
+    "terms": "En continuant, vous acceptez les <terms>conditions d'utilisation et de confidentialité</terms>.",
+    "errors": {
+      "INVALID_OTP": "Code incorrect. Vérifiez les 6 chiffres ou demandez un nouveau code.",
+      "OTP_EXPIRED": "Ce code a expiré. Demandez-en un nouveau.",
+      "TOO_MANY_ATTEMPTS": "Trop d'essais. Demandez un nouveau code.",
+      "INVALID_EMAIL_OR_PASSWORD": "Email ou mot de passe incorrect.",
+      "BANNED_USER": "Ce compte est suspendu. Contactez le support.",
+      "RATE_LIMITED": "Trop de tentatives. Réessayez dans une minute.",
+      "default": "La connexion a échoué. Réessayez.",
+      "INVALID_CODE": "Code incorrect. Saisissez le code affiché dans votre application.",
+      "INVALID_BACKUP_CODE": "Code de secours incorrect ou déjà utilisé.",
+      "INVALID_TWO_FACTOR_COOKIE": "Cette étape a expiré. Reconnectez-vous."
+    },
+    "secondFactor": {
+      "title": "Vérification en deux étapes",
+      "hint": "Saisissez le code à 6 chiffres de votre application d'authentification.",
+      "backupHint": "Saisissez un de vos codes de secours. Chaque code ne sert qu'une fois.",
+      "code": "Code de l'application",
+      "backupCode": "Code de secours",
+      "verify": "Vérifier",
+      "useBackupCode": "Utiliser un code de secours",
+      "useApp": "Utiliser l'application",
+      "cancel": "Annuler"
+    }
+  },
+  "resetPassword": {
+    "title": "Définir un nouveau mot de passe",
+    "subtitle": "Nous vous envoyons un code pour confirmer qu'il s'agit bien de vous.",
+    "sendCode": "Recevoir un code",
+    "newPassword": "Nouveau mot de passe",
+    "passwordHint": "Au moins 8 caractères.",
+    "submit": "Enregistrer le mot de passe",
+    "done": "Mot de passe enregistré. Vous pouvez vous connecter.",
+    "backToSignIn": "Retour à la connexion"
+  },
+  "welcome": {
+    "title": "Bienvenue sur Exams",
+    "subtitle": "Encore une étape, puis vous pourrez commencer.",
+    "name": "Votre nom",
+    "nameHint": "Tel qu'il apparaît sur votre pièce d'identité.",
+    "role": "Vous venez surtout pour…",
+    "roles": {
+      "candidate": {
+        "title": "Réserver ma place",
+        "description": "Je publie ma demande et je suis ma réservation."
+      },
+      "assistant": {
+        "title": "Réserver pour les autres",
+        "description": "J'ai une session ouverte sur le site du centre et je prends des demandes."
+      }
+    },
+    "roleHint": "Vous pourrez changer à tout moment depuis votre compte.",
+    "termsTitle": "En résumé",
+    "termsPoints": [
+      "Le prix est standard et affiché avant tout engagement.",
+      "Les identifiants du centre ne sont visibles que par l'assistant qui prend votre demande, puis effacés.",
+      "Un litige ou un impayé peut entraîner des sanctions."
+    ],
+    "acceptTerms": "J'accepte les conditions d'utilisation et de confidentialité.",
+    "readTerms": "Lire les conditions complètes",
+    "submit": "Commencer"
+  },
+  "app": {
+    "nav": {
+      "home": "Accueil",
+      "account": "Mon compte",
+      "main": "Navigation",
+      "admin": "Administration",
+      "catalog": "Catalogue"
+    },
+    "signOut": "Se déconnecter",
+    "roleLabel": {
+      "candidate": "Candidat",
+      "assistant": "Assistant"
+    }
+  },
+  "homePage": {
+    "title": "Bonjour {name}",
+    "candidate": {
+      "title": "Votre première demande arrive bientôt",
+      "description": "La publication des demandes ouvre avec le catalogue des sessions."
+    },
+    "assistant": {
+      "title": "La file des demandes arrive bientôt",
+      "description": "Vous pourrez prendre des demandes dès l'ouverture de la file."
+    }
+  },
+  "account": {
+    "title": "Mon compte",
+    "activeRole": "Rôle actif",
+    "activeRoleHint": "Change ce que vous voyez dans l'application.",
+    "roleSaved": "Rôle mis à jour.",
+    "language": "Langue",
+    "languages": {
+      "fr": "Français",
+      "en": "English"
+    },
+    "devices": "Appareils connectés",
+    "devicesHint": "Déconnectez un appareil que vous ne reconnaissez pas.",
+    "thisDevice": "Cet appareil",
+    "lastActive": "Dernière activité : {date}",
+    "unknownDevice": "Appareil inconnu",
+    "signOutDevice": "Déconnecter",
+    "confirmTitle": "Déconnecter cet appareil ?",
+    "confirmBody": "La personne qui l'utilise devra se reconnecter.",
+    "cancel": "Annuler",
+    "deviceSignedOut": "Appareil déconnecté.",
+    "security": {
+      "title": "Vérification en deux étapes",
+      "hint": "Obligatoire pour l'administration : connexion par mot de passe + code de votre application d'authentification (Google Authenticator, Microsoft Authenticator, Authy…).",
+      "enabled": "Activée",
+      "enabledHint": "Pour accéder à l'administration, connectez-vous avec votre mot de passe puis le code de l'application.",
+      "password": "Votre mot de passe",
+      "noPassword": "Pas encore de mot de passe ? Définissez-en un d'abord.",
+      "start": "Activer",
+      "scanTitle": "1. Scannez ce QR code avec votre application",
+      "manualKey": "Ou saisissez cette clé : {key}",
+      "backupTitle": "2. Gardez ces codes de secours en lieu sûr",
+      "backupHint": "Chacun permet une connexion si vous perdez votre téléphone. Ils ne seront plus affichés.",
+      "copyBackup": "Copier les codes",
+      "copied": "Codes copiés.",
+      "confirmTitle": "3. Saisissez le code affiché par l'application",
+      "confirm": "Confirmer l'activation",
+      "done": "Vérification en deux étapes activée."
+    }
+  },
+  "emails": {
+    "otp": {
+      "preview": "Votre code : {code}",
+      "subject": {
+        "sign-in": "Votre code de connexion : {code}",
+        "email-verification": "Confirmez votre email : {code}",
+        "forget-password": "Code pour votre mot de passe : {code}",
+        "change-email": "Confirmez votre nouvel email : {code}",
+        "two-factor": "Code de sécurité : {code}"
+      },
+      "intro": "Saisissez ce code sur Exams :",
+      "expiry": "Il expire dans {minutes} minutes.",
+      "ignore": "Si vous n'êtes pas à l'origine de cette demande, ignorez cet email."
+    }
+  },
+  "legal": {
+    "title": "Conditions d'utilisation et de confidentialité",
+    "draft": "Version provisoire : le texte définitif sera publié avant le lancement.",
+    "sections": [
+      {
+        "title": "Le service",
+        "body": "Exams met en relation des candidats qui veulent réserver une place d'examen et des assistants qui réservent pour eux. Exams ne vend pas de places et n'est pas affilié aux centres d'examen."
+      },
+      {
+        "title": "Prix",
+        "body": "Le prix est fixé par Exams pour chaque centre et chaque niveau, et affiché avant tout engagement. Il comprend la part de l'assistant et une commission pour la plateforme."
+      },
+      {
+        "title": "Vos identifiants du centre",
+        "body": "Ils sont chiffrés, visibles uniquement par l'assistant qui prend votre demande, pendant la réservation, puis effacés. Changez votre mot de passe après la réservation."
+      },
+      {
+        "title": "Règlement et litiges",
+        "body": "Après la réservation, vous réglez directement l'assistant et la plateforme. En cas de désaccord, Exams examine les preuves et tranche. Un impayé ou un litige abusif peut entraîner une suspension."
+      },
+      {
+        "title": "Vos données",
+        "body": "Nous ne collectons que ce qui sert à la réservation et au suivi. Vous pouvez demander l'export ou la suppression de vos données."
+      }
+    ],
+    "back": "Retour à l'accueil"
+  },
+  "admin": {
+    "secondFactorRequired": {
+      "title": "Vérification en deux étapes requise",
+      "description": "L'administration n'est accessible qu'après une connexion par mot de passe et code de votre application d'authentification.",
+      "steps": [
+        "Activez la vérification en deux étapes dans « Mon compte ».",
+        "Déconnectez-vous.",
+        "Reconnectez-vous avec votre mot de passe, puis le code de l'application."
+      ],
+      "action": "Aller à mon compte"
+    },
+    "catalog": {
+      "title": "Catalogue",
+      "subtitle": "Pays, centres et niveaux, avec le prix et les règles de chacun.",
+      "tabs": {
+        "offers": "Niveaux",
+        "centers": "Centres",
+        "countries": "Pays"
+      },
+      "add": {
+        "offer": "Ajouter un niveau",
+        "center": "Ajouter un centre",
+        "country": "Ajouter un pays"
+      },
+      "edit": "Modifier",
+      "saved": "Enregistré.",
+      "duplicate": "Cet élément existe déjà.",
+      "active": "Actif",
+      "inactive": "Inactif",
+      "empty": {
+        "offers": "Aucun niveau. Ajoutez d'abord un centre.",
+        "centers": "Aucun centre. Ajoutez d'abord un pays.",
+        "countries": "Aucun pays pour l'instant."
+      },
+      "columns": {
+        "center": "Centre",
+        "level": "Niveau",
+        "price": "Prix",
+        "commission": "Commission",
+        "bonusCap": "Bonus max",
+        "status": "Statut",
+        "country": "Pays",
+        "city": "Ville",
+        "currency": "Devise",
+        "timeZone": "Fuseau horaire",
+        "actions": "Actions"
+      },
+      "commissionValue": "{percent} % (min. {min})",
+      "country": {
+        "title": "Pays",
+        "code": "Code pays (ISO)",
+        "codeHint": "2 lettres, par exemple CM pour le Cameroun.",
+        "currency": "Devise (ISO)",
+        "currencyHint": "3 lettres, par exemple XAF.",
+        "timeZone": "Fuseau horaire",
+        "timeZoneHint": "Par exemple Africa/Douala. Les heures sont affichées dans ce fuseau.",
+        "active": "Visible par les utilisateurs"
+      },
+      "center": {
+        "title": "Centre",
+        "country": "Pays",
+        "name": "Nom du centre",
+        "city": "Ville",
+        "officialUrl": "Page officielle des inscriptions",
+        "active": "Visible par les utilisateurs"
+      },
+      "offer": {
+        "title": "Niveau",
+        "center": "Centre",
+        "level": "Niveau",
+        "levelHint": "Par exemple B1, B2, C1.",
+        "modules": "Modules",
+        "modulesHint": "Séparés par des virgules.",
+        "pricing": "Prix et commission",
+        "standardPrice": "Prix standard",
+        "commission": "Commission de la plateforme",
+        "commissionMin": "Commission minimale",
+        "bonusStep": "Pas du bonus",
+        "bonusCap": "Bonus maximum",
+        "timers": "Délais",
+        "claimTimeout": "Délai pour réserver après la prise",
+        "confirmOnline": "Délai de confirmation (candidat en ligne)",
+        "confirmOffline": "Délai de confirmation (candidat hors ligne)",
+        "paymentDeadline": "Délai de paiement",
+        "active": "Visible par les utilisateurs",
+        "units": {
+          "min": "min",
+          "h": "h",
+          "percent": "%"
+        },
+        "preview": "Aperçu de la répartition",
+        "previewBase": "Sans bonus",
+        "previewMax": "Avec le bonus maximum",
+        "total": "Total payé",
+        "assistant": "Assistant",
+        "platform": "Plateforme",
+        "newRequestsOnly": "Les changements de prix et de délais ne s'appliquent qu'aux nouvelles demandes. Les demandes déjà publiées gardent leurs conditions."
+      },
+      "save": "Enregistrer",
+      "cancel": "Annuler"
+    }
+  },
+  "share": {
+    "title": "Réservez votre place d'examen, simplement.",
+    "subtitle": "Prix standard · suivi en temps réel · paiement confirmé",
+    "points": "Examens de langue · B1 · B2"
+  }
+}

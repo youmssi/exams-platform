@@ -1,0 +1,329 @@
+{
+  "metadata": {
+    "title": "Exams — Book your exam seat without the stress",
+    "description": "A simple, transparent, standard-priced platform to book your language exams."
+  },
+  "home": {
+    "title": "Book your exam seat, simply.",
+    "subtitle": "Standard price, no unknown middlemen, real-time tracking.",
+    "cta": "Sign in"
+  },
+  "common": {
+    "error": "Something went wrong."
+  },
+  "validation": {
+    "email": "Enter a valid email address, for example name@example.com.",
+    "otp": "Enter the 6 digits we emailed you.",
+    "passwordTooShort": "Your password must be at least 8 characters.",
+    "required": "This field is required.",
+    "tooLong": "This text is too long.",
+    "termsRequired": "Accept the terms to continue.",
+    "invalid": "Invalid value.",
+    "integer": "Enter a whole number.",
+    "number": "Enter a number.",
+    "positive": "Enter a number greater than 0.",
+    "nonNegative": "Enter 0 or more.",
+    "percent": "Enter a percentage between 0 and 100.",
+    "countryCode": "2-letter uppercase country code, for example CM.",
+    "currencyCode": "3-letter uppercase currency code, for example XAF.",
+    "timeZone": "Unknown time zone, for example Africa/Douala.",
+    "url": "Enter a full web address, for example https://…",
+    "modules": "Enter at least one module.",
+    "bonusCapStep": "The cap must be a multiple of the bonus step."
+  },
+  "auth": {
+    "title": "Sign in to Exams",
+    "subtitle": "No account yet? It is created automatically the first time you sign in.",
+    "continueWith": "Continue with {provider}",
+    "or": "Or",
+    "email": "Email address",
+    "sendCode": "Email me a code",
+    "usePassword": "Sign in with my password",
+    "useCode": "Get a code instead",
+    "password": "Password",
+    "signIn": "Sign in",
+    "forgotPassword": "Forgot your password, or never set one?",
+    "codeTitle": "Check your email",
+    "codeSentTo": "We sent a 6-digit code to {email}.",
+    "code": "Verification code",
+    "verify": "Verify code",
+    "resendIn": "Resend a code in {seconds}s",
+    "resend": "Resend a code",
+    "changeEmail": "Use another email",
+    "codeResent": "New code sent.",
+    "terms": "By continuing, you agree to the <terms>terms of use and privacy</terms>.",
+    "errors": {
+      "INVALID_OTP": "Wrong code. Check the 6 digits or ask for a new code.",
+      "OTP_EXPIRED": "This code has expired. Ask for a new one.",
+      "TOO_MANY_ATTEMPTS": "Too many attempts. Ask for a new code.",
+      "INVALID_EMAIL_OR_PASSWORD": "Wrong email or password.",
+      "BANNED_USER": "This account is suspended. Contact support.",
+      "RATE_LIMITED": "Too many attempts. Try again in a minute.",
+      "default": "Sign-in failed. Try again.",
+      "INVALID_CODE": "Wrong code. Enter the code shown in your app.",
+      "INVALID_BACKUP_CODE": "Wrong or already used backup code.",
+      "INVALID_TWO_FACTOR_COOKIE": "This step has expired. Sign in again."
+    },
+    "secondFactor": {
+      "title": "Two-step verification",
+      "hint": "Enter the 6-digit code from your authenticator app.",
+      "backupHint": "Enter one of your backup codes. Each code works once.",
+      "code": "App code",
+      "backupCode": "Backup code",
+      "verify": "Verify",
+      "useBackupCode": "Use a backup code",
+      "useApp": "Use the app",
+      "cancel": "Cancel"
+    }
+  },
+  "resetPassword": {
+    "title": "Set a new password",
+    "subtitle": "We will email you a code to confirm it is you.",
+    "sendCode": "Get a code",
+    "newPassword": "New password",
+    "passwordHint": "At least 8 characters.",
+    "submit": "Save password",
+    "done": "Password saved. You can now sign in.",
+    "backToSignIn": "Back to sign in"
+  },
+  "welcome": {
+    "title": "Welcome to Exams",
+    "subtitle": "One more step and you can get started.",
+    "name": "Your name",
+    "nameHint": "As it appears on your ID.",
+    "role": "You are mainly here to…",
+    "roles": {
+      "candidate": {
+        "title": "Book my seat",
+        "description": "I post my request and follow my booking."
+      },
+      "assistant": {
+        "title": "Book for others",
+        "description": "I have a session open on the centre's website and I take requests."
+      }
+    },
+    "roleHint": "You can change this anytime from your account.",
+    "termsTitle": "In short",
+    "termsPoints": [
+      "The price is standard and shown before you commit.",
+      "Exam-centre credentials are only visible to the assistant who takes your request, then deleted.",
+      "A dispute or an unpaid booking can lead to sanctions."
+    ],
+    "acceptTerms": "I accept the terms of use and privacy.",
+    "readTerms": "Read the full terms",
+    "submit": "Get started"
+  },
+  "app": {
+    "nav": {
+      "home": "Home",
+      "account": "My account",
+      "main": "Navigation",
+      "admin": "Administration",
+      "catalog": "Catalogue"
+    },
+    "signOut": "Sign out",
+    "roleLabel": {
+      "candidate": "Candidate",
+      "assistant": "Assistant"
+    }
+  },
+  "homePage": {
+    "title": "Hello {name}",
+    "candidate": {
+      "title": "Your first request is coming soon",
+      "description": "Requests open together with the exam session catalogue."
+    },
+    "assistant": {
+      "title": "The request queue is coming soon",
+      "description": "You will be able to take requests as soon as the queue opens."
+    }
+  },
+  "account": {
+    "title": "My account",
+    "activeRole": "Active role",
+    "activeRoleHint": "Changes what you see in the app.",
+    "roleSaved": "Role updated.",
+    "language": "Language",
+    "languages": {
+      "fr": "Français",
+      "en": "English"
+    },
+    "devices": "Signed-in devices",
+    "devicesHint": "Sign out any device you do not recognise.",
+    "thisDevice": "This device",
+    "lastActive": "Last active: {date}",
+    "unknownDevice": "Unknown device",
+    "signOutDevice": "Sign out",
+    "confirmTitle": "Sign out this device?",
+    "confirmBody": "Whoever uses it will have to sign in again.",
+    "cancel": "Cancel",
+    "deviceSignedOut": "Device signed out.",
+    "security": {
+      "title": "Two-step verification",
+      "hint": "Required for administration: sign in with your password + a code from your authenticator app (Google Authenticator, Microsoft Authenticator, Authy…).",
+      "enabled": "Enabled",
+      "enabledHint": "To access administration, sign in with your password, then the app code.",
+      "password": "Your password",
+      "noPassword": "No password yet? Set one first.",
+      "start": "Enable",
+      "scanTitle": "1. Scan this QR code with your app",
+      "manualKey": "Or enter this key: {key}",
+      "backupTitle": "2. Keep these backup codes somewhere safe",
+      "backupHint": "Each one lets you sign in if you lose your phone. They will not be shown again.",
+      "copyBackup": "Copy codes",
+      "copied": "Codes copied.",
+      "confirmTitle": "3. Enter the code shown in the app",
+      "confirm": "Confirm",
+      "done": "Two-step verification enabled."
+    }
+  },
+  "emails": {
+    "otp": {
+      "preview": "Your code: {code}",
+      "subject": {
+        "sign-in": "Your sign-in code: {code}",
+        "email-verification": "Confirm your email: {code}",
+        "forget-password": "Your password code: {code}",
+        "change-email": "Confirm your new email: {code}",
+        "two-factor": "Security code: {code}"
+      },
+      "intro": "Enter this code on Exams:",
+      "expiry": "It expires in {minutes} minutes.",
+      "ignore": "If you did not request this, ignore this email."
+    }
+  },
+  "legal": {
+    "title": "Terms of use and privacy",
+    "draft": "Draft version: the final text will be published before launch.",
+    "sections": [
+      {
+        "title": "The service",
+        "body": "Exams connects candidates who want to book an exam seat with assistants who book it for them. Exams does not sell seats and is not affiliated with exam centres."
+      },
+      {
+        "title": "Price",
+        "body": "Exams sets the price for each centre and level, and shows it before you commit. It includes the assistant's share and a platform commission."
+      },
+      {
+        "title": "Your exam-centre credentials",
+        "body": "They are encrypted, visible only to the assistant who takes your request during the booking, then deleted. Change your password after the booking."
+      },
+      {
+        "title": "Payment and disputes",
+        "body": "After the booking, you pay the assistant and the platform directly. If you disagree, Exams reviews the evidence and decides. An unpaid booking or an abusive dispute can lead to a suspension."
+      },
+      {
+        "title": "Your data",
+        "body": "We only collect what the booking and its follow-up need. You can ask us to export or delete your data."
+      }
+    ],
+    "back": "Back to home"
+  },
+  "admin": {
+    "secondFactorRequired": {
+      "title": "Two-step verification required",
+      "description": "Administration is only available after signing in with your password and a code from your authenticator app.",
+      "steps": [
+        "Turn on two-step verification in “My account”.",
+        "Sign out.",
+        "Sign in again with your password, then the app code."
+      ],
+      "action": "Go to my account"
+    },
+    "catalog": {
+      "title": "Catalogue",
+      "subtitle": "Countries, centres and levels, with each one's price and rules.",
+      "tabs": {
+        "offers": "Levels",
+        "centers": "Centres",
+        "countries": "Countries"
+      },
+      "add": {
+        "offer": "Add a level",
+        "center": "Add a centre",
+        "country": "Add a country"
+      },
+      "edit": "Edit",
+      "saved": "Saved.",
+      "duplicate": "This item already exists.",
+      "active": "Active",
+      "inactive": "Inactive",
+      "empty": {
+        "offers": "No level yet. Add a centre first.",
+        "centers": "No centre yet. Add a country first.",
+        "countries": "No country yet."
+      },
+      "columns": {
+        "center": "Centre",
+        "level": "Level",
+        "price": "Price",
+        "commission": "Commission",
+        "bonusCap": "Max bonus",
+        "status": "Status",
+        "country": "Country",
+        "city": "City",
+        "currency": "Currency",
+        "timeZone": "Time zone",
+        "actions": "Actions"
+      },
+      "commissionValue": "{percent}% (min. {min})",
+      "country": {
+        "title": "Country",
+        "code": "Country code (ISO)",
+        "codeHint": "2 letters, for example CM for Cameroon.",
+        "currency": "Currency (ISO)",
+        "currencyHint": "3 letters, for example XAF.",
+        "timeZone": "Time zone",
+        "timeZoneHint": "For example Africa/Douala. Times are shown in this zone.",
+        "active": "Visible to users"
+      },
+      "center": {
+        "title": "Centre",
+        "country": "Country",
+        "name": "Centre name",
+        "city": "City",
+        "officialUrl": "Official registration page",
+        "active": "Visible to users"
+      },
+      "offer": {
+        "title": "Level",
+        "center": "Centre",
+        "level": "Level",
+        "levelHint": "For example B1, B2, C1.",
+        "modules": "Modules",
+        "modulesHint": "Separated by commas.",
+        "pricing": "Price and commission",
+        "standardPrice": "Standard price",
+        "commission": "Platform commission",
+        "commissionMin": "Minimum commission",
+        "bonusStep": "Bonus step",
+        "bonusCap": "Maximum bonus",
+        "timers": "Time limits",
+        "claimTimeout": "Time to book after taking a request",
+        "confirmOnline": "Confirmation time (candidate online)",
+        "confirmOffline": "Confirmation time (candidate offline)",
+        "paymentDeadline": "Payment deadline",
+        "active": "Visible to users",
+        "units": {
+          "min": "min",
+          "h": "h",
+          "percent": "%"
+        },
+        "preview": "Split preview",
+        "previewBase": "Without bonus",
+        "previewMax": "With the maximum bonus",
+        "total": "Total paid",
+        "assistant": "Assistant",
+        "platform": "Platform",
+        "newRequestsOnly": "Price and time-limit changes only apply to new requests. Published requests keep their terms."
+      },
+      "save": "Save",
+      "cancel": "Cancel"
+    }
+  },
+  "share": {
+    "title": "Book your exam seat, simply.",
+    "subtitle": "Standard price · real-time tracking · confirmed payment",
+    "points": "Language exams · B1 · B2"
+  }
+}
