@@ -29,14 +29,6 @@ export function AsciiCanvas({ frame, speed }: { frame: Frame; speed: number }) {
     let raf = 0;
     let visible = false;
 
-    const resize = () => {
-      const ratio = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * ratio;
-      canvas.height = rect.height * ratio;
-      context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    };
-
     const draw = () => {
       const rect = canvas.getBoundingClientRect();
       const { points, font, alpha } = frame(rect, time);
@@ -52,6 +44,15 @@ export function AsciiCanvas({ frame, speed }: { frame: Frame; speed: number }) {
         context.fillText(point.char, point.x, point.y);
       }
       context.globalAlpha = 1;
+    };
+
+    const resize = () => {
+      const ratio = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * ratio;
+      canvas.height = rect.height * ratio;
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      draw();
     };
 
     const loop = () => {
