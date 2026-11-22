@@ -4,29 +4,42 @@ import { Prisma } from "@/generated/prisma/client";
 import { encryptSecret } from "@/server/crypto";
 import { db } from "@/server/db";
 import { canAddBeneficiary } from "../domain/limits";
+import { displayName, isReadyToBook } from "../domain/profile";
 import type { BeneficiaryInput } from "../schemas";
 
 /** What the owner may see: never the password, only whether one is saved. */
 const PUBLIC_FIELDS = {
   id: true,
   isSelf: true,
-  fullName: true,
+  firstName: true,
+  lastName: true,
+  birthDate: true,
+  birthPlace: true,
+  phone: true,
+  city: true,
+  district: true,
+  participantNumber: true,
   email: true,
   passwordCipher: true,
   updatedAt: true,
 } as const;
 
-type Owner = { id: string; name: string; email: string };
+type Owner = { id: string; email: string };
 
 const toPublic = ({
   passwordCipher,
   ...beneficiary
-}: Prisma.BeneficiaryGetPayload<{ select: typeof PUBLIC_FIELDS }>) => ({
-  ...beneficiary,
-  hasPassword: passwordCipher !== null,
-});
+}: Prisma.BeneficiaryGetPayload<{ select: typeof PUBLIC_FIELDS }>) => {
+  const hasPassword = passwordCipher !== null;
+  return {
+    ...beneficiary,
+    name: displayName(beneficiary),
+    hasPassword,
+    isReady: isReadyToBook({ ...beneficiary, hasPassword }),
+  };
+};
 
-/** The account holder always has a "self" beneficiary, pre-filled from the account. */
+/** The account holder always has a "self" beneficiary, pre-filled with the account email. */
 async function ensureSelf(owner: Owner) {
   const exists = await db.beneficiary.count({
     where: { ownerId: owner.id, isSelf: true },
@@ -34,12 +47,7 @@ async function ensureSelf(owner: Owner) {
   if (exists) return;
   try {
     await db.beneficiary.create({
-      data: {
-        ownerId: owner.id,
-        isSelf: true,
-        fullName: owner.name,
-        email: owner.email,
-      },
+      data: { ownerId: owner.id, isSelf: true, email: owner.email },
     });
   } catch (error) {
     // A concurrent request created it first (partial unique index).
@@ -63,8 +71,15 @@ export async function listBeneficiaries(owner: Owner) {
   return rows.map(toPublic);
 }
 
-const passwordData = (password: string) =>
-  password ? { passwordCipher: encryptSecret(password) } : {};
+/** Columns written from the form; optional texts are stored as null when empty. */
+const profileData = ({ consent, password, ...input }: BeneficiaryInput) => ({
+  ...input,
+  birthDate: new Date(input.birthDate),
+  city: input.city || null,
+  district: input.district || null,
+  participantNumber: input.participantNumber || null,
+  ...(password ? { passwordCipher: encryptSecret(password) } : {}),
+});
 
 export async function addFriend(ownerId: string, input: BeneficiaryInput) {
   return db.$transaction(async (tx) => {
@@ -72,13 +87,7 @@ export async function addFriend(ownerId: string, input: BeneficiaryInput) {
     if (!canAddBeneficiary(count))
       throw new TRPCError({ code: "FORBIDDEN", message: "limitReached" });
     const created = await tx.beneficiary.create({
-      data: {
-        ownerId,
-        fullName: input.fullName,
-        email: input.email,
-        consentAt: new Date(),
-        ...passwordData(input.password),
-      },
+      data: { ownerId, consentAt: new Date(), ...profileData(input) },
       select: PUBLIC_FIELDS,
     });
     return toPublic(created);
@@ -92,19 +101,29 @@ export async function updateBeneficiary(
 ) {
   const { count } = await db.beneficiary.updateMany({
     where: { id, ownerId },
-    data: {
-      fullName: input.fullName,
-      email: input.email,
-      ...passwordData(input.password),
-    },
+    data: profileData(input),
   });
   if (!count) throw new TRPCError({ code: "NOT_FOUND" });
 }
 
-/** The account holder's own profile cannot be removed. */
+/**
+ * The account holder's own profile cannot be removed, nor anyone with a live request.
+ * Their cancelled requests go with them.
+ */
 export async function removeBeneficiary(ownerId: string, id: string) {
-  const { count } = await db.beneficiary.deleteMany({
-    where: { id, ownerId, isSelf: false },
+  await db.$transaction(async (tx) => {
+    const beneficiary = await tx.beneficiary.findFirst({
+      where: { id, ownerId, isSelf: false },
+      select: {
+        _count: {
+          select: { requests: { where: { status: { not: "CANCELLED" } } } },
+        },
+      },
+    });
+    if (!beneficiary) throw new TRPCError({ code: "NOT_FOUND" });
+    if (beneficiary._count.requests)
+      throw new TRPCError({ code: "CONFLICT", message: "hasOpenRequest" });
+    await tx.request.deleteMany({ where: { beneficiaryId: id } });
+    await tx.beneficiary.delete({ where: { id } });
   });
-  if (!count) throw new TRPCError({ code: "NOT_FOUND" });
 }

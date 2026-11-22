@@ -84,6 +84,7 @@ export function OnboardingForm({ defaultName }: { defaultName: string }) {
           </ul>
           <Link
             href={routes.terms}
+            target="_blank"
             className="text-sm underline underline-offset-4"
           >
             {t("readTerms")}
