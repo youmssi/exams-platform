@@ -3,12 +3,6 @@
     "title": "Exams — Book your exam seat without the stress",
     "description": "A simple, transparent, standard-priced platform to book your language exams."
   },
-  "home": {
-    "title": "Book your exam seat, simply.",
-    "subtitle": "Standard price, no unknown middlemen, real-time tracking.",
-    "cta": "Sign in",
-    "continue": "Continue"
-  },
   "common": {
     "error": "Something went wrong."
   },
@@ -690,5 +684,336 @@
     "momoNameHint": "As shown in the Mobile Money app.",
     "save": "Save",
     "saved": "Assistant profile saved."
+  },
+  "landing": {
+    "soon": "Soon",
+    "nav": {
+      "howItWorks": "How it works",
+      "assistants": "Assistants",
+      "security": "Security",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "signIn": "Sign in",
+      "start": "Get started",
+      "continue": "Continue",
+      "menu": "Menu"
+    },
+    "hero": {
+      "eyebrow": "Exam seat booking",
+      "line1": "Your exam seat,",
+      "line2": "booked",
+      "words": ["on time", "at a fair price", "live", "stress-free"],
+      "description": "Publish your request once. An assistant takes it as soon as registrations open, at a standard price shown upfront.",
+      "primary": "Publish my request",
+      "secondary": "See how it works",
+      "facts": [
+        {
+          "value": "1",
+          "label": "assistant per client",
+          "tag": "EXCLUSIVE"
+        },
+        {
+          "value": "{max}",
+          "label": "people per account",
+          "tag": "GROUP"
+        },
+        {
+          "value": "0",
+          "label": "unknown middlemen",
+          "tag": "TRANSPARENT"
+        },
+        {
+          "value": "24/7",
+          "label": "live request queue",
+          "tag": "LIVE"
+        },
+        {
+          "value": "AES-256",
+          "label": "encrypted credentials",
+          "tag": "SECURITY"
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "What changes",
+      "title": "No more lost seats.",
+      "subtitle": "No more middlemen.",
+      "items": {
+        "queue": {
+          "title": "A live queue",
+          "description": "Your request appears in the queue when registrations open. As soon as an assistant takes it, it disappears for everyone else."
+        },
+        "exclusive": {
+          "title": "One assistant, one client",
+          "description": "The assistant who takes your request works for you alone, with a deadline to book. Otherwise it goes back to the queue."
+        },
+        "group": {
+          "title": "Your whole class, one account",
+          "description": "Book for yourself and up to {others} classmates. Each request is taken separately, so it goes faster."
+        },
+        "security": {
+          "title": "Protected credentials",
+          "description": "Your exam-centre password is encrypted and only visible to the assistant who takes your request."
+        }
+      }
+    },
+    "how": {
+      "eyebrow": "How it works",
+      "title": "Three steps.",
+      "subtitle": "Zero stress.",
+      "window": "my-request",
+      "status": "Ready",
+      "steps": [
+        {
+          "title": "Publish your request",
+          "description": "Pick the session, the person and the modules. Your request goes out by itself when registrations open.",
+          "lines": [
+            "Session    Goethe B1 · 15 March",
+            "For        Danick M.",
+            "Modules    Full exam",
+            "Bonus      optional",
+            "→ published at opening"
+          ]
+        },
+        {
+          "title": "An assistant books",
+          "description": "They take your request in one tap. You follow the countdown and see whether they are online.",
+          "lines": [
+            "Status     In progress",
+            "Assistant  ● online",
+            "Book       before 19:42",
+            "Credentials  visible to them only"
+          ]
+        },
+        {
+          "title": "Confirm and pay",
+          "description": "You confirm the centre's email, then pay by Mobile Money: the assistant's share and the platform's.",
+          "lines": [
+            "Centre email  received ✓",
+            "Assistant  Mobile Money",
+            "Platform   Mobile Money",
+            "→ operation closed"
+          ],
+          "soon": true
+        }
+      ]
+    },
+    "centers": {
+      "eyebrow": "Centres",
+      "title": "Where you take",
+      "titleEnd": "your exam.",
+      "description": "We start with the Goethe-Institut Kamerun. More centres and levels are coming: request them from the app.",
+      "stats": {
+        "centers": "Centres",
+        "levels": "Levels",
+        "countries": "Countries"
+      },
+      "panel": "Catalogue",
+      "panelStatus": "Registrations tracked",
+      "empty": "The catalogue is coming soon."
+    },
+    "rules": {
+      "eyebrow": "Clear rules",
+      "title": "Deadlines",
+      "titleEnd": "everyone knows.",
+      "live": "Live",
+      "claim": "minutes to book after taking a request",
+      "confirm": "minutes to confirm the centre's email",
+      "payment": "hours to pay after confirmation",
+      "group": "people per account"
+    },
+    "payments": {
+      "eyebrow": "Payment",
+      "title": "Pay the way you already do.",
+      "titleEnd": "With Mobile Money.",
+      "description": "No bank card. You pay the assistant and the platform directly, after the booking.",
+      "items": [
+        {
+          "name": "MTN Mobile Money",
+          "category": "Payment"
+        },
+        {
+          "name": "Orange Money",
+          "category": "Payment"
+        },
+        {
+          "name": "Email",
+          "category": "Sign-in codes"
+        },
+        {
+          "name": "Google",
+          "category": "Sign-in"
+        },
+        {
+          "name": "Real time",
+          "category": "Request queue"
+        },
+        {
+          "name": "AES-256",
+          "category": "Encryption"
+        },
+        {
+          "name": "Français",
+          "category": "Language"
+        },
+        {
+          "name": "English",
+          "category": "Language"
+        }
+      ]
+    },
+    "security": {
+      "eyebrow": "Trust",
+      "title": "Your trust",
+      "titleEnd": "comes first.",
+      "description": "The seat is booked on the centre's official website, in your name. Exams runs the service, transparently.",
+      "tags": [
+        "AES-256",
+        "Anonymity",
+        "Standard price",
+        "Blacklist",
+        "Disputes"
+      ],
+      "items": {
+        "encrypted": {
+          "title": "Encrypted credentials",
+          "description": "Encrypted (AES-256) and only visible to the assistant who takes your request."
+        },
+        "anonymous": {
+          "title": "Anonymous in the queue",
+          "description": "Assistants see the level, the modules and the amount. Never your name or contact."
+        },
+        "erased": {
+          "title": "Erased at closing",
+          "description": "Your credentials are deleted when the operation ends."
+        },
+        "verified": {
+          "title": "Verified assistants",
+          "description": "ID document and Mobile Money account checked by the team."
+        }
+      }
+    },
+    "assistants": {
+      "eyebrow": "For assistants",
+      "title": "Already booking for others?",
+      "titleEnd": "Do it here.",
+      "description": "A queue of requests at a price fixed upfront, one client at a time, and everything ready to copy.",
+      "features": [
+        {
+          "title": "One client at a time",
+          "description": "Stay focused, no pressure."
+        },
+        {
+          "title": "Details ready",
+          "description": "Name, birth, credentials: one tap to copy."
+        },
+        {
+          "title": "Sorted queue",
+          "description": "Bonus first, then the oldest."
+        },
+        {
+          "title": "Paid by Mobile Money",
+          "description": "Straight to your account."
+        }
+      ],
+      "tabs": [
+        {
+          "label": "Take",
+          "lines": [
+            "Queue · Goethe B1 · 15 March",
+            "Full exam · published 2 min ago",
+            "Candidate  ● online",
+            "Amount     fixed upfront",
+            "[ Take ]"
+          ]
+        },
+        {
+          "label": "Book",
+          "lines": [
+            "Time to book   18:42",
+            "Email      •••••@gmail.com",
+            "Password   [ Show ]",
+            "Born       11/11/2005 · Douala",
+            "→ centre website"
+          ]
+        },
+        {
+          "label": "Get paid",
+          "lines": [
+            "Booking done ✓",
+            "Email confirmed by the candidate",
+            "Payment    Mobile Money",
+            "→ free for the next request"
+          ],
+          "soon": true
+        }
+      ],
+      "join": "Become an assistant",
+      "terms": "Read the terms"
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "title": "Everything you need",
+      "titleEnd": "to know.",
+      "items": [
+        {
+          "q": "Is the seat booked with the centre?",
+          "a": "Yes. It is booked on the centre's official website, in your name. Exams is an independent service: it connects people and tracks every step."
+        },
+        {
+          "q": "How much does it cost?",
+          "a": "The service price is standard per level and shown before you publish. Exam fees are paid directly to the centre."
+        },
+        {
+          "q": "What if nobody books in time?",
+          "a": "The assistant has {claim} minutes. Otherwise your request goes back to the queue for another assistant. You can also take it back at any time."
+        },
+        {
+          "q": "Are my credentials safe?",
+          "a": "They are encrypted and only visible to the assistant who takes your request. You can change your centre password after the exam."
+        },
+        {
+          "q": "Can I register classmates?",
+          "a": "Yes, up to {others} people besides you, with their consent. Each request is handled separately."
+        },
+        {
+          "q": "How do I become an assistant?",
+          "a": "Create your account, switch to Assistant at the top of the screen and complete your profile: phone and Mobile Money."
+        }
+      ]
+    },
+    "pricing": {
+      "eyebrow": "Pricing",
+      "title": "A standard price,",
+      "titleEnd": "shown upfront.",
+      "description": "The same price for everyone, set per level. You pay after the booking.",
+      "perPerson": "/ person",
+      "assistant": "Assistant: {amount}",
+      "platform": "Platform: {amount}",
+      "bonus": "Optional bonus up to +{amount}",
+      "modules": "Full exam or single modules",
+      "cta": "Publish my request",
+      "note": "Exam fees are not included: they are paid directly to the centre.",
+      "empty": "Prices are coming soon."
+    },
+    "cta": {
+      "title": "Ready for your",
+      "titleEnd": "next session?",
+      "description": "Create your account in a minute, complete your profile and publish your request before registrations open.",
+      "candidate": "I'm a candidate",
+      "assistant": "I'm an assistant",
+      "free": "Free account · no bank card"
+    },
+    "footer": {
+      "tagline": "Exam seat booking, simple and transparent.",
+      "product": "Product",
+      "roles": "Roles",
+      "candidates": "Candidates",
+      "legal": "Legal",
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "contact": "Contact",
+      "independent": "Independent service, not affiliated with exam centres."
+    }
   }
 }

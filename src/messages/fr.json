@@ -3,12 +3,6 @@
     "title": "Exams — Réservez votre place d'examen sans stress",
     "description": "Une plateforme simple, transparente et au prix standard pour réserver vos examens de langue."
   },
-  "home": {
-    "title": "Réservez votre place d'examen, simplement.",
-    "subtitle": "Prix standard, aucun intermédiaire inconnu, suivi en temps réel.",
-    "cta": "Se connecter",
-    "continue": "Continuer"
-  },
   "common": {
     "error": "Une erreur est survenue."
   },
@@ -690,5 +684,336 @@
     "momoNameHint": "Tel qu'il s'affiche dans l'application Mobile Money.",
     "save": "Enregistrer",
     "saved": "Profil assistant enregistré."
+  },
+  "landing": {
+    "soon": "Bientôt",
+    "nav": {
+      "howItWorks": "Comment ça marche",
+      "assistants": "Assistants",
+      "security": "Sécurité",
+      "pricing": "Prix",
+      "faq": "FAQ",
+      "signIn": "Se connecter",
+      "start": "Commencer",
+      "continue": "Continuer",
+      "menu": "Menu"
+    },
+    "hero": {
+      "eyebrow": "Réservation de places d'examen",
+      "line1": "Ta place d'examen,",
+      "line2": "réservée",
+      "words": ["à temps", "au juste prix", "en direct", "sans stress"],
+      "description": "Publie ta demande une fois. Un assistant la prend dès l'ouverture des inscriptions, à un prix standard affiché d'avance.",
+      "primary": "Publier ma demande",
+      "secondary": "Voir comment ça marche",
+      "facts": [
+        {
+          "value": "1",
+          "label": "assistant par client",
+          "tag": "EXCLUSIF"
+        },
+        {
+          "value": "{max}",
+          "label": "personnes par compte",
+          "tag": "GROUPE"
+        },
+        {
+          "value": "0",
+          "label": "intermédiaire inconnu",
+          "tag": "TRANSPARENT"
+        },
+        {
+          "value": "24/7",
+          "label": "file en temps réel",
+          "tag": "EN DIRECT"
+        },
+        {
+          "value": "AES-256",
+          "label": "identifiants chiffrés",
+          "tag": "SÉCURITÉ"
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "Ce qui change",
+      "title": "Fini les places perdues.",
+      "subtitle": "Fini les intermédiaires.",
+      "items": {
+        "queue": {
+          "title": "Une file en temps réel",
+          "description": "Ta demande apparaît dans la file à l'ouverture des inscriptions. Dès qu'un assistant la prend, elle disparaît pour tous les autres."
+        },
+        "exclusive": {
+          "title": "Un assistant, un client",
+          "description": "L'assistant qui prend ta demande s'occupe de toi seul, avec un délai pour réserver. Sinon, elle revient dans la file."
+        },
+        "group": {
+          "title": "Toute ta classe, un seul compte",
+          "description": "Réserve pour toi et jusqu'à {others} camarades. Chaque demande est prise séparément, pour aller plus vite."
+        },
+        "security": {
+          "title": "Identifiants protégés",
+          "description": "Ton mot de passe du centre est chiffré et visible uniquement par l'assistant qui prend ta demande."
+        }
+      }
+    },
+    "how": {
+      "eyebrow": "Comment ça marche",
+      "title": "Trois étapes.",
+      "subtitle": "Zéro stress.",
+      "window": "ma-demande",
+      "status": "Prêt",
+      "steps": [
+        {
+          "title": "Publie ta demande",
+          "description": "Choisis la session, la personne et les modules. Ta demande part toute seule à l'ouverture des inscriptions.",
+          "lines": [
+            "Session    Goethe B1 · 15 mars",
+            "Pour       Danick M.",
+            "Modules    Complet",
+            "Bonus      facultatif",
+            "→ publiée à l'ouverture"
+          ]
+        },
+        {
+          "title": "Un assistant réserve",
+          "description": "Il prend ta demande en un geste. Tu suis le compte à rebours et tu vois s'il est en ligne.",
+          "lines": [
+            "Statut     En cours",
+            "Assistant  ● en ligne",
+            "Réserver   avant 19:42",
+            "Identifiants  visibles par lui seul"
+          ]
+        },
+        {
+          "title": "Confirme et règle",
+          "description": "Tu confirmes le mail du centre, puis tu règles par Mobile Money : la part de l'assistant et celle de la plateforme.",
+          "lines": [
+            "Mail du centre  reçu ✓",
+            "Assistant  Mobile Money",
+            "Plateforme Mobile Money",
+            "→ opération clôturée"
+          ],
+          "soon": true
+        }
+      ]
+    },
+    "centers": {
+      "eyebrow": "Centres",
+      "title": "Là où tu passes",
+      "titleEnd": "ton examen.",
+      "description": "On commence avec le Goethe-Institut Kamerun. D'autres centres et niveaux arrivent : demande-les depuis l'app.",
+      "stats": {
+        "centers": "Centres",
+        "levels": "Niveaux",
+        "countries": "Pays"
+      },
+      "panel": "Catalogue",
+      "panelStatus": "Inscriptions suivies",
+      "empty": "Le catalogue arrive bientôt."
+    },
+    "rules": {
+      "eyebrow": "Règles claires",
+      "title": "Des délais que",
+      "titleEnd": "tout le monde connaît.",
+      "live": "En direct",
+      "claim": "minutes pour réserver après la prise",
+      "confirm": "minutes pour confirmer le mail du centre",
+      "payment": "heures pour régler après confirmation",
+      "group": "personnes par compte"
+    },
+    "payments": {
+      "eyebrow": "Paiement",
+      "title": "Tu paies comme d'habitude.",
+      "titleEnd": "Par Mobile Money.",
+      "description": "Pas de carte bancaire. Tu règles l'assistant et la plateforme directement, après la réservation.",
+      "items": [
+        {
+          "name": "MTN Mobile Money",
+          "category": "Paiement"
+        },
+        {
+          "name": "Orange Money",
+          "category": "Paiement"
+        },
+        {
+          "name": "Email",
+          "category": "Codes de connexion"
+        },
+        {
+          "name": "Google",
+          "category": "Connexion"
+        },
+        {
+          "name": "Temps réel",
+          "category": "File des demandes"
+        },
+        {
+          "name": "AES-256",
+          "category": "Chiffrement"
+        },
+        {
+          "name": "Français",
+          "category": "Langue"
+        },
+        {
+          "name": "English",
+          "category": "Langue"
+        }
+      ]
+    },
+    "security": {
+      "eyebrow": "Confiance",
+      "title": "Ta confiance,",
+      "titleEnd": "avant tout.",
+      "description": "La place se réserve sur le site officiel du centre, à ton nom. Exams organise le service, en toute transparence.",
+      "tags": [
+        "AES-256",
+        "Anonymat",
+        "Prix standard",
+        "Liste noire",
+        "Litiges"
+      ],
+      "items": {
+        "encrypted": {
+          "title": "Identifiants chiffrés",
+          "description": "Chiffrés (AES-256) et visibles uniquement par l'assistant qui prend ta demande."
+        },
+        "anonymous": {
+          "title": "Anonymat dans la file",
+          "description": "Les assistants voient le niveau, les modules et le montant. Jamais ton nom ni ton contact."
+        },
+        "erased": {
+          "title": "Effacés à la clôture",
+          "description": "Tes identifiants sont supprimés à la fin de l'opération."
+        },
+        "verified": {
+          "title": "Assistants vérifiés",
+          "description": "Pièce d'identité et compte Mobile Money contrôlés par l'équipe."
+        }
+      }
+    },
+    "assistants": {
+      "eyebrow": "Pour les assistants",
+      "title": "Tu réserves déjà ?",
+      "titleEnd": "Fais-le ici.",
+      "description": "Une file de demandes au prix fixé d'avance, un client à la fois, et toutes les infos prêtes à copier.",
+      "features": [
+        {
+          "title": "Un client à la fois",
+          "description": "Tu te concentres, sans pression."
+        },
+        {
+          "title": "Infos prêtes",
+          "description": "Nom, naissance, identifiants : un geste pour copier."
+        },
+        {
+          "title": "File triée",
+          "description": "Bonus d'abord, puis la plus ancienne."
+        },
+        {
+          "title": "Payé en Mobile Money",
+          "description": "Directement sur ton compte."
+        }
+      ],
+      "tabs": [
+        {
+          "label": "Prendre",
+          "lines": [
+            "File · Goethe B1 · 15 mars",
+            "Complet · publiée il y a 2 min",
+            "Candidat   ● en ligne",
+            "Montant    fixé d'avance",
+            "[ Prendre ]"
+          ]
+        },
+        {
+          "label": "Réserver",
+          "lines": [
+            "Temps pour réserver   18:42",
+            "Email      •••••@gmail.com",
+            "Mot de passe  [ Afficher ]",
+            "Naissance  11/11/2005 · Douala",
+            "→ site du centre"
+          ]
+        },
+        {
+          "label": "Être payé",
+          "lines": [
+            "Réservation effectuée ✓",
+            "Mail confirmé par le candidat",
+            "Paiement   Mobile Money",
+            "→ libéré pour la prochaine demande"
+          ],
+          "soon": true
+        }
+      ],
+      "join": "Devenir assistant",
+      "terms": "Lire les conditions"
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "title": "Tout ce qu'il faut",
+      "titleEnd": "savoir.",
+      "items": [
+        {
+          "q": "Est-ce que la place est réservée chez le centre ?",
+          "a": "Oui. Elle est réservée sur le site officiel du centre, à ton nom. Exams est un service indépendant : il met en relation et suit chaque étape."
+        },
+        {
+          "q": "Combien ça coûte ?",
+          "a": "Le prix du service est standard par niveau et affiché avant de publier. Les frais d'examen se règlent directement au centre."
+        },
+        {
+          "q": "Et si personne ne réserve à temps ?",
+          "a": "L'assistant a {claim} minutes. Sinon, ta demande revient dans la file pour un autre assistant. Tu peux aussi la retirer à tout moment."
+        },
+        {
+          "q": "Mes identifiants sont-ils en sécurité ?",
+          "a": "Ils sont chiffrés et visibles uniquement par l'assistant qui prend ta demande. Tu peux changer ton mot de passe du centre après l'examen."
+        },
+        {
+          "q": "Puis-je inscrire des camarades ?",
+          "a": "Oui, jusqu'à {others} personnes en plus de toi, avec leur accord. Chaque demande est traitée séparément."
+        },
+        {
+          "q": "Comment devenir assistant ?",
+          "a": "Crée ton compte, passe en mode Assistant en haut de l'écran et complète ton profil : téléphone et Mobile Money."
+        }
+      ]
+    },
+    "pricing": {
+      "eyebrow": "Prix",
+      "title": "Un prix standard,",
+      "titleEnd": "affiché d'avance.",
+      "description": "Le même prix pour tout le monde, fixé par niveau. Tu paies après la réservation.",
+      "perPerson": "/ personne",
+      "assistant": "Assistant : {amount}",
+      "platform": "Plateforme : {amount}",
+      "bonus": "Bonus facultatif jusqu'à +{amount}",
+      "modules": "Examen complet ou par module",
+      "cta": "Publier ma demande",
+      "note": "Les frais d'examen ne sont pas inclus : ils se règlent directement au centre.",
+      "empty": "Les prix arrivent bientôt."
+    },
+    "cta": {
+      "title": "Prêt pour ta",
+      "titleEnd": "prochaine session ?",
+      "description": "Crée ton compte en une minute, complète ton profil et publie ta demande avant l'ouverture des inscriptions.",
+      "candidate": "Je suis candidat",
+      "assistant": "Je suis assistant",
+      "free": "Compte gratuit · sans carte bancaire"
+    },
+    "footer": {
+      "tagline": "La réservation de places d'examen, simple et transparente.",
+      "product": "Produit",
+      "roles": "Rôles",
+      "candidates": "Candidats",
+      "legal": "Légal",
+      "terms": "Conditions",
+      "privacy": "Confidentialité",
+      "contact": "Contact",
+      "independent": "Service indépendant, sans lien avec les centres d'examen."
+    }
   }
 }
