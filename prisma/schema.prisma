@@ -167,6 +167,8 @@ model Offer {
   confirmOnlineMin  Int
   confirmOfflineMin Int
   paymentDeadlineH  Int
+  /// Days the centre gives to pay exam fees after booking; 0 hides the reminder.
+  centerFeeDays     Int           @default(0)
   active            Boolean       @default(true)
   sessions          ExamSession[]
   createdAt         DateTime      @default(now())
@@ -251,33 +253,39 @@ model SessionConfirmation {
 
 enum RequestStatus {
   OPEN
+  /// Booked by an assistant; follows its operation.
+  BOOKED
+  /// The candidate got a seat another way.
+  ELSEWHERE
   CANCELLED
 }
 
 /// A booking request for one beneficiary and one session.
 /// Visible in the queue once `publishAt` has passed; the price is frozen at creation.
 model Request {
-  id             String        @id @default(cuid())
-  sessionId      String
-  session        ExamSession   @relation(fields: [sessionId], references: [id], onDelete: Restrict)
-  beneficiaryId  String
-  beneficiary    Beneficiary   @relation(fields: [beneficiaryId], references: [id], onDelete: Restrict)
-  ownerId        String
-  owner          User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  status         RequestStatus @default(OPEN)
-  operations     Operation[]
+  id                    String        @id @default(cuid())
+  sessionId             String
+  session               ExamSession   @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  beneficiaryId         String
+  beneficiary           Beneficiary   @relation(fields: [beneficiaryId], references: [id], onDelete: Restrict)
+  ownerId               String
+  owner                 User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  status                RequestStatus @default(OPEN)
+  /// Set when an assistant could not sign in; cleared when the beneficiary's password changes.
+  credentialsRejectedAt DateTime?
+  operations            Operation[]
   /// Modules booked, in the offer's order; all of them means the full exam.
-  modules        String[]
-  publishAt      DateTime
-  currency       String
-  standardPrice  Int
-  bonus          Int
-  total          Int
-  commission     Int
-  assistantShare Int
-  version        Int           @default(0)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  modules               String[]
+  publishAt             DateTime
+  currency              String
+  standardPrice         Int
+  bonus                 Int
+  total                 Int
+  commission            Int
+  assistantShare        Int
+  version               Int           @default(0)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
 
   @@index([sessionId, status, publishAt])
   @@index([ownerId])
@@ -317,6 +325,10 @@ model Operation {
   claimedAt   DateTime        @default(now())
   /// Book before this time, or the request goes back to the queue.
   deadlineAt  DateTime
+  reservedAt  DateTime?
+  /// Once booked, the assistant is free after this time even if the candidate has not confirmed.
+  releaseAt   DateTime?
+  confirmedAt DateTime?
   endedAt     DateTime?
   version     Int             @default(0)
 
@@ -330,6 +342,10 @@ enum OperationStatus {
   RELEASED
   WITHDRAWN
   EXPIRED
+  INVALID_CREDENTIALS
+  RESERVED
+  CONFIRMED
+  DISPUTED
 }
 
 /// What an assistant needs before taking a request: how to reach them and how they are paid.

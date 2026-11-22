@@ -1,6 +1,7 @@
 /** Public server API of the `realtime` module. */
 export {
   channelsFor,
+  isUserOnline,
   presenceKey,
   publishQueueChange,
   publishUserChange,

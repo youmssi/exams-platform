@@ -64,6 +64,8 @@ const offerFields = z.object({
   confirmOnlineMin: positiveInt,
   confirmOfflineMin: positiveInt,
   paymentDeadlineH: positiveInt,
+  /** Days the centre gives to pay exam fees after booking; 0 hides the reminder. */
+  centerFeeDays: nonNegativeInt,
   active: z.boolean(),
 });
 

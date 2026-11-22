@@ -419,7 +419,8 @@
         "units": {
           "min": "min",
           "h": "h",
-          "percent": "%"
+          "percent": "%",
+          "days": "jours"
         },
         "preview": "Aperçu de la répartition",
         "previewBase": "Sans bonus",
@@ -427,7 +428,9 @@
         "total": "Total payé",
         "assistant": "Assistant",
         "platform": "Plateforme",
-        "newRequestsOnly": "Les changements de prix et de délais ne s'appliquent qu'aux nouvelles demandes. Les demandes déjà publiées gardent leurs conditions."
+        "newRequestsOnly": "Les changements de prix et de délais ne s'appliquent qu'aux nouvelles demandes. Les demandes déjà publiées gardent leurs conditions.",
+        "centerFeeDays": "Délai pour payer le centre",
+        "centerFeeDaysHint": "Jours après la réservation. 0 = aucun rappel."
       },
       "save": "Enregistrer",
       "cancel": "Annuler"
@@ -566,8 +569,13 @@
     "status": {
       "scheduled": "Programmée",
       "published": "Publiée",
-      "cancelled": "Annulée",
-      "inProgress": "En cours"
+      "inProgress": "En cours",
+      "toConfirm": "À confirmer",
+      "booked": "Réservée",
+      "disputed": "Contestée",
+      "credentials": "Identifiants refusés",
+      "elsewhere": "Inscrit autrement",
+      "cancelled": "Annulée"
     },
     "publishesAt": "publiée le {date}",
     "cancel": "Annuler la demande",
@@ -584,7 +592,36 @@
     "withdraw": "Me retirer",
     "withdrawTitle": "Retirer la demande à cet assistant ?",
     "withdrawBody": "Elle revient dans la file pour un autre assistant.",
-    "withdrawn": "Demande remise dans la file."
+    "withdrawn": "Demande remise dans la file.",
+    "fixCredentials": "Corriger le mot de passe",
+    "elsewhere": "Inscrit autrement",
+    "elsewhereTitle": "{name} a obtenu une place autrement ?",
+    "elsewhereBody": "La demande est close et quitte la file.",
+    "closedElsewhere": "Demande close.",
+    "disputedHint": "L'équipe examine la réservation.",
+    "centerFee": {
+      "title": "Paie les frais d'examen au centre",
+      "description": "Avant le {date}, sinon le centre peut annuler l'inscription."
+    },
+    "answer": {
+      "title": "Réservation déclarée",
+      "check": "Vérifie le mail du centre à",
+      "received": "J'ai reçu le mail",
+      "notReceived": "Je n'ai pas reçu le mail",
+      "confirmed": "Merci ! Réservation confirmée.",
+      "disputed": "Signalement envoyé à l'équipe.",
+      "checklistTitle": "Avant de signaler",
+      "checklistHint": "Le mail arrive parfois ailleurs. Vérifie chaque point.",
+      "checks": {
+        "inbox": "J'ai vérifié la boîte de réception de {email}.",
+        "spam": "J'ai vérifié les spams et courriers indésirables.",
+        "tabs": "J'ai vérifié les onglets Promotions, Notifications et Autres.",
+        "account": "Je me suis connecté à mon compte du centre : la réservation n'y apparaît pas.",
+        "warning": "Je comprends qu'un signalement abusif entraîne un avertissement."
+      },
+      "checkAll": "Coche chaque point pour signaler.",
+      "dispute": "Signaler l'absence de mail"
+    }
   },
   "queue": {
     "title": "File des demandes",
@@ -657,7 +694,21 @@
     "releaseBody": "Elle revient dans la file pour un autre assistant.",
     "keep": "Continuer",
     "released": "Demande libérée.",
-    "openSite": "Site du centre"
+    "openSite": "Site du centre",
+    "reserve": "Réservation effectuée",
+    "reserveTitle": "Réservation effectuée ?",
+    "reserveBody": "Le candidat va vérifier le mail du centre. Vous serez libéré dès sa réponse, ou automatiquement.",
+    "notYet": "Pas encore",
+    "reserved": "Réservation déclarée.",
+    "reject": "Identifiants refusés",
+    "rejectTitle": "Le site refuse ces identifiants ?",
+    "rejectBody": "La demande est rendue au candidat pour qu'il corrige son mot de passe. Aucune pénalité.",
+    "rejected": "Demande rendue au candidat.",
+    "waiting": {
+      "title": "En attente du candidat",
+      "description": "Il vérifie le mail du centre.",
+      "freeIn": "Libéré automatiquement dans"
+    }
   },
   "candidateProfile": {
     "title": "Profil candidat",

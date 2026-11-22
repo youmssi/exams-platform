@@ -419,7 +419,8 @@
         "units": {
           "min": "min",
           "h": "h",
-          "percent": "%"
+          "percent": "%",
+          "days": "days"
         },
         "preview": "Split preview",
         "previewBase": "Without bonus",
@@ -427,7 +428,9 @@
         "total": "Total paid",
         "assistant": "Assistant",
         "platform": "Platform",
-        "newRequestsOnly": "Price and time-limit changes only apply to new requests. Published requests keep their terms."
+        "newRequestsOnly": "Price and time-limit changes only apply to new requests. Published requests keep their terms.",
+        "centerFeeDays": "Time to pay the centre",
+        "centerFeeDaysHint": "Days after booking. 0 = no reminder."
       },
       "save": "Save",
       "cancel": "Cancel"
@@ -565,9 +568,14 @@
     "new": "Post a request",
     "status": {
       "scheduled": "Scheduled",
-      "published": "Posted",
-      "cancelled": "Cancelled",
-      "inProgress": "In progress"
+      "published": "Published",
+      "inProgress": "In progress",
+      "toConfirm": "To confirm",
+      "booked": "Booked",
+      "disputed": "Disputed",
+      "credentials": "Credentials refused",
+      "elsewhere": "Booked elsewhere",
+      "cancelled": "Cancelled"
     },
     "publishesAt": "posted on {date}",
     "cancel": "Cancel the request",
@@ -584,7 +592,36 @@
     "withdraw": "Withdraw",
     "withdrawTitle": "Take the request back from this assistant?",
     "withdrawBody": "It goes back to the queue for another assistant.",
-    "withdrawn": "Request back in the queue."
+    "withdrawn": "Request back in the queue.",
+    "fixCredentials": "Fix the password",
+    "elsewhere": "Booked elsewhere",
+    "elsewhereTitle": "Did {name} get a seat another way?",
+    "elsewhereBody": "The request is closed and leaves the queue.",
+    "closedElsewhere": "Request closed.",
+    "disputedHint": "The team is reviewing the booking.",
+    "centerFee": {
+      "title": "Pay the exam fees to the centre",
+      "description": "Before {date}, or the centre may cancel the registration."
+    },
+    "answer": {
+      "title": "Booking declared",
+      "check": "Check the centre's email at",
+      "received": "I received the email",
+      "notReceived": "I didn't receive the email",
+      "confirmed": "Thanks! Booking confirmed.",
+      "disputed": "Report sent to the team.",
+      "checklistTitle": "Before reporting",
+      "checklistHint": "The email sometimes lands elsewhere. Check each point.",
+      "checks": {
+        "inbox": "I checked the inbox of {email}.",
+        "spam": "I checked spam and junk mail.",
+        "tabs": "I checked the Promotions, Updates and Other tabs.",
+        "account": "I signed in to my centre account: the booking isn't there.",
+        "warning": "I understand an abusive report leads to a warning."
+      },
+      "checkAll": "Tick every point to report.",
+      "dispute": "Report the missing email"
+    }
   },
   "queue": {
     "title": "Request queue",
@@ -657,7 +694,21 @@
     "releaseBody": "It goes back to the queue for another assistant.",
     "keep": "Continue",
     "released": "Request released.",
-    "openSite": "Centre website"
+    "openSite": "Centre website",
+    "reserve": "Booking done",
+    "reserveTitle": "Booking done?",
+    "reserveBody": "The candidate will check the centre's email. You are free as soon as they answer, or automatically.",
+    "notYet": "Not yet",
+    "reserved": "Booking declared.",
+    "reject": "Credentials refused",
+    "rejectTitle": "Does the site refuse these credentials?",
+    "rejectBody": "The request goes back to the candidate to fix their password. No penalty.",
+    "rejected": "Request returned to the candidate.",
+    "waiting": {
+      "title": "Waiting for the candidate",
+      "description": "They are checking the centre's email.",
+      "freeIn": "Automatically free in"
+    }
   },
   "candidateProfile": {
     "title": "Candidate profile",
