@@ -8,33 +8,38 @@ import {
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { requireOnboardedUser } from "@/modules/identity";
+import { channels, isRealtimeEnabled } from "@/modules/realtime";
+import { PresenceBeacon, RealtimeProvider } from "@/modules/realtime/client";
 
 async function Shell({ children }: { children: React.ReactNode }) {
   const user = await requireOnboardedUser();
   return (
-    <SidebarProvider>
-      <AppSidebar
-        isAdmin={user.role === "admin"}
-        user={{
-          name: user.name,
-          email: user.email,
-          image: user.image,
-          activeRole: user.activeRole,
-        }}
-      />
-      <SidebarInset>
-        <header className="flex h-14 shrink-0 items-center gap-2 px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator
-            orientation="vertical"
-            className="mr-2 data-vertical:h-4 data-vertical:self-auto"
-          />
-        </header>
-        <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 p-4 pt-0">
-          {children}
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+    <RealtimeProvider channels={isRealtimeEnabled ? channels : null}>
+      {user.activeRole === "candidate" && <PresenceBeacon />}
+      <SidebarProvider>
+        <AppSidebar
+          isAdmin={user.role === "admin"}
+          user={{
+            name: user.name,
+            email: user.email,
+            image: user.image,
+            activeRole: user.activeRole,
+          }}
+        />
+        <SidebarInset>
+          <header className="flex h-14 shrink-0 items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator
+              orientation="vertical"
+              className="mr-2 data-vertical:h-4 data-vertical:self-auto"
+            />
+          </header>
+          <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 p-4 pt-0">
+            {children}
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+    </RealtimeProvider>
   );
 }
 

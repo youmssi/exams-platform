@@ -13,11 +13,10 @@ C'est la réponse au problème n° 2 : une demande prise doit disparaître pour 
 | Partout | Indicateur en ligne / hors ligne pendant une opération |
 
 #### Critères d'acceptation
-- [ ] Canaux Ably `queue:<offerId>` et présence `operation:<id>`, avec des jetons à capacités limitées, émis par le serveur.
+- [ ] Canaux Ably préfixés par environnement (`<env>:queue`, `<env>:presence`), avec des jetons courts à capacités limitées émis par le serveur : le candidat annonce sa présence, l'assistant écoute. Le candidat est identifié par une clé opaque (HMAC), jamais par son identifiant.
 - [ ] Une demande prise ou annulée disparaît en moins d'une seconde chez tous les assistants connectés.
 - [ ] Sans connexion temps réel, la file se rafraîchit au retour sur l'onglet et toutes les 15 s.
-- [ ] Les demandes de comptes en liste noire sont marquées et impossibles à prendre.
-- [ ] La file est masquée à un assistant qui a une opération active.
+- [ ] La file n'est visible qu'en rôle assistant (vérifié côté serveur) et n'affiche jamais les demandes de l'assistant lui-même.
 
 #### Critères d'acceptation UX
 - [ ] Chaque ligne répond à « vaut-elle la peine, et puis-je la prendre ? » : niveau, module, montant pour l'assistant, bonus, ancienneté, présence. [DATA-01, DATA-02]
@@ -35,4 +34,6 @@ C'est la réponse au problème n° 2 : une demande prise doit disparaître pour 
 - `tabs` (sessions), `item` (demandes), `badge` (bonus, présence, liste noire), `empty`, `skeleton`, `alert` (hors ligne), `button`.
 
 #### Hors périmètre
-Prise (EXM-007).
+- Prise, et file masquée pendant une opération active (EXM-007).
+- Comptes en liste noire marqués et non prenables (EXM-010).
+- Signal temps réel quand une demande programmée devient visible : la file se rafraîchit toutes les 60 s en direct (15 s sans connexion temps réel) ; un événement Inngest viendra avec EXM-007.

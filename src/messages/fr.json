@@ -131,7 +131,8 @@
       "catalog": "Catalogue",
       "beneficiaries": "Bénéficiaires",
       "sessions": "Sessions",
-      "requests": "Mes demandes"
+      "requests": "Mes demandes",
+      "queue": "File"
     },
     "signOut": "Se déconnecter",
     "roleLabel": {
@@ -147,9 +148,9 @@
       "action": "Voir les sessions"
     },
     "assistant": {
-      "title": "La file des demandes arrive bientôt",
-      "description": "Vous pourrez prendre des demandes dès l'ouverture de la file.",
-      "action": "Voir les sessions"
+      "title": "Des demandes vous attendent",
+      "description": "Elles arrivent en direct.",
+      "action": "Voir la file"
     }
   },
   "account": {
@@ -563,5 +564,24 @@
       "description": "Choisissez une session pour commencer."
     },
     "fullExam": "Complet"
+  },
+  "queue": {
+    "title": "File des demandes",
+    "live": "En direct.",
+    "polling": "Mise à jour toutes les 15 s.",
+    "offline": {
+      "title": "Hors ligne",
+      "description": "La file n'est plus à jour. Reconnexion en cours…"
+    },
+    "arrivals": "{count, plural, one {# nouvelle demande} other {# nouvelles demandes}}",
+    "empty": {
+      "title": "Aucune demande pour l'instant",
+      "description": "La file se met à jour toute seule."
+    },
+    "online": "En ligne",
+    "away": "Hors ligne",
+    "fullExam": "Complet",
+    "publishedAgo": "Publiée {ago}",
+    "bonus": "Bonus {bonus}"
   }
 }

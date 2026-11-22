@@ -9,6 +9,7 @@ export const routes = {
   beneficiaries: "/beneficiaries",
   sessions: "/sessions",
   requests: "/requests",
+  queue: "/queue",
   terms: "/terms",
   privacy: "/privacy",
   adminCatalog: "/admin/catalog",
