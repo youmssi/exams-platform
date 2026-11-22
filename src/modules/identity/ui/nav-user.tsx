@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/sidebar";
 import { routes } from "@/config/routes";
 import { Link, useRouter } from "@/i18n/navigation";
+import { initials } from "@/shared/initials";
 import { authClient } from "../auth-client";
 import type { Role } from "../schemas";
 
@@ -29,14 +30,6 @@ export type NavUserData = {
   image?: string | null;
   activeRole: Role;
 };
-
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
-}
 
 function UserSummary({
   user,

@@ -29,7 +29,8 @@
     "timeZone": "Unknown time zone, for example Africa/Douala.",
     "url": "Enter a full web address, for example https://…",
     "modules": "Enter at least one module.",
-    "bonusCapStep": "The cap must be a multiple of the bonus step."
+    "bonusCapStep": "The cap must be a multiple of the bonus step.",
+    "consentRequired": "Confirm that this person agreed."
   },
   "auth": {
     "title": "Sign in to Exams",
@@ -119,7 +120,8 @@
       "account": "My account",
       "main": "Navigation",
       "admin": "Administration",
-      "catalog": "Catalogue"
+      "catalog": "Catalogue",
+      "beneficiaries": "Beneficiaries"
     },
     "signOut": "Sign out",
     "roleLabel": {
@@ -325,5 +327,42 @@
     "title": "Book your exam seat, simply.",
     "subtitle": "Standard price · real-time tracking · confirmed payment",
     "points": "Language exams · B1 · B2"
+  },
+  "form": {
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+  },
+  "beneficiaries": {
+    "title": "Beneficiaries",
+    "subtitle": "The people you book for: you and up to {max} people in total. Entered once, ready on the day.",
+    "add": "Add a person",
+    "addTitle": "Add a person",
+    "addDescription": "A friend you book for. You manage their request and payment.",
+    "editTitle": "Edit {name}",
+    "save": "Save",
+    "saved": "Saved.",
+    "self": "Me",
+    "noName": "Name to complete",
+    "status": {
+      "ready": "Credentials saved",
+      "missingPassword": "Centre password missing"
+    },
+    "limitReached": "Limit of 5 people reached. Remove one to add another.",
+    "removeTitle": "Remove {name}?",
+    "removeBody": "Their details and exam-centre credentials will be deleted. This cannot be undone.",
+    "remove": "Remove",
+    "removed": "{name} was removed.",
+    "cancel": "Cancel",
+    "privacy": "The password is encrypted. Only the assistant who takes the request sees it, during the booking, then it is deleted.",
+    "fields": {
+      "fullName": "Full name",
+      "fullNameHint": "As it appears on the ID.",
+      "email": "Exam-centre account email",
+      "emailHint": "The address used to sign in to the centre's website (e.g. Goethe).",
+      "password": "Exam-centre account password",
+      "passwordHint": "Optional now, required to post a request.",
+      "passwordSaved": "A password is saved. Leave empty to keep it.",
+      "consent": "This person agreed that I manage their details and book for them."
+    }
   }
 }

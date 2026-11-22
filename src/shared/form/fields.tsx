@@ -1,6 +1,8 @@
 "use client";
 
-import type { ComponentProps, ReactNode } from "react";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { type ComponentProps, type ReactNode, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Field,
@@ -16,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
+  InputGroupButton,
   InputGroupInput,
   InputGroupText,
 } from "@/components/ui/input-group";
@@ -273,6 +276,52 @@ export function SwitchField({
         checked={field.state.value as boolean}
         onCheckedChange={(checked) => field.handleChange(checked)}
       />
+    </Field>
+  );
+}
+
+type PasswordFieldProps = {
+  label: ReactNode;
+  description?: ReactNode;
+  autoComplete: "current-password" | "new-password" | "off";
+};
+
+/** Password input with a show/hide toggle; paste and password managers stay allowed. */
+export function PasswordField({
+  label,
+  description,
+  autoComplete,
+}: PasswordFieldProps) {
+  const { field, isInvalid, errors } = useFieldErrors();
+  const t = useTranslations("form");
+  const [visible, setVisible] = useState(false);
+  return (
+    <Field data-invalid={isInvalid}>
+      <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+      <InputGroup>
+        <InputGroupInput
+          id={field.name}
+          name={field.name}
+          type={visible ? "text" : "password"}
+          autoComplete={autoComplete}
+          value={field.state.value as string}
+          onBlur={field.handleBlur}
+          onChange={(event) => field.handleChange(event.target.value)}
+          aria-invalid={isInvalid}
+        />
+        <InputGroupAddon align="inline-end">
+          <InputGroupButton
+            size="icon-xs"
+            aria-label={visible ? t("hidePassword") : t("showPassword")}
+            aria-pressed={visible}
+            onClick={() => setVisible((value) => !value)}
+          >
+            {visible ? <EyeOffIcon /> : <EyeIcon />}
+          </InputGroupButton>
+        </InputGroupAddon>
+      </InputGroup>
+      {description && <FieldDescription>{description}</FieldDescription>}
+      <FieldError errors={errors} />
     </Field>
   );
 }

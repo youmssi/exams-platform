@@ -85,9 +85,8 @@ function StartSetup({ onStarted }: { onStarted: (setup: Setup) => void }) {
       <FieldGroup>
         <form.AppField name="password">
           {(field) => (
-            <field.TextField
+            <field.PasswordField
               label={t("password")}
-              type="password"
               autoComplete="current-password"
               description={
                 <Link href={routes.resetPassword}>{t("noPassword")}</Link>

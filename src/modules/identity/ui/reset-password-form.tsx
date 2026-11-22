@@ -74,10 +74,9 @@ export function ResetPasswordForm() {
             </resetForm.AppField>
             <resetForm.AppField name="password">
               {(field) => (
-                <field.TextField
+                <field.PasswordField
                   label={t("newPassword")}
                   description={t("passwordHint")}
-                  type="password"
                   autoComplete="new-password"
                 />
               )}
