@@ -3,6 +3,7 @@
 import { ArrowRightIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { BlurText } from "@/components/react-bits/blur-text";
 import { ShinyText } from "@/components/react-bits/shiny-text";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
@@ -83,7 +84,15 @@ export function HeroSection({
         <h1
           className={`mb-12 font-display text-[clamp(3rem,10vw,9rem)] leading-[0.9] tracking-tight duration-1000 ${reveal(inView)}`}
         >
-          <span className="block">{t("line1")}</span>
+          <BlurText
+            text={t("line1")}
+            className="block"
+            delay={45}
+            stepDuration={0.3}
+            blur={8}
+            distance={16}
+            trigger="load"
+          />
           <span className="block">
             {t("line2")}{" "}
             <span className="relative inline-block" aria-live="polite">
