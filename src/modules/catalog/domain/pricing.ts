@@ -46,3 +46,13 @@ export function isValidBonus(
     bonus % settings.bonusStep === 0
   );
 }
+
+/** Bonus values a candidate can pick, from 0 to the cap. */
+export function bonusOptions(
+  settings: Pick<PricingSettings, "bonusStep" | "bonusCap">,
+) {
+  return Array.from(
+    { length: Math.floor(settings.bonusCap / settings.bonusStep) + 1 },
+    (_, index) => index * settings.bonusStep,
+  );
+}

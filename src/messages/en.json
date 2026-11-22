@@ -30,7 +30,12 @@
     "url": "Enter a full web address, for example https://…",
     "modules": "Enter at least one module.",
     "bonusCapStep": "The cap must be a multiple of the bonus step.",
-    "consentRequired": "Confirm that this person agreed."
+    "consentRequired": "Confirm that this person agreed.",
+    "date": "Pick a date.",
+    "dateTime": "Pick a date and time.",
+    "opensAfterExam": "Registrations open before the exam date.",
+    "tooShort": "Add a few details.",
+    "pickBeneficiary": "Pick at least one person."
   },
   "auth": {
     "title": "Sign in to Exams",
@@ -121,7 +126,9 @@
       "main": "Navigation",
       "admin": "Administration",
       "catalog": "Catalogue",
-      "beneficiaries": "Beneficiaries"
+      "beneficiaries": "Beneficiaries",
+      "sessions": "Sessions",
+      "requests": "My requests"
     },
     "signOut": "Sign out",
     "roleLabel": {
@@ -132,12 +139,14 @@
   "homePage": {
     "title": "Hello {name}",
     "candidate": {
-      "title": "Your first request is coming soon",
-      "description": "Requests open together with the exam session catalogue."
+      "title": "Post your request",
+      "description": "Pick the session and the person, and you're done: it goes out when registrations open.",
+      "action": "See sessions"
     },
     "assistant": {
       "title": "The request queue is coming soon",
-      "description": "You will be able to take requests as soon as the queue opens."
+      "description": "You will be able to take requests as soon as the queue opens.",
+      "action": "See sessions"
     }
   },
   "account": {
@@ -363,6 +372,97 @@
       "passwordHint": "Optional now, required to post a request.",
       "passwordSaved": "A password is saved. Leave empty to keep it.",
       "consent": "This person agreed that I manage their details and book for them."
+    },
+    "hasOpenRequest": "This person has an open request. Cancel it first in “My requests”."
+  },
+  "sessions": {
+    "title": "Exam sessions",
+    "subtitle": "Pick a session to post your request. It goes out on its own when registrations open.",
+    "create": "Add a session",
+    "requestAddition": "Ask for a new centre or level",
+    "missingCentre": "Your centre or level is missing? Ask for it.",
+    "verified": "Confirmed",
+    "unverified": "Unverified · {count}/3 confirmations",
+    "confirm": "I confirm this date",
+    "confirmed": "Thanks, confirmation saved.",
+    "publish": "Post a request",
+    "examOn": "Exam on {date}",
+    "opensAt": "Registrations on {date}",
+    "empty": {
+      "title": "No upcoming session",
+      "description": "Add the next date published by the centre, or ask for a new centre."
+    },
+    "dialogs": {
+      "create": "Add a session",
+      "catalogRequest": "Ask for an addition",
+      "publish": "Post a request"
+    },
+    "form": {
+      "offer": "Centre and level",
+      "examDate": "Exam date",
+      "opensAt": "Registrations open",
+      "opensAtHint": "Centre local time ({zone}).",
+      "officialUrl": "Official link (optional)",
+      "officialUrlHint": "The centre's page announcing this date.",
+      "submit": "Add the session",
+      "created": "Session added.",
+      "existing": "This session already exists: you can post right away."
+    },
+    "catalogRequest": {
+      "kind": "What is missing?",
+      "kinds": {
+        "COUNTRY": "A country",
+        "CENTER": "A centre",
+        "LEVEL": "A level",
+        "OTHER": "Something else"
+      },
+      "details": "Details",
+      "detailsHint": "For example: Goethe-Institut Douala, level A2, first date in March.",
+      "officialUrl": "Official link (optional)",
+      "submit": "Send the request",
+      "sent": "Request sent. The team will add it to the catalogue."
+    }
+  },
+  "publish": {
+    "who": "For whom?",
+    "missingPassword": "Add the centre password",
+    "addBonus": "Add a bonus (optional)",
+    "bonusSet": "Bonus: {bonus}",
+    "bonusHint": "A bonus moves your request up the queue. It is capped.",
+    "noBonus": "No bonus",
+    "summary": "Total per person: {total}",
+    "split": "Assistant {assistant} · Platform {platform}",
+    "totalFor": "{count} people: {total} in total",
+    "payLater": "You only pay after the booking, once the centre's confirmation email arrives.",
+    "submit": "{count, plural, one {Post the request — {total}} other {Post # requests — {total}}}",
+    "schedule": "{count, plural, one {Schedule for {date}} other {Schedule # requests for {date}}}",
+    "pickSomeone": "Pick at least one person",
+    "publishedToast": "{count, plural, one {Request posted.} other {# requests posted.}}",
+    "scheduledToast": "{count, plural, one {Request scheduled.} other {# requests scheduled.}}",
+    "errors": {
+      "alreadyRequested": "A request is already open for this person and session.",
+      "missingPassword": "A person's centre password is missing.",
+      "sessionPast": "This session is over.",
+      "invalidBonus": "This bonus is not allowed."
+    }
+  },
+  "myRequests": {
+    "title": "My requests",
+    "new": "Post a request",
+    "status": {
+      "scheduled": "Scheduled",
+      "published": "Posted",
+      "cancelled": "Cancelled"
+    },
+    "publishesAt": "posted on {date}",
+    "cancel": "Cancel the request",
+    "cancelTitle": "Cancel {name}'s request?",
+    "cancelBody": "It disappears from the queue. You can post a new one.",
+    "keep": "Keep",
+    "cancelled": "Request cancelled.",
+    "empty": {
+      "title": "No request yet",
+      "description": "Pick a session and post your request: it goes out when registrations open."
     }
   }
 }

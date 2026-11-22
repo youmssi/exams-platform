@@ -36,6 +36,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import { useFieldErrors } from "./use-field-errors";
 
 type TextFieldProps = Omit<
@@ -320,6 +321,32 @@ export function PasswordField({
           </InputGroupButton>
         </InputGroupAddon>
       </InputGroup>
+      {description && <FieldDescription>{description}</FieldDescription>}
+      <FieldError errors={errors} />
+    </Field>
+  );
+}
+
+export function TextareaField({
+  label,
+  description,
+}: {
+  label: ReactNode;
+  description?: ReactNode;
+}) {
+  const { field, isInvalid, errors } = useFieldErrors();
+  return (
+    <Field data-invalid={isInvalid}>
+      <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+      <Textarea
+        id={field.name}
+        name={field.name}
+        rows={4}
+        value={field.state.value as string}
+        onBlur={field.handleBlur}
+        onChange={(event) => field.handleChange(event.target.value)}
+        aria-invalid={isInvalid}
+      />
       {description && <FieldDescription>{description}</FieldDescription>}
       <FieldError errors={errors} />
     </Field>
