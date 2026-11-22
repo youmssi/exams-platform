@@ -9,6 +9,7 @@ import {
   SparklesIcon,
   UsersRoundIcon,
 } from "lucide-react";
+import { connection } from "next/server";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -32,6 +33,8 @@ type Copy = Awaited<ReturnType<typeof getTranslations<"landing">>>;
 type PricingOffer = Awaited<ReturnType<typeof listPublicPricing>>[number];
 
 export async function LandingPage() {
+  await connection();
+
   const [t, offers, session, home] = await Promise.all([
     getTranslations("landing"),
     listPublicPricing(),
