@@ -1,3 +1,4 @@
+import { assistantsRouter } from "@/modules/assistants";
 import { beneficiariesRouter } from "@/modules/beneficiaries";
 import { catalogRouter } from "@/modules/catalog";
 import { identityRouter } from "@/modules/identity";
@@ -11,6 +12,7 @@ import { createTRPCRouter } from "../init";
  * and is mounted here under its own namespace.
  */
 export const appRouter = createTRPCRouter({
+  assistants: assistantsRouter,
   beneficiaries: beneficiariesRouter,
   catalog: catalogRouter,
   identity: identityRouter,

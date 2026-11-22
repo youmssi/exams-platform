@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { FieldGroup } from "@/components/ui/field";
 import { useAppForm } from "@/shared/form";
 import { useTRPC } from "@/trpc/client";
-import { countryInput } from "../schemas";
+import { countryFormSchema, toCountryForm, toCountryInput } from "../schemas";
 import type { AdminCountry } from "./types";
 import { useCatalogSaveHandlers } from "./use-catalog-save";
 
@@ -23,15 +23,24 @@ export function CountryForm({
   );
 
   const form = useAppForm({
-    defaultValues: {
-      code: country?.code ?? "",
-      currency: country?.currency ?? "",
-      timeZone: country?.timeZone ?? "",
-      active: country?.active ?? true,
-    },
-    validators: { onSubmit: countryInput },
+    defaultValues: country
+      ? toCountryForm({
+          code: country.code,
+          currency: country.currency,
+          timeZone: country.timeZone,
+          mobileMoneyOperators: country.mobileMoneyOperators,
+          active: country.active,
+        })
+      : {
+          code: "",
+          currency: "",
+          timeZone: "",
+          mobileMoneyOperators: "",
+          active: true,
+        },
+    validators: { onSubmit: countryFormSchema },
     onSubmit: ({ value }) =>
-      save.mutateAsync({ id: country?.id, data: countryInput.parse(value) }),
+      save.mutateAsync({ id: country?.id, data: toCountryInput(value) }),
   });
 
   return (
@@ -66,6 +75,14 @@ export function CountryForm({
             <field.TextField
               label={t("country.timeZone")}
               description={t("country.timeZoneHint")}
+            />
+          )}
+        </form.AppField>
+        <form.AppField name="mobileMoneyOperators">
+          {(field) => (
+            <field.TextField
+              label={t("country.operators")}
+              description={t("country.operatorsHint")}
             />
           )}
         </form.AppField>

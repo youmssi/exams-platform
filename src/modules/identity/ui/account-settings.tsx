@@ -3,7 +3,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MonitorSmartphoneIcon } from "lucide-react";
 import { useFormatter, useLocale, useTranslations } from "next-intl";
-import { useState } from "react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -26,13 +25,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldLabel,
-  FieldTitle,
-} from "@/components/ui/field";
-import {
   Item,
   ItemActions,
   ItemContent,
@@ -41,87 +33,37 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Skeleton } from "@/components/ui/skeleton";
 import { routes } from "@/config/routes";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { useTRPC } from "@/trpc/client";
 import { authClient } from "../auth-client";
 import { deviceLabel } from "../domain/device";
-import { ROLES, type Role } from "../schemas";
 import { TwoFactorCard } from "./two-factor-card";
 
 type AccountSettingsProps = {
-  activeRole: Role;
+  /** Per-role profiles, composed by the page from their modules. */
+  profiles: React.ReactNode;
   /** Admins manage their second factor here. */
   admin?: { twoFactorEnabled: boolean };
 };
 
-export function AccountSettings({ activeRole, admin }: AccountSettingsProps) {
+export function AccountSettings({ profiles, admin }: AccountSettingsProps) {
   const t = useTranslations("account");
   return (
     <div className="flex flex-col gap-6">
       <h1 className="font-semibold text-2xl">{t("title")}</h1>
+      <section className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
+          <h2 className="font-medium">{t("profiles")}</h2>
+          <p className="text-muted-foreground text-sm">{t("profilesHint")}</p>
+        </div>
+        <ItemGroup>{profiles}</ItemGroup>
+      </section>
       {admin && <TwoFactorCard enabled={admin.twoFactorEnabled} />}
-      <RoleCard activeRole={activeRole} />
       <LanguageCard />
       <DevicesCard />
     </div>
-  );
-}
-
-function RoleCard({ activeRole }: { activeRole: Role }) {
-  const t = useTranslations("account");
-  const tWelcome = useTranslations("welcome");
-  const tCommon = useTranslations("common");
-  const trpc = useTRPC();
-  const router = useRouter();
-  const [role, setRole] = useState(activeRole);
-  const save = useMutation(
-    trpc.identity.setActiveRole.mutationOptions({
-      onSuccess: () => {
-        toast.success(t("roleSaved"));
-        router.refresh();
-      },
-      onError: () => {
-        setRole(activeRole);
-        toast.error(tCommon("error"));
-      },
-    }),
-  );
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("activeRole")}</CardTitle>
-        <CardDescription>{t("activeRoleHint")}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <RadioGroup
-          value={role}
-          onValueChange={(value) => {
-            setRole(value as Role);
-            save.mutate({ role: value as Role });
-          }}
-          disabled={save.isPending}
-        >
-          {ROLES.map((value) => (
-            <FieldLabel key={value} htmlFor={`role-${value}`}>
-              <Field orientation="horizontal">
-                <RadioGroupItem value={value} id={`role-${value}`} />
-                <FieldContent>
-                  <FieldTitle>{tWelcome(`roles.${value}.title`)}</FieldTitle>
-                  <FieldDescription>
-                    {tWelcome(`roles.${value}.description`)}
-                  </FieldDescription>
-                </FieldContent>
-              </Field>
-            </FieldLabel>
-          ))}
-        </RadioGroup>
-      </CardContent>
-    </Card>
   );
 }
 

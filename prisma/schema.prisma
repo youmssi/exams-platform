@@ -35,6 +35,7 @@ model User {
   confirmations    SessionConfirmation[]
   requests         Request[]
   operations       Operation[]
+  assistantProfile AssistantProfile?
   catalogRequests  CatalogRequest[]
 
   @@unique([email])
@@ -118,14 +119,17 @@ model RateLimit {
 
 /// A country where exams are booked. Its name is localized from `code` (ISO 3166-1 alpha-2).
 model Country {
-  id        String   @id @default(cuid())
-  code      String   @unique
-  currency  String
-  timeZone  String
-  active    Boolean  @default(true)
-  centers   Center[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                   String             @id @default(cuid())
+  code                 String             @unique
+  currency             String
+  timeZone             String
+  /// Mobile Money operators assistants can be paid with in this country.
+  mobileMoneyOperators String[]
+  active               Boolean            @default(true)
+  centers              Center[]
+  assistants           AssistantProfile[]
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
 
   @@map("country")
 }
@@ -326,4 +330,22 @@ enum OperationStatus {
   RELEASED
   WITHDRAWN
   EXPIRED
+}
+
+/// What an assistant needs before taking a request: how to reach them and how they are paid.
+model AssistantProfile {
+  userId     String   @id
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  countryId  String
+  country    Country  @relation(fields: [countryId], references: [id], onDelete: Restrict)
+  phone      String
+  /// One of the country's `mobileMoneyOperators`.
+  operator   String
+  momoNumber String
+  /// Account holder name, as the Mobile Money app shows it.
+  momoName   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("assistant_profile")
 }

@@ -1,5 +1,10 @@
 "use client";
 
+/*
+ * From React Bits (https://reactbits.dev/text-animations/blur-text), via the shadcn registry.
+ * Copyright (c) 2026 David Haz. MIT + Commons Clause License Condition v1.0.
+ */
+
 import {
   type Easing,
   MotionConfig,
@@ -285,7 +290,7 @@ const buildRanks = (
 const startPhase = (trigger: BlurTextTrigger): Phase =>
   trigger === "load" ? "in" : "from";
 
-const BlurText = ({
+export const BlurText = ({
   text = "",
   delay = 200,
   className = "",
@@ -517,4 +522,3 @@ const BlurText = ({
   );
 };
 
-export default BlurText;
