@@ -187,6 +187,7 @@ function EmailStep({
         <FieldDescription className="text-center">
           {t.rich("terms", {
             terms: (chunks) => <Link href={routes.terms}>{chunks}</Link>,
+            privacy: (chunks) => <Link href={routes.privacy}>{chunks}</Link>,
           })}
         </FieldDescription>
       </FieldGroup>

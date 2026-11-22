@@ -94,6 +94,7 @@ Le skill est installé dans `.claude/skills/ux-expert` (v1.1.0) et le serveur MC
 - **Avant chaque release** : porte de lancement (Go / Conditional Go / No-Go).
 - Citer les identifiants de critères (ex. `FORM-09`) dans les stories et les PR.
 - Principe directeur : **l'expérience la plus simple possible**. Chaque écran a un seul objectif clair et une seule action principale.
+- **Peu de texte** : un titre, au plus une phrase courte sous le titre, des aides de champ de quelques mots. Si une explication est longue, elle va dans l'aide (FAQ), pas sur l'écran.
 
 ## Commandes
 

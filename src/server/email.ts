@@ -1,4 +1,5 @@
 import "server-only";
+import { render } from "@react-email/components";
 import type { ReactElement } from "react";
 import { Resend } from "resend";
 import { env } from "./env";
@@ -9,15 +10,19 @@ type Email = { to: string; subject: string; react: ReactElement };
 
 /**
  * Single entry point for outgoing email.
+ * The template is rendered here (HTML + plain text) rather than by the Resend SDK,
+ * whose lazy renderer is not resolvable once bundled.
  * Without an API key (local development), the email is logged instead.
  */
 export async function sendEmail({ to, subject, react }: Email) {
+  const [html, text] = await Promise.all([
+    render(react),
+    render(react, { plainText: true }),
+  ]);
+
   if (!resend) {
-    if (env.NODE_ENV === "production") {
+    if (env.NODE_ENV === "production")
       throw new Error("RESEND_API_KEY is required in production");
-    }
-    const { render } = await import("@react-email/components");
-    const text = await render(react, { plainText: true });
     console.info(`[email] to=${to} subject="${subject}"\n${text}`);
     return;
   }
@@ -26,7 +31,8 @@ export async function sendEmail({ to, subject, react }: Email) {
     from: env.EMAIL_FROM,
     to,
     subject,
-    react,
+    html,
+    text,
   });
   if (error) throw new Error(`Email not sent: ${error.message}`);
 }

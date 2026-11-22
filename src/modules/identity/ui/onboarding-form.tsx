@@ -75,7 +75,6 @@ export function OnboardingForm({ defaultName }: { defaultName: string }) {
             />
           )}
         </form.AppField>
-        <FieldDescription>{t("roleHint")}</FieldDescription>
         <FieldSet>
           <FieldLegend variant="label">{t("termsTitle")}</FieldLegend>
           <ul className="list-disc space-y-1 ps-5 text-muted-foreground text-sm">

@@ -51,19 +51,23 @@ export function SessionsBoard() {
     trpc.catalog.sessions.queryOptions(),
   );
   const [dialog, setDialog] = useState<Dialog>(null);
+  const [created, setCreated] = useState<string | null>(null);
   const close = () => setDialog(null);
 
-  const openPublish = (sessionId: string) => {
-    const session = sessions.find((candidate) => candidate.id === sessionId);
-    setDialog(session ? { kind: "publish", session } : null);
-  };
+  // After a session is created, publishing for it is the obvious next step.
+  const createdSession =
+    created && sessions.find((session) => session.id === created);
+  if (createdSession) {
+    setCreated(null);
+    setDialog({ kind: "publish", session: createdSession });
+  }
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="font-semibold text-2xl">{t("title")}</h1>
-          <p className="text-muted-foreground">{t("subtitle")}</p>
+          <p className="text-muted-foreground text-sm">{t("subtitle")}</p>
         </div>
         <Button variant="outline" onClick={() => setDialog({ kind: "create" })}>
           <CalendarPlusIcon />
@@ -117,7 +121,7 @@ export function SessionsBoard() {
         onOpenChange={(open) => !open && close()}
         title={dialog ? t(`dialogs.${dialog.kind}`) : ""}
       >
-        {dialog?.kind === "create" && <SessionForm onDone={openPublish} />}
+        {dialog?.kind === "create" && <SessionForm onDone={setCreated} />}
         {dialog?.kind === "catalogRequest" && (
           <CatalogRequestForm onDone={close} />
         )}
@@ -157,8 +161,10 @@ function SessionItem({
   return (
     <Item variant="outline">
       <ItemContent className="min-w-0">
-        <ItemTitle className="flex-wrap">
+        <ItemTitle>
           {session.offer.center.name} · {session.offer.level}
+        </ItemTitle>
+        <div>
           {session.verifiedAt ? (
             <Badge variant="secondary">{t("verified")}</Badge>
           ) : (
@@ -166,11 +172,11 @@ function SessionItem({
               {t("unverified", { count: session.confirmationCount })}
             </Badge>
           )}
-        </ItemTitle>
-        <ItemDescription>
+        </div>
+        <ItemDescription className="line-clamp-none">
           {t("examOn", {
             date: format.dateTime(new Date(session.examDate), {
-              dateStyle: "full",
+              dateStyle: "long",
               timeZone: "UTC",
             }),
           })}
@@ -185,7 +191,7 @@ function SessionItem({
           })}
         </ItemDescription>
       </ItemContent>
-      <ItemActions className="flex-wrap">
+      <ItemActions className="w-full justify-end sm:w-auto">
         {session.canConfirm && (
           <Button
             variant="ghost"
