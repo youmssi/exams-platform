@@ -14,6 +14,7 @@ async function Shell({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <AppSidebar
+        isAdmin={user.role === "admin"}
         user={{
           name: user.name,
           email: user.email,
@@ -29,7 +30,7 @@ async function Shell({ children }: { children: React.ReactNode }) {
             className="mr-2 data-vertical:h-4 data-vertical:self-auto"
           />
         </header>
-        <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 p-4 pt-0">
+        <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 p-4 pt-0">
           {children}
         </div>
       </SidebarInset>

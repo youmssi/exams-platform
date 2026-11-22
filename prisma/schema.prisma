@@ -36,16 +36,17 @@ model User {
 }
 
 model Session {
-  id             String   @id
+  id             String    @id
   expiresAt      DateTime
   token          String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
   ipAddress      String?
   userAgent      String?
   userId         String
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   impersonatedBy String?
+  secondFactorAt DateTime?
 
   @@unique([token])
   @@index([userId])
@@ -107,4 +108,74 @@ model RateLimit {
 
   @@unique([key])
   @@map("rateLimit")
+}
+
+/// A country where exams are booked. Its name is localized from `code` (ISO 3166-1 alpha-2).
+model Country {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  currency  String
+  timeZone  String
+  active    Boolean  @default(true)
+  centers   Center[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("country")
+}
+
+model Center {
+  id          String   @id @default(cuid())
+  countryId   String
+  country     Country  @relation(fields: [countryId], references: [id], onDelete: Restrict)
+  name        String
+  city        String
+  officialUrl String
+  active      Boolean  @default(true)
+  offers      Offer[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([countryId, name])
+  @@map("center")
+}
+
+/// A level offered by a center (e.g. Goethe Yaoundé B1) with its economic settings.
+/// Amounts are integers in the country's currency unit; the commission rate is in basis points.
+model Offer {
+  id                String   @id @default(cuid())
+  centerId          String
+  center            Center   @relation(fields: [centerId], references: [id], onDelete: Restrict)
+  level             String
+  modules           String[]
+  standardPrice     Int
+  commissionRateBp  Int
+  commissionMin     Int
+  bonusStep         Int
+  bonusCap          Int
+  claimTimeoutMin   Int
+  confirmOnlineMin  Int
+  confirmOfflineMin Int
+  paymentDeadlineH  Int
+  active            Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([centerId, level])
+  @@map("offer")
+}
+
+/// Every admin action, with the state before and after.
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String
+  action     String
+  targetType String
+  targetId   String
+  before     Json?
+  after      Json?
+  createdAt  DateTime @default(now())
+
+  @@index([targetType, targetId])
+  @@map("audit_log")
 }
