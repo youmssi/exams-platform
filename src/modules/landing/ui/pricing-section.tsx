@@ -41,7 +41,9 @@ export function PricingSection({ offers }: { offers: PublicOffer[] }) {
         {offers.length === 0 ? (
           <p className="text-muted-foreground">{t("empty")}</p>
         ) : (
-          <div className="grid gap-px bg-foreground/10 md:grid-cols-2 lg:grid-cols-3">
+          <div
+            className={`grid gap-px bg-foreground/10 md:grid-cols-2 ${offers.length >= 3 ? "lg:grid-cols-3" : ""}`}
+          >
             {offers.map((offer, index) => {
               const currency = offer.center.country.currency;
               return (
@@ -68,8 +70,8 @@ export function PricingSection({ offers }: { offers: PublicOffer[] }) {
                       {offer.center.name} · {offer.center.city}
                     </p>
                   </div>
-                  <div className="mb-8 flex items-baseline gap-2 border-foreground/10 border-b pb-8">
-                    <span className="font-display text-5xl text-foreground lg:text-6xl">
+                  <div className="mb-8 flex flex-wrap items-baseline gap-x-2 border-foreground/10 border-b pb-8">
+                    <span className="whitespace-nowrap font-display text-5xl text-foreground lg:text-6xl">
                       {money(offer.price.total, currency)}
                     </span>
                     <span className="text-muted-foreground">

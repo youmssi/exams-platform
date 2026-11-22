@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { Link } from "@/i18n/navigation";
 import { AnimatedSphere } from "./animations";
+import { palette } from "./palette";
 import { reveal, useInView } from "./use-in-view";
 
 type Fact = { value: string; label: string; tag: string };
@@ -71,8 +72,8 @@ export function HeroSection({
             <span className="h-px w-8 bg-foreground/30" />
             <ShinyText
               text={t("eyebrow")}
-              color="var(--muted-foreground)"
-              shineColor="var(--foreground)"
+              color={palette.muted}
+              shineColor={palette.foreground}
               speed={3}
               delay={2}
             />
