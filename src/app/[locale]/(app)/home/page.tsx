@@ -28,7 +28,17 @@ async function Home() {
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button render={<Link href={routes.sessions} />}>
+          <Button
+            render={
+              <Link
+                href={
+                  user.activeRole === "assistant"
+                    ? routes.queue
+                    : routes.sessions
+                }
+              />
+            }
+          >
             {t(`${user.activeRole}.action`)}
           </Button>
         </EmptyContent>

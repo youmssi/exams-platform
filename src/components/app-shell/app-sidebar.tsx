@@ -5,6 +5,7 @@ import {
   HomeIcon,
   LibraryIcon,
   ListChecksIcon,
+  RadioTowerIcon,
   UsersIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -25,17 +26,26 @@ import { routes } from "@/config/routes";
 import { Link, usePathname } from "@/i18n/navigation";
 import { NavUser, type NavUserData } from "@/modules/identity/client";
 
-const NAV = [
-  { href: routes.home, key: "home", Icon: HomeIcon },
-  { href: routes.sessions, key: "sessions", Icon: CalendarDaysIcon },
-  { href: routes.requests, key: "requests", Icon: ListChecksIcon },
-  { href: routes.beneficiaries, key: "beneficiaries", Icon: UsersIcon },
-] as const;
+/** Each role sees only its own work. */
+const NAV = {
+  candidate: [
+    { href: routes.home, key: "home", Icon: HomeIcon },
+    { href: routes.sessions, key: "sessions", Icon: CalendarDaysIcon },
+    { href: routes.requests, key: "requests", Icon: ListChecksIcon },
+    { href: routes.beneficiaries, key: "beneficiaries", Icon: UsersIcon },
+  ],
+  assistant: [
+    { href: routes.home, key: "home", Icon: HomeIcon },
+    { href: routes.queue, key: "queue", Icon: RadioTowerIcon },
+  ],
+} as const;
 const ADMIN_NAV = [
   { href: routes.adminCatalog, key: "catalog", Icon: LibraryIcon },
 ] as const;
 
-type NavEntry = (typeof NAV)[number] | (typeof ADMIN_NAV)[number];
+type NavEntry =
+  | (typeof NAV)[keyof typeof NAV][number]
+  | (typeof ADMIN_NAV)[number];
 
 export function AppSidebar({
   user,
@@ -62,7 +72,11 @@ export function AppSidebar({
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>{t("main")}</SidebarGroupLabel>
-          <NavMenu entries={NAV} pathname={pathname} label={t} />
+          <NavMenu
+            entries={NAV[user.activeRole]}
+            pathname={pathname}
+            label={t}
+          />
         </SidebarGroup>
         {isAdmin && (
           <SidebarGroup>
