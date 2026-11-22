@@ -1,14 +1,21 @@
 "use client";
 
-import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { WifiOffIcon } from "lucide-react";
 import { useFormatter, useNow, useTranslations } from "next-intl";
 import { useState } from "react";
+import { toast } from "sonner";
+import { PresenceBadge } from "@/components/presence-badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
+  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyTitle,
@@ -21,8 +28,12 @@ import {
   ItemGroup,
   ItemTitle,
 } from "@/components/ui/item";
+import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { QueueChannel, type QueueLiveState } from "@/modules/realtime/client";
+import { routes } from "@/config/routes";
+import { Link, useRouter } from "@/i18n/navigation";
+import { type LiveState, LiveUpdates } from "@/modules/realtime/client";
+import { track } from "@/shared/analytics";
 import { useTRPC } from "@/trpc/client";
 import type { QueueRequest } from "./types";
 
@@ -37,16 +48,18 @@ export function QueueBoard() {
     queryClient.invalidateQueries({ queryKey: trpc.requests.queue.queryKey() });
 
   return (
-    <QueueChannel onChange={refresh}>
+    <LiveUpdates source="queue" onChange={refresh}>
       {(state) => <Queue state={state} />}
-    </QueueChannel>
+    </LiveUpdates>
   );
 }
 
-function Queue({ state }: { state: QueueLiveState }) {
+function Queue({ state }: { state: LiveState }) {
   const t = useTranslations("queue");
   const trpc = useTRPC();
-  const { data: requests } = useSuspenseQuery({
+  const {
+    data: { busy, requests },
+  } = useSuspenseQuery({
     ...trpc.requests.queue.queryOptions(),
     refetchInterval: state.live ? POLL_LIVE_MS : POLL_FALLBACK_MS,
     refetchOnWindowFocus: true,
@@ -61,6 +74,22 @@ function Queue({ state }: { state: QueueLiveState }) {
   const arrivals = requests.length - visible.length;
 
   const sessions = groupBySession(visible);
+
+  if (busy) {
+    return (
+      <Empty className="border">
+        <EmptyHeader>
+          <EmptyTitle>{t("busy.title")}</EmptyTitle>
+          <EmptyDescription>{t("busy.description")}</EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button render={<Link href={routes.operation} />}>
+            {t("busy.action")}
+          </Button>
+        </EmptyContent>
+      </Empty>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -176,8 +205,35 @@ function RequestRow({
   isOnline: boolean;
 }) {
   const t = useTranslations("queue");
+  const tCommon = useTranslations("common");
   const format = useFormatter();
   const now = useNow({ updateInterval: 30_000 });
+  const router = useRouter();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  const claim = useMutation(
+    trpc.operations.claim.mutationOptions({
+      onSuccess: () => {
+        track({ name: "request_claimed", data: { bonus: request.bonus } });
+        router.push(routes.operation);
+      },
+      onError: (error) => {
+        if (error.message === "busy") {
+          toast.error(t("errors.busy"));
+          router.push(routes.operation);
+          return;
+        }
+        toast.error(
+          error.message === "alreadyTaken"
+            ? t("errors.alreadyTaken")
+            : tCommon("error"),
+        );
+        queryClient.invalidateQueries({
+          queryKey: trpc.requests.queue.queryKey(),
+        });
+      },
+    }),
+  );
   const { offer } = request.session;
   const money = (amount: number) =>
     format.number(amount, {
@@ -191,17 +247,7 @@ function RequestRow({
       <ItemContent className="min-w-0">
         <ItemTitle className="flex-wrap">
           {offer.center.name} · {offer.level}
-          <Badge variant={isOnline ? "default" : "outline"}>
-            <span
-              aria-hidden
-              className={
-                isOnline
-                  ? "size-1.5 rounded-full bg-current"
-                  : "size-1.5 rounded-full border border-current"
-              }
-            />
-            {isOnline ? t("online") : t("away")}
-          </Badge>
+          <PresenceBadge online={isOnline} />
         </ItemTitle>
         <ItemDescription className="line-clamp-none">
           {request.isFullExam ? t("fullExam") : request.modules.join(", ")} ·{" "}
@@ -224,6 +270,14 @@ function RequestRow({
             {t("bonus", { bonus: money(request.bonus) })}
           </Badge>
         )}
+        <Button
+          size="sm"
+          disabled={claim.isPending}
+          onClick={() => claim.mutate({ id: request.id })}
+        >
+          {claim.isPending && <Spinner />}
+          {t("claim")}
+        </Button>
       </ItemActions>
     </Item>
   );

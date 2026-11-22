@@ -8,6 +8,8 @@ import {
   isValidBonus,
   priceBreakdown,
 } from "@/modules/catalog";
+import { activeOperation } from "@/modules/operations";
+import { presenceKey } from "@/modules/realtime";
 import { db } from "@/server/db";
 import { publishAtFor, requestVisibility } from "../domain/visibility";
 import type { PublishInput } from "../schemas";
@@ -118,6 +120,15 @@ export async function listMyRequests(ownerId: string) {
       total: true,
       modules: true,
       beneficiary: { select: { firstName: true, lastName: true } },
+      operations: {
+        where: activeOperation(),
+        select: {
+          id: true,
+          claimedAt: true,
+          deadlineAt: true,
+          assistantId: true,
+        },
+      },
       session: {
         select: {
           examDate: true,
@@ -132,18 +143,31 @@ export async function listMyRequests(ownerId: string) {
       },
     },
   });
-  return requests.map(({ beneficiary, ...request }) => ({
-    ...request,
-    beneficiaryName: displayName(beneficiary),
-    isFullExam: isFullExam(request.session.offer.modules, request.modules),
-    visibility: requestVisibility(request.publishAt),
-  }));
+  return requests.map(
+    ({ beneficiary, operations: [operation], ...request }) => ({
+      ...request,
+      operation: operation && {
+        id: operation.id,
+        claimedAt: operation.claimedAt,
+        deadlineAt: operation.deadlineAt,
+        assistantKey: presenceKey(operation.assistantId),
+      },
+      beneficiaryName: displayName(beneficiary),
+      isFullExam: isFullExam(request.session.offer.modules, request.modules),
+      visibility: requestVisibility(request.publishAt),
+    }),
+  );
 }
 
-/** Only an open request can be cancelled (before an assistant takes it — EXM-007). */
+/** Only an open request nobody is working on can be cancelled; withdraw it from the assistant first. */
 export async function cancelRequest(ownerId: string, id: string) {
   const { count } = await db.request.updateMany({
-    where: { id, ownerId, status: "OPEN" },
+    where: {
+      id,
+      ownerId,
+      status: "OPEN",
+      operations: { none: activeOperation() },
+    },
     data: { status: "CANCELLED", version: { increment: 1 } },
   });
   if (!count) throw new TRPCError({ code: "NOT_FOUND" });

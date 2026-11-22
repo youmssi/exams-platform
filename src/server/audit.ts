@@ -15,7 +15,7 @@ const toJson = (value: unknown) =>
     ? undefined
     : (JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue);
 
-/** Records an admin action in the same transaction as the change it describes. */
+/** Records a sensitive action (admin change, credential read), in the same transaction as the change when there is one. */
 export function recordAudit(tx: Prisma.TransactionClient, entry: AuditEntry) {
   return tx.auditLog.create({
     data: {
