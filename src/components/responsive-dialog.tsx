@@ -45,7 +45,7 @@ export function ResponsiveDialog({
               <DrawerDescription>{description}</DrawerDescription>
             )}
           </DrawerHeader>
-          <div className="overflow-y-auto px-4 pb-6">{children}</div>
+          <div className="min-h-0 overflow-y-auto px-4 pb-6">{children}</div>
         </DrawerContent>
       </Drawer>
     );
@@ -53,12 +53,15 @@ export function ResponsiveDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="flex max-h-[calc(100dvh-2rem)] flex-col sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-        {children}
+        {/* Long forms scroll inside the dialog; the title stays visible. */}
+        <div className="-mx-4 min-h-0 overflow-y-auto px-4 pb-1">
+          {children}
+        </div>
       </DialogContent>
     </Dialog>
   );
