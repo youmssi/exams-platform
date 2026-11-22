@@ -132,7 +132,8 @@
       "beneficiaries": "Beneficiaries",
       "sessions": "Sessions",
       "requests": "My requests",
-      "queue": "Queue"
+      "queue": "Queue",
+      "operation": "Operation"
     },
     "signOut": "Sign out",
     "roleLabel": {
@@ -551,7 +552,8 @@
     "status": {
       "scheduled": "Scheduled",
       "published": "Posted",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "inProgress": "In progress"
     },
     "publishesAt": "posted on {date}",
     "cancel": "Cancel the request",
@@ -563,7 +565,12 @@
       "title": "No request yet",
       "description": "Pick a session to start."
     },
-    "fullExam": "Full"
+    "fullExam": "Full",
+    "assistantOnIt": "An assistant is on it",
+    "withdraw": "Withdraw",
+    "withdrawTitle": "Take the request back from this assistant?",
+    "withdrawBody": "It goes back to the queue for another assistant.",
+    "withdrawn": "Request back in the queue."
   },
   "queue": {
     "title": "Request queue",
@@ -578,10 +585,59 @@
       "title": "No requests yet",
       "description": "The queue updates by itself."
     },
-    "online": "Online",
-    "away": "Offline",
     "fullExam": "Full exam",
     "publishedAgo": "Published {ago}",
-    "bonus": "Bonus {bonus}"
+    "bonus": "Bonus {bonus}",
+    "claim": "Take",
+    "busy": {
+      "title": "Finish your current operation",
+      "description": "One client at a time.",
+      "action": "View the operation"
+    },
+    "errors": {
+      "alreadyTaken": "Already taken by another assistant.",
+      "busy": "You already have an operation in progress."
+    }
+  },
+  "countdown": {
+    "warning": "{minutes, plural, one {One minute left.} other {# minutes left.}}",
+    "until": "Due at {time}."
+  },
+  "presence": {
+    "online": "Online",
+    "offline": "Offline"
+  },
+  "operation": {
+    "none": {
+      "title": "No operation in progress",
+      "description": "Take a request from the queue.",
+      "action": "Open the queue"
+    },
+    "fullExam": "Full exam",
+    "timeLeft": "Time to book",
+    "deadlineRule": "Without a booking when time runs out, the request goes back to the queue.",
+    "account": "Centre account",
+    "candidate": "Candidate",
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "firstName": "First name(s)",
+      "lastName": "Last name(s)",
+      "birthDate": "Date of birth",
+      "birthPlace": "Place of birth",
+      "phone": "Phone",
+      "city": "City",
+      "district": "District",
+      "participantNumber": "Participant no."
+    },
+    "show": "Show",
+    "copy": "Copy: {label}",
+    "copied": "Copied.",
+    "release": "Release",
+    "releaseTitle": "Release this request?",
+    "releaseBody": "It goes back to the queue for another assistant.",
+    "keep": "Continue",
+    "released": "Request released.",
+    "openSite": "Centre website"
   }
 }

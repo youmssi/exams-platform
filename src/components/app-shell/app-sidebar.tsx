@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  BriefcaseIcon,
   CalendarDaysIcon,
   HomeIcon,
   LibraryIcon,
@@ -37,6 +38,7 @@ const NAV = {
   assistant: [
     { href: routes.home, key: "home", Icon: HomeIcon },
     { href: routes.queue, key: "queue", Icon: RadioTowerIcon },
+    { href: routes.operation, key: "operation", Icon: BriefcaseIcon },
   ],
 } as const;
 const ADMIN_NAV = [

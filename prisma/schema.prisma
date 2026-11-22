@@ -34,6 +34,7 @@ model User {
   sessionsCreated  ExamSession[]
   confirmations    SessionConfirmation[]
   requests         Request[]
+  operations       Operation[]
   catalogRequests  CatalogRequest[]
 
   @@unique([email])
@@ -260,6 +261,7 @@ model Request {
   ownerId        String
   owner          User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   status         RequestStatus @default(OPEN)
+  operations     Operation[]
   /// Modules booked, in the offer's order; all of them means the full exam.
   modules        String[]
   publishAt      DateTime
@@ -297,4 +299,31 @@ model CatalogRequest {
   createdAt   DateTime           @default(now())
 
   @@map("catalog_request")
+}
+
+/// One assistant working on one request, from the claim to its end.
+/// At most one active operation per assistant and per request (partial unique indexes in SQL).
+model Operation {
+  id          String          @id @default(cuid())
+  requestId   String
+  request     Request         @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  assistantId String
+  assistant   User            @relation(fields: [assistantId], references: [id], onDelete: Restrict)
+  status      OperationStatus @default(CLAIMED)
+  claimedAt   DateTime        @default(now())
+  /// Book before this time, or the request goes back to the queue.
+  deadlineAt  DateTime
+  endedAt     DateTime?
+  version     Int             @default(0)
+
+  @@index([requestId])
+  @@index([assistantId, status])
+  @@map("operation")
+}
+
+enum OperationStatus {
+  CLAIMED
+  RELEASED
+  WITHDRAWN
+  EXPIRED
 }

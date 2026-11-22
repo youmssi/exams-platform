@@ -132,7 +132,8 @@
       "beneficiaries": "Bénéficiaires",
       "sessions": "Sessions",
       "requests": "Mes demandes",
-      "queue": "File"
+      "queue": "File",
+      "operation": "Opération"
     },
     "signOut": "Se déconnecter",
     "roleLabel": {
@@ -551,7 +552,8 @@
     "status": {
       "scheduled": "Programmée",
       "published": "Publiée",
-      "cancelled": "Annulée"
+      "cancelled": "Annulée",
+      "inProgress": "En cours"
     },
     "publishesAt": "publiée le {date}",
     "cancel": "Annuler la demande",
@@ -563,7 +565,12 @@
       "title": "Aucune demande pour l'instant",
       "description": "Choisissez une session pour commencer."
     },
-    "fullExam": "Complet"
+    "fullExam": "Complet",
+    "assistantOnIt": "Un assistant s'en occupe",
+    "withdraw": "Me retirer",
+    "withdrawTitle": "Retirer la demande à cet assistant ?",
+    "withdrawBody": "Elle revient dans la file pour un autre assistant.",
+    "withdrawn": "Demande remise dans la file."
   },
   "queue": {
     "title": "File des demandes",
@@ -578,10 +585,59 @@
       "title": "Aucune demande pour l'instant",
       "description": "La file se met à jour toute seule."
     },
-    "online": "En ligne",
-    "away": "Hors ligne",
     "fullExam": "Complet",
     "publishedAgo": "Publiée {ago}",
-    "bonus": "Bonus {bonus}"
+    "bonus": "Bonus {bonus}",
+    "claim": "Prendre",
+    "busy": {
+      "title": "Terminez votre opération en cours",
+      "description": "Un client à la fois.",
+      "action": "Voir l'opération"
+    },
+    "errors": {
+      "alreadyTaken": "Déjà prise par un autre assistant.",
+      "busy": "Vous avez déjà une opération en cours."
+    }
+  },
+  "countdown": {
+    "warning": "{minutes, plural, one {Plus qu'une minute.} other {Plus que # minutes.}}",
+    "until": "Échéance à {time}."
+  },
+  "presence": {
+    "online": "En ligne",
+    "offline": "Hors ligne"
+  },
+  "operation": {
+    "none": {
+      "title": "Aucune opération en cours",
+      "description": "Prenez une demande dans la file.",
+      "action": "Voir la file"
+    },
+    "fullExam": "Complet",
+    "timeLeft": "Temps pour réserver",
+    "deadlineRule": "Sans réservation à la fin du temps, la demande revient dans la file.",
+    "account": "Compte du centre",
+    "candidate": "Candidat",
+    "fields": {
+      "email": "Email",
+      "password": "Mot de passe",
+      "firstName": "Prénom(s)",
+      "lastName": "Nom(s)",
+      "birthDate": "Date de naissance",
+      "birthPlace": "Lieu de naissance",
+      "phone": "Téléphone",
+      "city": "Ville",
+      "district": "Quartier",
+      "participantNumber": "N° de participant"
+    },
+    "show": "Afficher",
+    "copy": "Copier : {label}",
+    "copied": "Copié.",
+    "release": "Libérer",
+    "releaseTitle": "Libérer cette demande ?",
+    "releaseBody": "Elle revient dans la file pour un autre assistant.",
+    "keep": "Continuer",
+    "released": "Demande libérée.",
+    "openSite": "Site du centre"
   }
 }
