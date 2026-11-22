@@ -20,10 +20,11 @@ const schema = z.object({
   EMAIL_FROM: z.string().min(1),
 });
 
+/** Previews use their stable branch URL (e.g. the develop alias); production sets APP_URL. */
+const vercelHost = process.env.VERCEL_BRANCH_URL ?? process.env.VERCEL_URL;
+
 export const env = schema.parse({
   ...process.env,
-  // Vercel previews get their own URL; production sets APP_URL explicitly.
   APP_URL:
-    process.env.APP_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined),
+    process.env.APP_URL ?? (vercelHost ? `https://${vercelHost}` : undefined),
 });
