@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/field";
 import { routes } from "@/config/routes";
 import { Link, useRouter } from "@/i18n/navigation";
+import { track } from "@/shared/analytics";
 import { useAppForm } from "@/shared/form";
 import { authClient } from "../auth-client";
 import { emailSchema, OTP_LENGTH, otpSchema, passwordSchema } from "../schemas";
@@ -78,6 +79,8 @@ function EmailStep({
         : z.object({ email: emailSchema, password: z.string() }),
     },
     onSubmit: async ({ value }) => {
+      const method = withPassword ? "password" : "code";
+      track({ name: "auth_started", data: { method } });
       if (withPassword) {
         const { data, error } = await authClient.signIn.email({
           email: value.email,
@@ -86,6 +89,7 @@ function EmailStep({
         if (error) return toast.error(errorMessage(error));
         if (data && "twoFactorRedirect" in data && data.twoFactorRedirect)
           return onSecondFactor();
+        track({ name: "auth_completed", data: { method } });
         return router.replace(next);
       }
       const { error } = await authClient.emailOtp.sendVerificationOtp({
@@ -98,6 +102,7 @@ function EmailStep({
   });
 
   const signInWith = async (provider: SocialProvider) => {
+    track({ name: "auth_started", data: { method: provider } });
     const { error } = await authClient.signIn.social({
       provider,
       callbackURL: next,
@@ -213,6 +218,7 @@ function CodeStep({
         otp: value.otp,
       });
       if (error) return toast.error(errorMessage(error));
+      track({ name: "auth_completed", data: { method: "code" } });
       router.replace(next);
     },
   });
@@ -292,6 +298,7 @@ function SecondFactorStep({
           })
         : await authClient.twoFactor.verifyTotp({ code: value.code });
       if (error) return toast.error(errorMessage(error));
+      track({ name: "auth_completed", data: { method: "password" } });
       router.replace(next);
     },
   });

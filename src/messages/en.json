@@ -184,7 +184,8 @@
         "sign-in": "Your sign-in code: {code}",
         "email-verification": "Confirm your email: {code}",
         "forget-password": "Your password code: {code}",
-        "change-email": "Confirm your new email: {code}"
+        "change-email": "Confirm your new email: {code}",
+        "two-factor": "Security code: {code}"
       },
       "intro": "Enter this code on Exams:",
       "expiry": "It expires in {minutes} minutes.",
@@ -319,5 +320,10 @@
       "save": "Save",
       "cancel": "Cancel"
     }
+  },
+  "share": {
+    "title": "Book your exam seat, simply.",
+    "subtitle": "Standard price · real-time tracking · confirmed payment",
+    "points": "Language exams · B1 · B2"
   }
 }

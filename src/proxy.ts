@@ -24,5 +24,7 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/((?!api|trpc|_next|_vercel|.*\\..*).*)",
+  // Skips API routes, Next internals, files with an extension and generated metadata images.
+  matcher:
+    "/((?!api|trpc|_next|_vercel|.*opengraph-image|apple-icon|.*\\..*).*)",
 };

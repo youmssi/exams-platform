@@ -2,6 +2,7 @@
 
 import { HomeIcon, LibraryIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { LogoMark } from "@/components/brand/logo";
 import {
   Sidebar,
   SidebarContent,
@@ -41,9 +42,7 @@ export function AppSidebar({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" render={<Link href={routes.home} />}>
-              <span className="flex size-8 items-center justify-center rounded-md bg-primary font-bold text-primary-foreground">
-                E
-              </span>
+              <LogoMark />
               <span className="font-semibold">Exams</span>
             </SidebarMenuButton>
           </SidebarMenuItem>

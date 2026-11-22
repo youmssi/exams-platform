@@ -184,7 +184,8 @@
         "sign-in": "Votre code de connexion : {code}",
         "email-verification": "Confirmez votre email : {code}",
         "forget-password": "Code pour votre mot de passe : {code}",
-        "change-email": "Confirmez votre nouvel email : {code}"
+        "change-email": "Confirmez votre nouvel email : {code}",
+        "two-factor": "Code de sécurité : {code}"
       },
       "intro": "Saisissez ce code sur Exams :",
       "expiry": "Il expire dans {minutes} minutes.",
@@ -319,5 +320,10 @@
       "save": "Enregistrer",
       "cancel": "Annuler"
     }
+  },
+  "share": {
+    "title": "Réservez votre place d'examen, simplement.",
+    "subtitle": "Prix standard · suivi en temps réel · paiement confirmé",
+    "points": "Examens de langue · B1 · B2"
   }
 }
