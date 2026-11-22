@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "title": "Exams — Book your exam seat without the stress",
+    "description": "A simple, transparent, standard-priced platform to book your language exams."
+  },
+  "home": {
+    "title": "Book your exam seat, simply.",
+    "subtitle": "Standard price, no unknown middlemen, real-time tracking.",
+    "cta": "Get started"
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Try again",
+    "error": "Something went wrong."
+  }
+}
