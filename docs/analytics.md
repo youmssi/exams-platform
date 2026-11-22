@@ -14,5 +14,6 @@ Outil : **Umami** (instance auto-hébergée), sans cookie. Le script n'est charg
 |---|---|---|
 | `auth_started` | `method` : `code`, `password`, `google`, `microsoft` | EXM-002 |
 | `auth_completed` | `method` : `code`, `password` | EXM-002 |
+| `request_published` | `count` (demandes), `bonus` (montant) | EXM-005 |
 
 Les connexions Google et Microsoft se terminent après une redirection : elles sont comptées par les visites de `/home` qui suivent un `auth_started`.

@@ -6,7 +6,11 @@ export const routes = {
   welcome: "/welcome",
   home: "/home",
   account: "/account",
+  beneficiaries: "/beneficiaries",
+  sessions: "/sessions",
+  requests: "/requests",
   terms: "/terms",
+  privacy: "/privacy",
   adminCatalog: "/admin/catalog",
 } as const;
 
@@ -16,6 +20,7 @@ export const publicRoutes: readonly string[] = [
   routes.signIn,
   routes.resetPassword,
   routes.terms,
+  routes.privacy,
 ];
 
 /** Keeps a post-sign-in redirect inside the app. */

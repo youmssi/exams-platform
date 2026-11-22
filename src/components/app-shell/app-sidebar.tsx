@@ -1,6 +1,12 @@
 "use client";
 
-import { HomeIcon, LibraryIcon } from "lucide-react";
+import {
+  CalendarDaysIcon,
+  HomeIcon,
+  LibraryIcon,
+  ListChecksIcon,
+  UsersIcon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LogoMark } from "@/components/brand/logo";
 import {
@@ -19,7 +25,12 @@ import { routes } from "@/config/routes";
 import { Link, usePathname } from "@/i18n/navigation";
 import { NavUser, type NavUserData } from "@/modules/identity/client";
 
-const NAV = [{ href: routes.home, key: "home", Icon: HomeIcon }] as const;
+const NAV = [
+  { href: routes.home, key: "home", Icon: HomeIcon },
+  { href: routes.sessions, key: "sessions", Icon: CalendarDaysIcon },
+  { href: routes.requests, key: "requests", Icon: ListChecksIcon },
+  { href: routes.beneficiaries, key: "beneficiaries", Icon: UsersIcon },
+] as const;
 const ADMIN_NAV = [
   { href: routes.adminCatalog, key: "catalog", Icon: LibraryIcon },
 ] as const;

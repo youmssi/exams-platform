@@ -13,10 +13,11 @@ Saisir une seule fois les informations du compte du centre rend la publication i
 | Fiche | Nom, email du compte du centre, identifiant et mot de passe du centre (masqués) |
 
 #### Critères d'acceptation
-- [ ] Identifiants chiffrés en AES-256-GCM (`shared/crypto`), jamais renvoyés en clair au propriétaire après l'enregistrement.
+- [ ] Mot de passe du centre chiffré en AES-256-GCM (`src/server/crypto.ts`, format versionné `v1:` pour la rotation de clé), jamais renvoyé au propriétaire : l'API indique seulement s'il est enregistré.
 - [ ] Limite de 5 bénéficiaires vérifiée côté serveur.
 - [ ] Un tiers ne peut être ajouté qu'avec l'attestation d'accord (horodatée).
-- [ ] Suppression impossible si une demande du bénéficiaire est en cours.
+- [ ] Suppression impossible si une demande du bénéficiaire est en cours — vérifiée en EXM-005, quand les demandes existent.
+- [ ] « Moi » est créé automatiquement à partir du compte et ne peut pas être supprimé (index unique partiel en base).
 
 #### Critères d'acceptation UX
 - [ ] Le formulaire tient en un seul écran, avec 4 champs ; le nom et l'email sont pré-remplis pour « Moi ». [FORM-01, FORM-08, FLOW-03]

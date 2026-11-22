@@ -29,11 +29,17 @@
     "timeZone": "Fuseau horaire inconnu, par exemple Africa/Douala.",
     "url": "Saisissez une adresse web complète, par exemple https://…",
     "modules": "Indiquez au moins un module.",
-    "bonusCapStep": "Le plafond doit être un multiple du pas du bonus."
+    "bonusCapStep": "Le plafond doit être un multiple du pas du bonus.",
+    "consentRequired": "Confirmez avoir l'accord de cette personne.",
+    "date": "Choisissez une date.",
+    "dateTime": "Choisissez une date et une heure.",
+    "opensAfterExam": "Les inscriptions ouvrent avant la date de l'examen.",
+    "tooShort": "Ajoutez quelques détails.",
+    "pickBeneficiary": "Choisissez au moins une personne."
   },
   "auth": {
     "title": "Connexion à Exams",
-    "subtitle": "Pas encore de compte ? Il est créé automatiquement à la première connexion.",
+    "subtitle": "Pas de compte ? Il est créé à la connexion.",
     "continueWith": "Continuer avec {provider}",
     "or": "Ou",
     "email": "Adresse email",
@@ -51,7 +57,7 @@
     "resend": "Renvoyer un code",
     "changeEmail": "Changer d'adresse email",
     "codeResent": "Nouveau code envoyé.",
-    "terms": "En continuant, vous acceptez les <terms>conditions d'utilisation et de confidentialité</terms>.",
+    "terms": "En continuant, vous acceptez les <terms>conditions</terms> et la <privacy>politique de confidentialité</privacy>.",
     "errors": {
       "INVALID_OTP": "Code incorrect. Vérifiez les 6 chiffres ou demandez un nouveau code.",
       "OTP_EXPIRED": "Ce code a expiré. Demandez-en un nouveau.",
@@ -88,9 +94,9 @@
   },
   "welcome": {
     "title": "Bienvenue sur Exams",
-    "subtitle": "Encore une étape, puis vous pourrez commencer.",
+    "subtitle": "Une dernière étape.",
     "name": "Votre nom",
-    "nameHint": "Tel qu'il apparaît sur votre pièce d'identité.",
+    "nameHint": "Comme sur votre pièce d'identité.",
     "role": "Vous venez surtout pour…",
     "roles": {
       "candidate": {
@@ -102,14 +108,13 @@
         "description": "J'ai une session ouverte sur le site du centre et je prends des demandes."
       }
     },
-    "roleHint": "Vous pourrez changer à tout moment depuis votre compte.",
     "termsTitle": "En résumé",
     "termsPoints": [
       "Le prix est standard et affiché avant tout engagement.",
       "Les identifiants du centre ne sont visibles que par l'assistant qui prend votre demande, puis effacés.",
       "Un litige ou un impayé peut entraîner des sanctions."
     ],
-    "acceptTerms": "J'accepte les conditions d'utilisation et de confidentialité.",
+    "acceptTerms": "J'accepte les conditions d'utilisation et la politique de confidentialité.",
     "readTerms": "Lire les conditions complètes",
     "submit": "Commencer"
   },
@@ -119,7 +124,10 @@
       "account": "Mon compte",
       "main": "Navigation",
       "admin": "Administration",
-      "catalog": "Catalogue"
+      "catalog": "Catalogue",
+      "beneficiaries": "Bénéficiaires",
+      "sessions": "Sessions",
+      "requests": "Mes demandes"
     },
     "signOut": "Se déconnecter",
     "roleLabel": {
@@ -130,18 +138,20 @@
   "homePage": {
     "title": "Bonjour {name}",
     "candidate": {
-      "title": "Votre première demande arrive bientôt",
-      "description": "La publication des demandes ouvre avec le catalogue des sessions."
+      "title": "Publiez votre demande",
+      "description": "Elle partira à l'ouverture des inscriptions.",
+      "action": "Voir les sessions"
     },
     "assistant": {
       "title": "La file des demandes arrive bientôt",
-      "description": "Vous pourrez prendre des demandes dès l'ouverture de la file."
+      "description": "Vous pourrez prendre des demandes dès l'ouverture de la file.",
+      "action": "Voir les sessions"
     }
   },
   "account": {
     "title": "Mon compte",
     "activeRole": "Rôle actif",
-    "activeRoleHint": "Change ce que vous voyez dans l'application.",
+    "activeRoleHint": "Change ce que vous voyez.",
     "roleSaved": "Rôle mis à jour.",
     "language": "Langue",
     "languages": {
@@ -149,7 +159,7 @@
       "en": "English"
     },
     "devices": "Appareils connectés",
-    "devicesHint": "Déconnectez un appareil que vous ne reconnaissez pas.",
+    "devicesHint": "Déconnectez ceux que vous ne reconnaissez pas.",
     "thisDevice": "Cet appareil",
     "lastActive": "Dernière activité : {date}",
     "unknownDevice": "Appareil inconnu",
@@ -193,31 +203,113 @@
     }
   },
   "legal": {
-    "title": "Conditions d'utilisation et de confidentialité",
-    "draft": "Version provisoire : le texte définitif sera publié avant le lancement.",
-    "sections": [
-      {
-        "title": "Le service",
-        "body": "Exams met en relation des candidats qui veulent réserver une place d'examen et des assistants qui réservent pour eux. Exams ne vend pas de places et n'est pas affilié aux centres d'examen."
-      },
-      {
-        "title": "Prix",
-        "body": "Le prix est fixé par Exams pour chaque centre et chaque niveau, et affiché avant tout engagement. Il comprend la part de l'assistant et une commission pour la plateforme."
-      },
-      {
-        "title": "Vos identifiants du centre",
-        "body": "Ils sont chiffrés, visibles uniquement par l'assistant qui prend votre demande, pendant la réservation, puis effacés. Changez votre mot de passe après la réservation."
-      },
-      {
-        "title": "Règlement et litiges",
-        "body": "Après la réservation, vous réglez directement l'assistant et la plateforme. En cas de désaccord, Exams examine les preuves et tranche. Un impayé ou un litige abusif peut entraîner une suspension."
-      },
-      {
-        "title": "Vos données",
-        "body": "Nous ne collectons que ce qui sert à la réservation et au suivi. Vous pouvez demander l'export ou la suppression de vos données."
-      }
-    ],
-    "back": "Retour à l'accueil"
+    "terms": {
+      "title": "Conditions d'utilisation",
+      "sections": [
+        {
+          "title": "Le service",
+          "body": [
+            "Exams met en relation des candidats qui veulent réserver une place d'examen et des assistants qui réservent pour eux. Exams ne vend pas de places et n'est affilié à aucun centre d'examen."
+          ]
+        },
+        {
+          "title": "Prix",
+          "body": [
+            "Le prix est fixé par Exams pour chaque centre et chaque niveau, et affiché avant tout engagement. Il comprend la part de l'assistant et une commission pour la plateforme."
+          ]
+        },
+        {
+          "title": "Identifiants du centre",
+          "body": [
+            "Vous ne les saisissez que pour vous ou pour une personne qui a donné son accord. Ils sont chiffrés, visibles uniquement par l'assistant qui prend la demande, puis effacés. Changez votre mot de passe après la réservation."
+          ]
+        },
+        {
+          "title": "Règlement et litiges",
+          "body": [
+            "Après la réservation, vous réglez directement l'assistant et la plateforme. En cas de désaccord, Exams examine les preuves et tranche. Un impayé, un litige abusif ou une fraude peut entraîner une suspension ou une exclusion."
+          ]
+        },
+        {
+          "title": "Contact",
+          "body": ["contact@mrvin100.de"]
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Politique de confidentialité",
+      "sections": [
+        {
+          "title": "Qui sommes-nous",
+          "body": [
+            "Exams (exams.mrvin100.de) est une plateforme qui met en relation des candidats à des examens de langue et des assistants qui réservent pour eux. Pour toute question sur vos données : contact@mrvin100.de."
+          ]
+        },
+        {
+          "title": "Données que nous collectons",
+          "body": [
+            "Compte : nom, adresse email, photo de profil si vous vous connectez avec Google ou Microsoft, langue et rôle choisis, date d'acceptation des conditions.",
+            "Bénéficiaires : nom, email et mot de passe du compte du centre d'examen des personnes pour qui vous réservez, avec leur accord.",
+            "Demandes : session, niveau, montants, statuts et dates.",
+            "Sécurité : appareils connectés (navigateur, système, adresse IP) et journaux de connexion.",
+            "Mesure d'audience : pages vues et événements anonymes via Umami, sans cookie ni identification personnelle."
+          ]
+        },
+        {
+          "title": "Données Google (et Microsoft)",
+          "body": [
+            "Si vous choisissez « Continuer avec Google », nous recevons uniquement votre nom, votre adresse email et votre photo de profil (périmètres openid, email et profile). Nous n'accédons ni à vos emails, ni à vos contacts, ni à vos fichiers.",
+            "Ces données servent uniquement à créer votre compte et à vous connecter. Elles ne sont ni vendues, ni partagées à des fins publicitaires, ni utilisées pour entraîner des modèles d'intelligence artificielle.",
+            "L'usage des informations reçues des API Google respecte la Google API Services User Data Policy, y compris les exigences de Limited Use."
+          ]
+        },
+        {
+          "title": "Pourquoi nous les utilisons",
+          "body": [
+            "Faire fonctionner le service : connexion, publication des demandes, réservation par un assistant, suivi et règlement.",
+            "Sécuriser les comptes et prévenir la fraude (limite de tentatives, vérification en deux étapes des administrateurs, sanctions en cas d'abus).",
+            "Vous envoyer les emails nécessaires au service (codes de connexion, avancement de vos demandes)."
+          ]
+        },
+        {
+          "title": "Partage",
+          "body": [
+            "Le mot de passe du centre d'un bénéficiaire n'est visible que par l'assistant qui prend la demande, le temps de la réservation. Le candidat et l'assistant ne voient jamais l'identité l'un de l'autre, sauf le compte de dépôt nécessaire au règlement.",
+            "Nos sous-traitants techniques : Vercel (hébergement), Neon (base de données, Union européenne), Resend (envoi d'emails), Umami (mesure d'audience). Nous ne vendons aucune donnée."
+          ]
+        },
+        {
+          "title": "Conservation",
+          "body": [
+            "Le mot de passe du centre est effacé dès la clôture de l'opération.",
+            "Les données du compte sont conservées tant que le compte existe, puis supprimées sous 30 jours après sa suppression, sauf obligation légale."
+          ]
+        },
+        {
+          "title": "Sécurité",
+          "body": [
+            "Connexions chiffrées (HTTPS). Mots de passe des centres chiffrés en AES-256-GCM. Codes de connexion stockés hachés. Accès administrateur protégé par une application d'authentification."
+          ]
+        },
+        {
+          "title": "Vos droits",
+          "body": [
+            "Vous pouvez demander l'accès, la rectification, l'export ou la suppression de vos données, et retirer votre accord à tout moment, en écrivant à contact@mrvin100.de. Vous pouvez aussi révoquer l'accès d'Exams à votre compte Google depuis myaccount.google.com/permissions."
+          ]
+        },
+        {
+          "title": "Modifications",
+          "body": [
+            "Nous indiquerons toute modification importante sur cette page et, si nécessaire, par email."
+          ]
+        }
+      ]
+    },
+    "updated": "Mis à jour le {date}",
+    "updatedOn": "22 novembre 2026",
+    "back": "Retour à l'accueil",
+    "seePrivacy": "Politique de confidentialité",
+    "seeTerms": "Conditions d'utilisation"
   },
   "admin": {
     "secondFactorRequired": {
@@ -325,5 +417,133 @@
     "title": "Réservez votre place d'examen, simplement.",
     "subtitle": "Prix standard · suivi en temps réel · paiement confirmé",
     "points": "Examens de langue · B1 · B2"
+  },
+  "form": {
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe"
+  },
+  "beneficiaries": {
+    "title": "Bénéficiaires",
+    "subtitle": "Jusqu'à {max} personnes, vous compris.",
+    "add": "Ajouter une personne",
+    "addTitle": "Ajouter une personne",
+    "addDescription": "Un proche pour qui vous réservez.",
+    "editTitle": "Modifier {name}",
+    "save": "Enregistrer",
+    "saved": "Enregistré.",
+    "self": "Moi",
+    "noName": "Nom à compléter",
+    "status": {
+      "ready": "Identifiants enregistrés",
+      "missingPassword": "Mot de passe du centre à ajouter"
+    },
+    "limitReached": "Limite de 5 personnes atteinte. Supprimez-en une pour en ajouter une autre.",
+    "removeTitle": "Supprimer {name} ?",
+    "removeBody": "Ses informations et ses identifiants du centre seront effacés. Cette action est définitive.",
+    "remove": "Supprimer",
+    "removed": "{name} a été supprimé.",
+    "cancel": "Annuler",
+    "privacy": "Chiffré. Visible uniquement par l'assistant, le temps de la réservation.",
+    "fields": {
+      "fullName": "Nom complet",
+      "fullNameHint": "Comme sur la pièce d'identité.",
+      "email": "Email du compte du centre",
+      "emailHint": "Celui du compte sur le site du centre.",
+      "password": "Mot de passe du compte du centre",
+      "passwordHint": "Nécessaire pour publier.",
+      "passwordSaved": "Enregistré. Laissez vide pour le garder.",
+      "consent": "Cette personne m'a donné son accord."
+    },
+    "hasOpenRequest": "Cette personne a une demande en cours. Annulez-la d'abord dans « Mes demandes »."
+  },
+  "sessions": {
+    "title": "Sessions d'examen",
+    "subtitle": "Choisissez une session, publiez, c'est tout.",
+    "create": "Ajouter une session",
+    "requestAddition": "Demander un nouveau centre ou niveau",
+    "missingCentre": "Centre ou niveau manquant ?",
+    "verified": "Confirmée",
+    "unverified": "À confirmer · {count}/3",
+    "confirm": "Confirmer",
+    "confirmed": "Merci, confirmation enregistrée.",
+    "publish": "Publier",
+    "examOn": "Examen le {date}",
+    "opensAt": "Inscriptions le {date}",
+    "empty": {
+      "title": "Aucune session à venir",
+      "description": "Ajoutez la prochaine date du centre."
+    },
+    "dialogs": {
+      "create": "Ajouter une session",
+      "catalogRequest": "Demander un ajout",
+      "publish": "Publier une demande"
+    },
+    "form": {
+      "offer": "Centre et niveau",
+      "examDate": "Date de l'examen",
+      "opensAt": "Ouverture des inscriptions",
+      "opensAtHint": "Heure locale du centre ({zone}).",
+      "officialUrl": "Lien officiel",
+      "officialUrlHint": "Facultatif.",
+      "submit": "Ajouter la session",
+      "created": "Session ajoutée.",
+      "existing": "Cette session existe déjà : vous pouvez publier directement."
+    },
+    "catalogRequest": {
+      "kind": "Que manque-t-il ?",
+      "kinds": {
+        "COUNTRY": "Un pays",
+        "CENTER": "Un centre",
+        "LEVEL": "Un niveau",
+        "OTHER": "Autre chose"
+      },
+      "details": "Précisions",
+      "detailsHint": "Ex. Goethe Douala, A2.",
+      "officialUrl": "Lien officiel (facultatif)",
+      "submit": "Envoyer la demande",
+      "sent": "Demande envoyée. L'équipe l'ajoutera au catalogue."
+    }
+  },
+  "publish": {
+    "who": "Pour qui ?",
+    "missingPassword": "Ajouter le mot de passe du centre",
+    "addBonus": "Ajouter un bonus (facultatif)",
+    "bonusSet": "Bonus : {bonus}",
+    "bonusHint": "Remonte votre demande dans la file.",
+    "noBonus": "Sans bonus",
+    "summary": "Total par personne : {total}",
+    "split": "Assistant {assistant} · Plateforme {platform}",
+    "totalFor": "{count} personnes : {total} au total",
+    "payLater": "Vous payez après la réservation.",
+    "submit": "{count, plural, one {Publier la demande — {total}} other {Publier # demandes — {total}}}",
+    "schedule": "{count, plural, one {Programmer pour le {date}} other {Programmer # demandes pour le {date}}}",
+    "pickSomeone": "Choisissez au moins une personne",
+    "publishedToast": "{count, plural, one {Demande publiée.} other {# demandes publiées.}}",
+    "scheduledToast": "{count, plural, one {Demande programmée.} other {# demandes programmées.}}",
+    "errors": {
+      "alreadyRequested": "Une demande est déjà ouverte pour cette personne et cette session.",
+      "missingPassword": "Le mot de passe du centre manque pour une personne.",
+      "sessionPast": "Cette session est passée.",
+      "invalidBonus": "Ce bonus n'est pas autorisé."
+    }
+  },
+  "myRequests": {
+    "title": "Mes demandes",
+    "new": "Publier une demande",
+    "status": {
+      "scheduled": "Programmée",
+      "published": "Publiée",
+      "cancelled": "Annulée"
+    },
+    "publishesAt": "publiée le {date}",
+    "cancel": "Annuler la demande",
+    "cancelTitle": "Annuler la demande de {name} ?",
+    "cancelBody": "Elle disparaît de la file. Vous pourrez en publier une nouvelle.",
+    "keep": "Garder",
+    "cancelled": "Demande annulée.",
+    "empty": {
+      "title": "Aucune demande pour l'instant",
+      "description": "Choisissez une session pour commencer."
+    }
   }
 }

@@ -5,8 +5,10 @@ import {
   ChoiceCardsField,
   NumberField,
   OtpField,
+  PasswordField,
   SelectField,
   SwitchField,
+  TextareaField,
   TextField,
 } from "./fields";
 import { SubmitButton } from "./submit-button";
@@ -22,10 +24,12 @@ export const { useAppForm } = createFormHook({
     TextField,
     NumberField,
     OtpField,
+    PasswordField,
     CheckboxField,
     ChoiceCardsField,
     SelectField,
     SwitchField,
+    TextareaField,
   },
   formComponents: { SubmitButton },
 });

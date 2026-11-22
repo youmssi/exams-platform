@@ -13,23 +13,28 @@ datasource db {
 }
 
 model User {
-  id               String      @id
+  id               String                @id
   name             String
   email            String
-  emailVerified    Boolean     @default(false)
+  emailVerified    Boolean               @default(false)
   image            String?
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-  twoFactorEnabled Boolean?    @default(false)
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  twoFactorEnabled Boolean?              @default(false)
   role             String?
-  banned           Boolean?    @default(false)
+  banned           Boolean?              @default(false)
   banReason        String?
   banExpires       DateTime?
-  activeRole       String?     @default("candidate")
+  activeRole       String?               @default("candidate")
   termsAcceptedAt  DateTime?
   sessions         Session[]
   accounts         Account[]
   twofactors       TwoFactor[]
+  beneficiaries    Beneficiary[]
+  sessionsCreated  ExamSession[]
+  confirmations    SessionConfirmation[]
+  requests         Request[]
+  catalogRequests  CatalogRequest[]
 
   @@unique([email])
   @@map("user")
@@ -143,9 +148,9 @@ model Center {
 /// A level offered by a center (e.g. Goethe Yaoundé B1) with its economic settings.
 /// Amounts are integers in the country's currency unit; the commission rate is in basis points.
 model Offer {
-  id                String   @id @default(cuid())
+  id                String        @id @default(cuid())
   centerId          String
-  center            Center   @relation(fields: [centerId], references: [id], onDelete: Restrict)
+  center            Center        @relation(fields: [centerId], references: [id], onDelete: Restrict)
   level             String
   modules           String[]
   standardPrice     Int
@@ -157,9 +162,10 @@ model Offer {
   confirmOnlineMin  Int
   confirmOfflineMin Int
   paymentDeadlineH  Int
-  active            Boolean  @default(true)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  active            Boolean       @default(true)
+  sessions          ExamSession[]
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 
   @@unique([centerId, level])
   @@map("offer")
@@ -178,4 +184,106 @@ model AuditLog {
 
   @@index([targetType, targetId])
   @@map("audit_log")
+}
+
+/// A person the account holder books for: themself ("self") or a friend who agreed.
+/// The exam-centre password is encrypted (AES-256-GCM) and never sent back to the owner.
+model Beneficiary {
+  id             String    @id @default(cuid())
+  ownerId        String
+  owner          User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  isSelf         Boolean   @default(false)
+  fullName       String
+  email          String
+  passwordCipher String?
+  consentAt      DateTime?
+  requests       Request[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([ownerId])
+  @@map("beneficiary")
+}
+
+/// An exam date for an offer, created by any user. Confirmed after 3 confirmations or by an admin.
+model ExamSession {
+  id                  String                @id @default(cuid())
+  offerId             String
+  offer               Offer                 @relation(fields: [offerId], references: [id], onDelete: Restrict)
+  examDate            DateTime              @db.Date
+  registrationOpensAt DateTime
+  officialUrl         String?
+  verifiedAt          DateTime?
+  createdById         String
+  createdBy           User                  @relation(fields: [createdById], references: [id], onDelete: Restrict)
+  confirmations       SessionConfirmation[]
+  requests            Request[]
+  createdAt           DateTime              @default(now())
+
+  @@unique([offerId, examDate])
+  @@map("exam_session")
+}
+
+model SessionConfirmation {
+  sessionId String
+  session   ExamSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+
+  @@id([sessionId, userId])
+  @@map("session_confirmation")
+}
+
+enum RequestStatus {
+  OPEN
+  CANCELLED
+}
+
+/// A booking request for one beneficiary and one session.
+/// Visible in the queue once `publishAt` has passed; the price is frozen at creation.
+model Request {
+  id             String        @id @default(cuid())
+  sessionId      String
+  session        ExamSession   @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  beneficiaryId  String
+  beneficiary    Beneficiary   @relation(fields: [beneficiaryId], references: [id], onDelete: Restrict)
+  ownerId        String
+  owner          User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  status         RequestStatus @default(OPEN)
+  publishAt      DateTime
+  currency       String
+  standardPrice  Int
+  bonus          Int
+  total          Int
+  commission     Int
+  assistantShare Int
+  version        Int           @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([sessionId, status, publishAt])
+  @@index([ownerId])
+  @@map("request")
+}
+
+enum CatalogRequestKind {
+  COUNTRY
+  CENTER
+  LEVEL
+  OTHER
+}
+
+/// A user asks the admins to add a country, a centre or a level.
+model CatalogRequest {
+  id          String             @id @default(cuid())
+  requesterId String
+  requester   User               @relation(fields: [requesterId], references: [id], onDelete: Cascade)
+  kind        CatalogRequestKind
+  details     String
+  officialUrl String?
+  handledAt   DateTime?
+  createdAt   DateTime           @default(now())
+
+  @@map("catalog_request")
 }
