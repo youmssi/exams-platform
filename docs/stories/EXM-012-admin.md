@@ -13,6 +13,7 @@ L'admin n'intervient qu'aux moments critiques. Il doit tout voir en temps réel 
 | Opérations | Liste filtrable, fiche avec l'historique complet |
 | Litiges | Preuves, chronologie, décision |
 | Utilisateurs | Rôles, avertissements, suspendre, bannir, révoquer les sessions |
+| Assistants à vérifier | Pièce d'identité, numéro Mobile Money, valider / refuser avec motif |
 | Catalogue | EXM-003 ; demandes d'ajout ; sessions à valider |
 | Signalements | File à traiter |
 | Journal d'audit | Toutes les actions admin |

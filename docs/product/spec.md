@@ -119,7 +119,7 @@ En litige, l'assistant doit fournir une preuve (capture). C'est le **seul** mome
 
 - Le candidat ne voit pas l'identité de l'assistant, seulement le compte de dépôt au moment du règlement.
 - L'assistant ne voit que ce qui sert à réserver, et seulement pendant la prise.
-- La plateforme connaît les deux (vérification d'identité légère des assistants).
+- La plateforme connaît les deux : un assistant envoie sa pièce d'identité et son numéro Mobile Money, validés par l'admin avant sa première prise.
 
 ## 8. Présence
 
@@ -160,6 +160,6 @@ En litige, l'assistant doit fournir une preuve (capture). C'est le **seul** mome
 ## 12. Hors MVP
 
 - Paiement intégré (Mobile Money) et séquestre.
-- Application mobile native, notifications push.
+- Application mobile native, notifications push, notifications WhatsApp ou SMS.
 - Vérification automatique de la réservation sur le site du centre.
 - Landing page marketing (conçue à part).

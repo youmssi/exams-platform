@@ -20,6 +20,7 @@ Chaque action engage la responsabilité de quelqu'un (paiement, sanction). Il fa
 - [ ] `protectedProcedure`, `assistantProcedure`, `adminProcedure` dans tRPC.
 - [ ] `proxy.ts` redirige un visiteur non connecté vers la connexion, puis le renvoie à la page demandée.
 - [ ] Un compte banni ne peut ni se connecter ni appeler l'API.
+- [ ] Devenir assistant : envoi de la pièce d'identité (R2, privé) et du numéro Mobile Money ; statut « en attente de vérification » jusqu'à validation par l'admin (EXM-012). Sans validation, la file est visible mais la prise est refusée.
 
 #### Critères d'acceptation UX
 - [ ] Les boutons Google et Microsoft sont en premier ; l'email est une alternative sur le même écran, sans page supplémentaire. [ONB-05, FLOW-02]
@@ -32,6 +33,7 @@ Chaque action engage la responsabilité de quelqu'un (paiement, sanction). Il fa
 - [ ] Session expirée : reconnexion sans perte du formulaire en cours. [STATE-12]
 - [ ] Les CGU sont résumées en 3 points lisibles, avec le lien vers le texte complet ; la case n'est pas pré-cochée. [TRUST-01, TRUST-20, CONT-14]
 - [ ] L'utilisateur voit ses appareils connectés et peut les déconnecter. [TRUST-17]
+- [ ] L'assistant en attente de vérification voit son statut, ce qui est vérifié et le délai habituel ; le bouton « Prendre » est désactivé avec la raison. [TRUST-19, INT-15]
 - [ ] Le parcours est entièrement faisable au clavier et au lecteur d'écran, à 360 px. [A11Y-02, A11Y-24, RESP-04]
 
 **Mesuré par :** `auth_started`, `auth_completed` (méthode). [MEAS-02]
@@ -41,6 +43,7 @@ Chaque action engage la responsabilité de quelqu'un (paiement, sanction). Il fa
 - Formulaires : `src/shared/form` (`createFormHook` + `Field`), créé dans cette story.
 - Premier accès : `radio-group` en cartes (`FieldLabel` + `Field`), `checkbox` (CGU).
 - Coque de l'app : block `sidebar-07` ; menu du compte `avatar` + `dropdown-menu` ; appareils `item` + `alert-dialog`.
+- Vérification assistant : `field`, `input`, `attachment` (pièce d'identité), `badge` (statut).
 
 #### Hors périmètre
-Vérification d'identité des assistants (décision ouverte, voir `docs/ux`).
+Écran de validation des assistants côté admin (EXM-012).

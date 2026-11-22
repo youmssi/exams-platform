@@ -74,17 +74,10 @@ Ajouter un bénéficiaire (nom, email, identifiants, attestation d'accord) → s
 
 ## 3. Décisions produit
 
-Toutes tranchées avec le porteur du projet (voir `docs/product/spec.md`). Il reste deux décisions ouvertes :
+Toutes tranchées avec le porteur du projet (voir `docs/product/spec.md`), dont les deux dernières :
 
-[INTERACTIVE STEP] Vérification d'identité des assistants au MVP
-- Option A — Pièce d'identité + numéro Mobile Money vérifiés par l'admin avant la première prise : plus de confiance, mais une friction au démarrage [ONB-06, TRUST-20].
-- Option B — Numéro Mobile Money seul ; pièce d'identité demandée au premier litige : démarrage rapide, risque accepté.
-Recommandation : **A**, car l'anonymat vis-à-vis du candidat n'est acceptable que si la plateforme peut identifier l'assistant.
-
-[INTERACTIVE STEP] Canal de notification urgente (réservation effectuée, délai qui expire)
-- Option A — Email + notification dans l'application (MVP) : gratuit, mais l'email est lent à lire [NOTIF-02].
-- Option B — Ajouter WhatsApp Business ou SMS : lu immédiatement, mais avec un coût par message.
-Recommandation : **A** au MVP, puis **B** dès la v2, car le délai de 15 minutes suppose que le candidat soit réactif.
+- **Vérification d'identité des assistants :** pièce d'identité + numéro Mobile Money, validés par l'admin avant la première prise. L'anonymat vis-à-vis du candidat n'est acceptable que si la plateforme peut identifier l'assistant. [ONB-06, TRUST-20] → EXM-002 (statut « assistant vérifié ») et EXM-012 (validation).
+- **Notifications urgentes :** email + notification dans l'application au MVP ; WhatsApp ou SMS en v2. [NOTIF-02] → EXM-011.
 
 ### Stories manquantes repérées
 

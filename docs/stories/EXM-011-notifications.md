@@ -37,5 +37,5 @@ Les délais (15 min, 24 h) supposent que chacun soit prévenu au bon moment, ave
 #### Composants shadcn
 - `popover` (bureau) / `sheet` (téléphone), `item`, `badge` (non lues), `empty`, `switch` (préférences), `field`.
 
-#### Décisions ouvertes
-[INTERACTIVE STEP] Canal urgent WhatsApp ou SMS (voir `docs/ux`, §3).
+#### Hors périmètre
+WhatsApp et SMS (v2).
