@@ -4,13 +4,14 @@ import { type OperationStatus, Prisma } from "@/generated/prisma/client";
 import { isAssistantReady } from "@/modules/assistants";
 import { displayName } from "@/modules/beneficiaries";
 import { isFullExam } from "@/modules/catalog";
-import { presenceKey } from "@/modules/realtime";
+import { isUserOnline, presenceKey } from "@/modules/realtime";
 import { recordAudit } from "@/server/audit";
 import { decryptSecret } from "@/server/crypto";
 import { db } from "@/server/db";
 import {
   claimDeadline,
   type OperationEvent,
+  releaseTime,
   transition,
 } from "../domain/machine";
 
@@ -21,6 +22,12 @@ export const activeOperation = (now = new Date()) =>
   ({
     status: "CLAIMED",
     deadlineAt: { gt: now },
+  }) satisfies Prisma.OperationWhereInput;
+
+/** What keeps an assistant busy: a running claim, or a booking still waiting for the candidate. */
+export const assistantBusy = (now = new Date()) =>
+  ({
+    OR: [activeOperation(now), { status: "RESERVED", releaseAt: { gt: now } }],
   }) satisfies Prisma.OperationWhereInput;
 
 /**
@@ -56,8 +63,15 @@ export async function claimRequest(assistantId: string, requestId: string) {
   return db.$transaction(async (tx) => {
     await expireOverdue(tx, { OR: [{ requestId }, { assistantId }] });
     const now = new Date();
+    if (
+      await tx.operation.count({
+        where: { assistantId, ...assistantBusy(now) },
+      })
+    )
+      throw new TRPCError({ code: "CONFLICT", message: "busy" });
     const request = await tx.request.findFirst({
       where: {
+        credentialsRejectedAt: null,
         id: requestId,
         status: "OPEN",
         publishAt: { lte: now },
@@ -100,15 +114,18 @@ export async function claimRequest(assistantId: string, requestId: string) {
   });
 }
 
-/** The assistant's running operation, with what they need to book. Never the password. */
+/** The assistant's running operation, with what they need to book. Never the password or the phone. */
 export async function currentOperation(assistantId: string) {
   await expireOverdue(db, { assistantId });
   const operation = await db.operation.findFirst({
-    where: { assistantId, ...activeOperation() },
+    where: { assistantId, ...assistantBusy() },
     select: {
       id: true,
+      status: true,
       claimedAt: true,
       deadlineAt: true,
+      reservedAt: true,
+      releaseAt: true,
       request: {
         select: {
           ownerId: true,
@@ -122,7 +139,6 @@ export async function currentOperation(assistantId: string) {
               lastName: true,
               birthDate: true,
               birthPlace: true,
-              phone: true,
               city: true,
               district: true,
               participantNumber: true,
@@ -161,25 +177,42 @@ export async function currentOperation(assistantId: string) {
   };
 }
 
-/** Decrypts the exam-centre password for the assistant of the running operation; every read is audited. */
-export async function revealPassword(assistantId: string, operationId: string) {
+/**
+ * Shows a protected detail to the assistant of the running operation: the exam-centre password
+ * (only while booking) or the candidate's phone. Every read is audited.
+ */
+export async function revealDetail(
+  assistantId: string,
+  operationId: string,
+  detail: "password" | "phone",
+) {
   const operation = await db.operation.findFirst({
-    where: { id: operationId, assistantId, ...activeOperation() },
+    where: {
+      id: operationId,
+      assistantId,
+      ...(detail === "password" ? activeOperation() : assistantBusy()),
+    },
     select: {
       request: {
-        select: { beneficiary: { select: { passwordCipher: true } } },
+        select: {
+          beneficiary: { select: { passwordCipher: true, phone: true } },
+        },
       },
     },
   });
-  const cipher = operation?.request.beneficiary.passwordCipher;
-  if (!cipher) throw new TRPCError({ code: "NOT_FOUND" });
+  const beneficiary = operation?.request.beneficiary;
+  const value =
+    detail === "password"
+      ? beneficiary?.passwordCipher && decryptSecret(beneficiary.passwordCipher)
+      : beneficiary?.phone;
+  if (!value) throw new TRPCError({ code: "NOT_FOUND" });
   await recordAudit(db, {
     actorId: assistantId,
-    action: "operation.revealPassword",
+    action: `operation.reveal.${detail}`,
     targetType: "operation",
     targetId: operationId,
   });
-  return { password: decryptSecret(cipher) };
+  return { value };
 }
 
 /** Ends a running operation; the request goes back to the queue. Returns the candidate to notify. */
@@ -218,3 +251,104 @@ export const releaseOperation = (assistantId: string, id: string) =>
 
 export const withdrawOperation = (ownerId: string, id: string) =>
   endOperation({ id, request: { ownerId } }, "withdraw");
+
+/** The running claim of this assistant, or NOT_FOUND. */
+async function runningClaim(assistantId: string, id: string) {
+  const operation = await db.operation.findFirst({
+    where: { id, assistantId, ...activeOperation() },
+    select: {
+      id: true,
+      version: true,
+      requestId: true,
+      request: {
+        select: {
+          ownerId: true,
+          session: {
+            select: {
+              offer: {
+                select: { confirmOnlineMin: true, confirmOfflineMin: true },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+  if (!operation) throw new TRPCError({ code: "NOT_FOUND" });
+  return operation;
+}
+
+/** The candidate's view of things decides how long the assistant stays bound to them. */
+export async function reserveOperation(assistantId: string, id: string) {
+  const operation = await runningClaim(assistantId, id);
+  const online = await isUserOnline(operation.request.ownerId);
+  const now = new Date();
+  await db.$transaction(async (tx) => {
+    const { count } = await tx.operation.updateMany({
+      where: { id, version: operation.version, status: "CLAIMED" },
+      data: {
+        status: next("CLAIMED", "reserve"),
+        reservedAt: now,
+        releaseAt: releaseTime(operation.request.session.offer, online, now),
+        version: { increment: 1 },
+      },
+    });
+    if (!count)
+      throw new TRPCError({ code: "CONFLICT", message: "invalidTransition" });
+    await tx.request.update({
+      where: { id: operation.requestId },
+      data: { status: "BOOKED", version: { increment: 1 } },
+    });
+  });
+  return { ownerId: operation.request.ownerId };
+}
+
+/** The assistant could not sign in: no penalty, the request waits for the candidate to fix it. */
+export async function rejectCredentials(assistantId: string, id: string) {
+  const operation = await runningClaim(assistantId, id);
+  const now = new Date();
+  await db.$transaction(async (tx) => {
+    const { count } = await tx.operation.updateMany({
+      where: { id, version: operation.version, status: "CLAIMED" },
+      data: {
+        status: next("CLAIMED", "rejectCredentials"),
+        endedAt: now,
+        version: { increment: 1 },
+      },
+    });
+    if (!count)
+      throw new TRPCError({ code: "CONFLICT", message: "invalidTransition" });
+    await tx.request.update({
+      where: { id: operation.requestId },
+      data: { credentialsRejectedAt: now, version: { increment: 1 } },
+    });
+  });
+  return { ownerId: operation.request.ownerId };
+}
+
+/** The candidate answers a booking: email received, or disputed (the dispute itself is EXM-010). */
+export async function answerBooking(
+  ownerId: string,
+  id: string,
+  answer: "confirm" | "dispute",
+) {
+  const operation = await db.operation.findFirst({
+    where: { id, status: "RESERVED", request: { ownerId } },
+    select: { version: true, assistantId: true },
+  });
+  if (!operation) throw new TRPCError({ code: "NOT_FOUND" });
+  const now = new Date();
+  const { count } = await db.operation.updateMany({
+    where: { id, version: operation.version, status: "RESERVED" },
+    data: {
+      status: next("RESERVED", answer),
+      ...(answer === "confirm" ? { confirmedAt: now } : {}),
+      // The assistant is free as soon as the candidate answers.
+      releaseAt: now,
+      version: { increment: 1 },
+    },
+  });
+  if (!count)
+    throw new TRPCError({ code: "CONFLICT", message: "invalidTransition" });
+  return { assistantId: operation.assistantId };
+}

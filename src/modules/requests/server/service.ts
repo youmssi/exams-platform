@@ -8,7 +8,7 @@ import {
   isValidBonus,
   priceBreakdown,
 } from "@/modules/catalog";
-import { activeOperation } from "@/modules/operations";
+import { activeOperation, centerFeeDeadline } from "@/modules/operations";
 import { presenceKey } from "@/modules/realtime";
 import { db } from "@/server/db";
 import { publishAtFor, requestVisibility } from "../domain/visibility";
@@ -119,13 +119,24 @@ export async function listMyRequests(ownerId: string) {
       bonus: true,
       total: true,
       modules: true,
-      beneficiary: { select: { firstName: true, lastName: true } },
+      credentialsRejectedAt: true,
+      beneficiary: { select: { firstName: true, lastName: true, email: true } },
       operations: {
-        where: activeOperation(),
+        // The claim in progress, or the booking the candidate answers or pays.
+        where: {
+          OR: [
+            activeOperation(),
+            { status: { in: ["RESERVED", "CONFIRMED", "DISPUTED"] } },
+          ],
+        },
+        orderBy: { claimedAt: "desc" },
+        take: 1,
         select: {
           id: true,
+          status: true,
           claimedAt: true,
           deadlineAt: true,
+          confirmedAt: true,
           assistantId: true,
         },
       },
@@ -136,7 +147,14 @@ export async function listMyRequests(ownerId: string) {
             select: {
               level: true,
               modules: true,
-              center: { select: { name: true, city: true } },
+              centerFeeDays: true,
+              center: {
+                select: {
+                  name: true,
+                  city: true,
+                  country: { select: { timeZone: true } },
+                },
+              },
             },
           },
         },
@@ -148,15 +166,37 @@ export async function listMyRequests(ownerId: string) {
       ...request,
       operation: operation && {
         id: operation.id,
+        status: operation.status,
         claimedAt: operation.claimedAt,
         deadlineAt: operation.deadlineAt,
         assistantKey: presenceKey(operation.assistantId),
+        centerFeeDeadline:
+          operation.confirmedAt &&
+          centerFeeDeadline(
+            request.session.offer.centerFeeDays,
+            operation.confirmedAt,
+          ),
       },
       beneficiaryName: displayName(beneficiary),
+      beneficiaryEmail: beneficiary.email,
       isFullExam: isFullExam(request.session.offer.modules, request.modules),
       visibility: requestVisibility(request.publishAt),
     }),
   );
+}
+
+/** The candidate got a seat another way: closes an open request nobody is working on. */
+export async function markBookedElsewhere(ownerId: string, id: string) {
+  const { count } = await db.request.updateMany({
+    where: {
+      id,
+      ownerId,
+      status: "OPEN",
+      operations: { none: activeOperation() },
+    },
+    data: { status: "ELSEWHERE", version: { increment: 1 } },
+  });
+  if (!count) throw new TRPCError({ code: "NOT_FOUND" });
 }
 
 /** Only an open request nobody is working on can be cancelled; withdraw it from the assistant first. */

@@ -21,6 +21,7 @@ const offer = {
   confirmOnlineMin: 15,
   confirmOfflineMin: 5,
   paymentDeadlineH: 24,
+  centerFeeDays: 3,
   active: true,
 };
 

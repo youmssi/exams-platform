@@ -6,23 +6,16 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { useFormatter, useTranslations } from "next-intl";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
+import { ConfirmAction } from "@/components/confirm-action";
 import { Countdown } from "@/components/countdown";
 import { PresenceBadge } from "@/components/presence-badge";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { ResponsiveDialog } from "@/components/responsive-dialog";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Empty,
   EmptyContent,
@@ -30,6 +23,7 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import {
   Item,
   ItemActions,
@@ -111,6 +105,45 @@ function RequestList({
   );
 }
 
+type Status =
+  | "scheduled"
+  | "published"
+  | "inProgress"
+  | "toConfirm"
+  | "booked"
+  | "disputed"
+  | "credentials"
+  | "elsewhere"
+  | "cancelled";
+
+/** One status per request, read from the request and its latest operation. */
+function statusOf(request: MyRequest): Status {
+  if (request.status === "CANCELLED") return "cancelled";
+  if (request.status === "ELSEWHERE") return "elsewhere";
+  const operation = request.operation;
+  if (operation?.status === "RESERVED") return "toConfirm";
+  if (operation?.status === "CONFIRMED") return "booked";
+  if (operation?.status === "DISPUTED") return "disputed";
+  if (operation) return "inProgress";
+  if (request.credentialsRejectedAt) return "credentials";
+  return request.visibility;
+}
+
+const BADGE: Record<
+  Status,
+  "default" | "secondary" | "outline" | "destructive"
+> = {
+  scheduled: "secondary",
+  published: "default",
+  inProgress: "default",
+  toConfirm: "default",
+  booked: "secondary",
+  disputed: "destructive",
+  credentials: "destructive",
+  elsewhere: "outline",
+  cancelled: "outline",
+};
+
 function RequestItem({
   request,
   online,
@@ -124,54 +157,40 @@ function RequestItem({
   const tCommon = useTranslations("common");
   const format = useFormatter();
   const trpc = useTRPC();
-  const queryClient = useQueryClient();
+  const handlers = (message: string, event?: () => void) => ({
+    onSuccess: async () => {
+      event?.();
+      await refresh();
+      toast.success(message);
+    },
+    onError: () => toast.error(tCommon("error")),
+  });
   const cancel = useMutation(
-    trpc.requests.cancel.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries({
-          queryKey: trpc.requests.mine.queryKey(),
-        });
-        toast.success(t("cancelled"));
-      },
-      onError: () => toast.error(tCommon("error")),
-    }),
+    trpc.requests.cancel.mutationOptions(handlers(t("cancelled"))),
+  );
+  const elsewhere = useMutation(
+    trpc.requests.bookedElsewhere.mutationOptions(
+      handlers(t("closedElsewhere")),
+    ),
   );
   const withdraw = useMutation(
-    trpc.operations.withdraw.mutationOptions({
-      onSuccess: async () => {
-        track({ name: "candidate_withdrew" });
-        await refresh();
-        toast.success(t("withdrawn"));
-      },
-      onError: () => toast.error(tCommon("error")),
-    }),
+    trpc.operations.withdraw.mutationOptions(
+      handlers(t("withdrawn"), () => track({ name: "candidate_withdrew" })),
+    ),
   );
   const { operation } = request;
-  const status =
-    request.status === "CANCELLED"
-      ? "cancelled"
-      : operation
-        ? "inProgress"
-        : request.visibility;
+  const status = statusOf(request);
   const { offer } = request.session;
+  const { timeZone } = offer.center.country;
+  const name = request.beneficiaryName;
 
   return (
-    <Item variant="outline">
+    <Item variant="outline" className="flex-wrap">
       <ItemContent className="min-w-0">
         <ItemTitle className="flex-wrap">
-          {request.beneficiaryName}
-          <Badge
-            variant={
-              status === "published"
-                ? "default"
-                : status === "scheduled"
-                  ? "secondary"
-                  : "outline"
-            }
-          >
-            {t(`status.${status}`)}
-          </Badge>
-          {operation && (
+          {name}
+          <Badge variant={BADGE[status]}>{t(`status.${status}`)}</Badge>
+          {operation && status === "inProgress" && (
             <PresenceBadge online={online.has(operation.assistantKey)} />
           )}
         </ItemTitle>
@@ -191,7 +210,7 @@ function RequestItem({
           {status === "scheduled" &&
             ` · ${t("publishesAt", { date: format.dateTime(new Date(request.publishAt), { dateStyle: "medium", timeStyle: "short" }) })}`}
         </ItemDescription>
-        {operation && (
+        {operation && status === "inProgress" && (
           <Countdown
             start={new Date(operation.claimedAt)}
             end={new Date(operation.deadlineAt)}
@@ -199,63 +218,193 @@ function RequestItem({
             onEnd={refresh}
           />
         )}
+        {operation && status === "toConfirm" && (
+          <BookingAnswer
+            operationId={operation.id}
+            email={request.beneficiaryEmail}
+            refresh={refresh}
+          />
+        )}
+        {operation?.centerFeeDeadline && status === "booked" && (
+          <Alert>
+            <AlertTitle>{t("centerFee.title")}</AlertTitle>
+            <AlertDescription>
+              {t("centerFee.description", {
+                date: format.dateTime(new Date(operation.centerFeeDeadline), {
+                  dateStyle: "full",
+                  timeStyle: "short",
+                  timeZone,
+                  timeZoneName: "short",
+                }),
+              })}
+            </AlertDescription>
+          </Alert>
+        )}
+        {status === "disputed" && (
+          <p className="text-muted-foreground text-sm">{t("disputedHint")}</p>
+        )}
       </ItemContent>
-      {operation ? (
-        <ItemActions>
-          <AlertDialog>
-            <AlertDialogTrigger render={<Button variant="outline" size="sm" />}>
-              {t("withdraw")}
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>{t("withdrawTitle")}</AlertDialogTitle>
-                <AlertDialogDescription>
-                  {t("withdrawBody")}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>{t("keep")}</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => withdraw.mutate({ id: operation.id })}
-                >
-                  {t("withdraw")}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </ItemActions>
-      ) : (
-        request.status === "OPEN" && (
-          <ItemActions>
-            <AlertDialog>
-              <AlertDialogTrigger
-                render={<Button variant="outline" size="sm" />}
-              >
-                {t("cancel")}
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    {t("cancelTitle", { name: request.beneficiaryName })}
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    {t("cancelBody")}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>{t("keep")}</AlertDialogCancel>
-                  <AlertDialogAction
-                    variant="destructive"
-                    onClick={() => cancel.mutate({ id: request.id })}
-                  >
-                    {t("cancel")}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </ItemActions>
-        )
-      )}
+
+      <ItemActions className="flex-wrap">
+        {status === "credentials" && (
+          <Button size="sm" render={<Link href={routes.beneficiaries} />}>
+            {t("fixCredentials")}
+          </Button>
+        )}
+        {operation && status === "inProgress" && (
+          <ConfirmAction
+            trigger={<Button variant="outline" size="sm" />}
+            title={t("withdrawTitle")}
+            description={t("withdrawBody")}
+            confirm={t("withdraw")}
+            cancel={t("keep")}
+            onConfirm={() => withdraw.mutate({ id: operation.id })}
+          >
+            {t("withdraw")}
+          </ConfirmAction>
+        )}
+        {request.status === "OPEN" && !operation && (
+          <>
+            <ConfirmAction
+              trigger={<Button variant="ghost" size="sm" />}
+              title={t("elsewhereTitle", { name })}
+              description={t("elsewhereBody")}
+              confirm={t("elsewhere")}
+              cancel={t("keep")}
+              onConfirm={() => elsewhere.mutate({ id: request.id })}
+            >
+              {t("elsewhere")}
+            </ConfirmAction>
+            <ConfirmAction
+              trigger={<Button variant="outline" size="sm" />}
+              title={t("cancelTitle", { name })}
+              description={t("cancelBody")}
+              confirm={t("cancel")}
+              cancel={t("keep")}
+              destructive
+              onConfirm={() => cancel.mutate({ id: request.id })}
+            >
+              {t("cancel")}
+            </ConfirmAction>
+          </>
+        )}
+      </ItemActions>
     </Item>
+  );
+}
+
+const CHECKS = ["inbox", "spam", "tabs", "account", "warning"] as const;
+
+/** The centre's email decides: confirm it, or contest after checking every usual hiding place. */
+function BookingAnswer({
+  operationId,
+  email,
+  refresh,
+}: {
+  operationId: string;
+  email: string;
+  refresh: () => void;
+}) {
+  const t = useTranslations("myRequests.answer");
+  const tCommon = useTranslations("common");
+  const trpc = useTRPC();
+  const [open, setOpen] = useState(false);
+  const [checked, setChecked] = useState<string[]>([]);
+  const answer = useMutation(
+    trpc.operations.answer.mutationOptions({
+      onSuccess: async (_, { answer }) => {
+        track({
+          name: answer === "confirm" ? "mail_confirmed" : "booking_disputed",
+        });
+        setOpen(false);
+        await refresh();
+        toast.success(answer === "confirm" ? t("confirmed") : t("disputed"));
+      },
+      onError: () => toast.error(tCommon("error")),
+    }),
+  );
+  const complete = checked.length === CHECKS.length;
+
+  return (
+    <Alert>
+      <AlertTitle>{t("title")}</AlertTitle>
+      <AlertDescription className="flex flex-col gap-3">
+        <span>
+          {t("check")} <strong className="break-all">{email}</strong>
+        </span>
+        <span className="flex flex-wrap gap-2">
+          <Button
+            size="sm"
+            disabled={answer.isPending}
+            onClick={() =>
+              answer.mutate({
+                id: operationId,
+                answer: "confirm",
+                checked: false,
+              })
+            }
+          >
+            {t("received")}
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => setOpen(true)}>
+            {t("notReceived")}
+          </Button>
+        </span>
+      </AlertDescription>
+      <ResponsiveDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={t("checklistTitle")}
+        description={t("checklistHint")}
+      >
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (complete)
+              answer.mutate({
+                id: operationId,
+                answer: "dispute",
+                checked: true,
+              });
+          }}
+        >
+          <FieldGroup>
+            <FieldSet>
+              {CHECKS.map((check) => (
+                <Field key={check} orientation="horizontal">
+                  <Checkbox
+                    id={`check-${check}`}
+                    checked={checked.includes(check)}
+                    onCheckedChange={(value) =>
+                      setChecked((current) =>
+                        value
+                          ? [...current, check]
+                          : current.filter((item) => item !== check),
+                      )
+                    }
+                  />
+                  <FieldLabel
+                    htmlFor={`check-${check}`}
+                    className="font-normal"
+                  >
+                    {t(`checks.${check}`, { email })}
+                  </FieldLabel>
+                </Field>
+              ))}
+            </FieldSet>
+            {!complete && (
+              <p className="text-muted-foreground text-sm">{t("checkAll")}</p>
+            )}
+            <Button
+              type="submit"
+              variant="destructive"
+              disabled={!complete || answer.isPending}
+            >
+              {t("dispute")}
+            </Button>
+          </FieldGroup>
+        </form>
+      </ResponsiveDialog>
+    </Alert>
   );
 }

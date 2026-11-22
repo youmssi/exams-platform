@@ -14,6 +14,9 @@ Chaque story vit dans sa branche `exm-<code>-<titre>`, part de `develop` et y re
 | [EXM-017](EXM-017-emails-privacy-polish.md) | Emails, confidentialité, écrans allégés | 002, 005 | S |
 | [EXM-018](EXM-018-beneficiary-profile-and-modules.md) | Profil complet du bénéficiaire et choix des modules | 004, 005 | M |
 | [EXM-019](EXM-019-roles-and-assistant-profile.md) | Rôles visibles et profil assistant | 002, 007 | M |
+| [EXM-022](EXM-022-carry-over.md) | Report des demandes non réservées | 005, 008 | M |
+| [EXM-023](EXM-023-session-dates-helper.md) | Aide automatique pour les dates de session | 005 | M |
+| [EXM-024](EXM-024-third-party-consent.md) | Consentement des camarades par email | 004 | S |
 | [EXM-005](EXM-005-sessions-and-requests.md) | Sessions et publication des demandes | 003, 004 | L |
 | [EXM-006](EXM-006-live-queue.md) | File publique en temps réel et présence | 005 | M |
 | [EXM-007](EXM-007-claim.md) | Prendre une demande : un assistant, un client | 006 | L |

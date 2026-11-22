@@ -8,7 +8,12 @@ import {
 } from "@/trpc/init";
 import { publishInput } from "../schemas";
 import { listQueue } from "./queue";
-import { cancelRequest, listMyRequests, publishRequests } from "./service";
+import {
+  cancelRequest,
+  listMyRequests,
+  markBookedElsewhere,
+  publishRequests,
+} from "./service";
 
 /** After a change to the queue, connected assistants refresh it once the response is sent. */
 const notifyQueue = <T>(result: T) => {
@@ -29,6 +34,11 @@ export const requestsRouter = createTRPCRouter({
     .input(z.object({ id: z.string().min(1) }))
     .mutation(async ({ ctx, input }) =>
       notifyQueue(await cancelRequest(ctx.session.user.id, input.id)),
+    ),
+  bookedElsewhere: protectedProcedure
+    .input(z.object({ id: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) =>
+      notifyQueue(await markBookedElsewhere(ctx.session.user.id, input.id)),
     ),
   queue: assistantProcedure.query(({ ctx }) => listQueue(ctx.session.user.id)),
 });

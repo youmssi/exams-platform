@@ -63,3 +63,18 @@ export function createRealtimeToken(
     capability: JSON.stringify(capability),
   });
 }
+
+/** Whether the user has the app open right now; false when realtime is not configured or unreachable. */
+export async function isUserOnline(userId: string) {
+  const channels = channelsFor(userId);
+  if (!ably || !channels) return false;
+  try {
+    const members = await ably.channels.get(channels.presence).presence.get({
+      clientId: presenceKey(userId),
+    });
+    return members.items.length > 0;
+  } catch (error) {
+    console.error("Presence not read", error);
+    return false;
+  }
+}
