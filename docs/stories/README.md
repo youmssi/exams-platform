@@ -13,6 +13,7 @@ Chaque story vit dans sa branche `exm-<code>-<titre>`, part de `develop` et y re
 | [EXM-016](EXM-016-auth-hardening.md) | Durcissement de la connexion | 002 | S |
 | [EXM-017](EXM-017-emails-privacy-polish.md) | Emails, confidentialité, écrans allégés | 002, 005 | S |
 | [EXM-018](EXM-018-beneficiary-profile-and-modules.md) | Profil complet du bénéficiaire et choix des modules | 004, 005 | M |
+| [EXM-019](EXM-019-marketing-landing-page.md) | Landing page marketing | 001, 003 | M |
 | [EXM-005](EXM-005-sessions-and-requests.md) | Sessions et publication des demandes | 003, 004 | L |
 | [EXM-006](EXM-006-live-queue.md) | File publique en temps réel et présence | 005 | M |
 | [EXM-007](EXM-007-claim.md) | Prendre une demande : un assistant, un client | 006 | L |
