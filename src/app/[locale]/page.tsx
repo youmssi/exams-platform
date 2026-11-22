@@ -2,6 +2,8 @@ import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { use } from "react";
 import { Button } from "@/components/ui/button";
+import { routes } from "@/config/routes";
+import { Link } from "@/i18n/navigation";
 
 export default function HomePage({ params }: PageProps<"/[locale]">) {
   const { locale } = use(params);
@@ -14,7 +16,9 @@ export default function HomePage({ params }: PageProps<"/[locale]">) {
         {t("title")}
       </h1>
       <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
-      <Button size="lg">{t("cta")}</Button>
+      <Button size="lg" render={<Link href={routes.signIn} />}>
+        {t("cta")}
+      </Button>
     </main>
   );
 }

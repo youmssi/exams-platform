@@ -6,11 +6,172 @@
   "home": {
     "title": "Réservez votre place d'examen, simplement.",
     "subtitle": "Prix standard, aucun intermédiaire inconnu, suivi en temps réel.",
-    "cta": "Commencer"
+    "cta": "Se connecter"
   },
   "common": {
-    "loading": "Chargement…",
-    "retry": "Réessayer",
     "error": "Une erreur est survenue."
+  },
+  "validation": {
+    "email": "Saisissez une adresse email valide, par exemple nom@exemple.com.",
+    "otp": "Saisissez les 6 chiffres reçus par email.",
+    "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+    "required": "Ce champ est obligatoire.",
+    "tooLong": "Ce texte est trop long.",
+    "termsRequired": "Acceptez les conditions pour continuer.",
+    "invalid": "Valeur invalide."
+  },
+  "auth": {
+    "title": "Connexion à Exams",
+    "subtitle": "Pas encore de compte ? Il est créé automatiquement à la première connexion.",
+    "continueWith": "Continuer avec {provider}",
+    "or": "Ou",
+    "email": "Adresse email",
+    "sendCode": "Recevoir un code par email",
+    "usePassword": "Me connecter avec mon mot de passe",
+    "useCode": "Recevoir plutôt un code",
+    "password": "Mot de passe",
+    "signIn": "Se connecter",
+    "forgotPassword": "Mot de passe oublié ou pas encore défini ?",
+    "codeTitle": "Vérifiez vos emails",
+    "codeSentTo": "Nous avons envoyé un code à 6 chiffres à {email}.",
+    "code": "Code de vérification",
+    "verify": "Valider le code",
+    "resendIn": "Renvoyer un code dans {seconds} s",
+    "resend": "Renvoyer un code",
+    "changeEmail": "Changer d'adresse email",
+    "codeResent": "Nouveau code envoyé.",
+    "terms": "En continuant, vous acceptez les <terms>conditions d'utilisation et de confidentialité</terms>.",
+    "errors": {
+      "INVALID_OTP": "Code incorrect. Vérifiez les 6 chiffres ou demandez un nouveau code.",
+      "OTP_EXPIRED": "Ce code a expiré. Demandez-en un nouveau.",
+      "TOO_MANY_ATTEMPTS": "Trop d'essais. Demandez un nouveau code.",
+      "INVALID_EMAIL_OR_PASSWORD": "Email ou mot de passe incorrect.",
+      "BANNED_USER": "Ce compte est suspendu. Contactez le support.",
+      "RATE_LIMITED": "Trop de tentatives. Réessayez dans une minute.",
+      "default": "La connexion a échoué. Réessayez."
+    }
+  },
+  "resetPassword": {
+    "title": "Définir un nouveau mot de passe",
+    "subtitle": "Nous vous envoyons un code pour confirmer qu'il s'agit bien de vous.",
+    "sendCode": "Recevoir un code",
+    "newPassword": "Nouveau mot de passe",
+    "passwordHint": "Au moins 8 caractères.",
+    "submit": "Enregistrer le mot de passe",
+    "done": "Mot de passe enregistré. Vous pouvez vous connecter.",
+    "backToSignIn": "Retour à la connexion"
+  },
+  "welcome": {
+    "title": "Bienvenue sur Exams",
+    "subtitle": "Encore une étape, puis vous pourrez commencer.",
+    "name": "Votre nom",
+    "nameHint": "Tel qu'il apparaît sur votre pièce d'identité.",
+    "role": "Vous venez surtout pour…",
+    "roles": {
+      "candidate": {
+        "title": "Réserver ma place",
+        "description": "Je publie ma demande et je suis ma réservation."
+      },
+      "assistant": {
+        "title": "Réserver pour les autres",
+        "description": "J'ai une session ouverte sur le site du centre et je prends des demandes."
+      }
+    },
+    "roleHint": "Vous pourrez changer à tout moment depuis votre compte.",
+    "termsTitle": "En résumé",
+    "termsPoints": [
+      "Le prix est standard et affiché avant tout engagement.",
+      "Les identifiants du centre ne sont visibles que par l'assistant qui prend votre demande, puis effacés.",
+      "Un litige ou un impayé peut entraîner des sanctions."
+    ],
+    "acceptTerms": "J'accepte les conditions d'utilisation et de confidentialité.",
+    "readTerms": "Lire les conditions complètes",
+    "submit": "Commencer"
+  },
+  "app": {
+    "nav": {
+      "home": "Accueil",
+      "account": "Mon compte",
+      "main": "Navigation"
+    },
+    "signOut": "Se déconnecter",
+    "roleLabel": {
+      "candidate": "Candidat",
+      "assistant": "Assistant"
+    }
+  },
+  "homePage": {
+    "title": "Bonjour {name}",
+    "candidate": {
+      "title": "Votre première demande arrive bientôt",
+      "description": "La publication des demandes ouvre avec le catalogue des sessions."
+    },
+    "assistant": {
+      "title": "La file des demandes arrive bientôt",
+      "description": "Vous pourrez prendre des demandes dès l'ouverture de la file."
+    }
+  },
+  "account": {
+    "title": "Mon compte",
+    "activeRole": "Rôle actif",
+    "activeRoleHint": "Change ce que vous voyez dans l'application.",
+    "roleSaved": "Rôle mis à jour.",
+    "language": "Langue",
+    "languages": {
+      "fr": "Français",
+      "en": "English"
+    },
+    "devices": "Appareils connectés",
+    "devicesHint": "Déconnectez un appareil que vous ne reconnaissez pas.",
+    "thisDevice": "Cet appareil",
+    "lastActive": "Dernière activité : {date}",
+    "unknownDevice": "Appareil inconnu",
+    "signOutDevice": "Déconnecter",
+    "confirmTitle": "Déconnecter cet appareil ?",
+    "confirmBody": "La personne qui l'utilise devra se reconnecter.",
+    "cancel": "Annuler",
+    "deviceSignedOut": "Appareil déconnecté."
+  },
+  "emails": {
+    "otp": {
+      "preview": "Votre code : {code}",
+      "subject": {
+        "sign-in": "Votre code de connexion : {code}",
+        "email-verification": "Confirmez votre email : {code}",
+        "forget-password": "Code pour votre mot de passe : {code}",
+        "change-email": "Confirmez votre nouvel email : {code}",
+        "two-factor": "Code de sécurité : {code}"
+      },
+      "intro": "Saisissez ce code sur Exams :",
+      "expiry": "Il expire dans {minutes} minutes.",
+      "ignore": "Si vous n'êtes pas à l'origine de cette demande, ignorez cet email."
+    }
+  },
+  "legal": {
+    "title": "Conditions d'utilisation et de confidentialité",
+    "draft": "Version provisoire : le texte définitif sera publié avant le lancement.",
+    "sections": [
+      {
+        "title": "Le service",
+        "body": "Exams met en relation des candidats qui veulent réserver une place d'examen et des assistants qui réservent pour eux. Exams ne vend pas de places et n'est pas affilié aux centres d'examen."
+      },
+      {
+        "title": "Prix",
+        "body": "Le prix est fixé par Exams pour chaque centre et chaque niveau, et affiché avant tout engagement. Il comprend la part de l'assistant et une commission pour la plateforme."
+      },
+      {
+        "title": "Vos identifiants du centre",
+        "body": "Ils sont chiffrés, visibles uniquement par l'assistant qui prend votre demande, pendant la réservation, puis effacés. Changez votre mot de passe après la réservation."
+      },
+      {
+        "title": "Règlement et litiges",
+        "body": "Après la réservation, vous réglez directement l'assistant et la plateforme. En cas de désaccord, Exams examine les preuves et tranche. Un impayé ou un litige abusif peut entraîner une suspension."
+      },
+      {
+        "title": "Vos données",
+        "body": "Nous ne collectons que ce qui sert à la réservation et au suivi. Vous pouvez demander l'export ou la suppression de vos données."
+      }
+    ],
+    "back": "Retour à l'accueil"
   }
 }

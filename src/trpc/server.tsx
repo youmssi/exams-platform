@@ -6,7 +6,7 @@ import {
   type TRPCQueryOptions,
 } from "@trpc/tanstack-react-query";
 import { cache } from "react";
-import { createTRPCContext } from "./init";
+import { createTRPCContext } from "./context";
 import { makeQueryClient } from "./query-client";
 import { appRouter } from "./routers/_app";
 

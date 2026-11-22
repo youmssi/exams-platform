@@ -32,8 +32,9 @@ src/
   messages/               fr.json, en.json
   components/ui/          composants shadcn (générés, non lintés)
   components/providers/   providers globaux
-  shared/                 utilitaires sans métier (money, dates, ids)
-  config/env.ts           variables d'environnement validées (zod)
+  server/                 infrastructure serveur : env (zod), db (Prisma), email (Resend)
+  shared/                 utilitaires sans métier (formulaires, formatage)
+  config/routes.ts        routes de l'app, routes publiques
   proxy.ts                locale (et protection des routes en EXM-002)
 ```
 

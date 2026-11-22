@@ -6,11 +6,172 @@
   "home": {
     "title": "Book your exam seat, simply.",
     "subtitle": "Standard price, no unknown middlemen, real-time tracking.",
-    "cta": "Get started"
+    "cta": "Sign in"
   },
   "common": {
-    "loading": "Loading…",
-    "retry": "Try again",
     "error": "Something went wrong."
+  },
+  "validation": {
+    "email": "Enter a valid email address, for example name@example.com.",
+    "otp": "Enter the 6 digits we emailed you.",
+    "passwordTooShort": "Your password must be at least 8 characters.",
+    "required": "This field is required.",
+    "tooLong": "This text is too long.",
+    "termsRequired": "Accept the terms to continue.",
+    "invalid": "Invalid value."
+  },
+  "auth": {
+    "title": "Sign in to Exams",
+    "subtitle": "No account yet? It is created automatically the first time you sign in.",
+    "continueWith": "Continue with {provider}",
+    "or": "Or",
+    "email": "Email address",
+    "sendCode": "Email me a code",
+    "usePassword": "Sign in with my password",
+    "useCode": "Get a code instead",
+    "password": "Password",
+    "signIn": "Sign in",
+    "forgotPassword": "Forgot your password, or never set one?",
+    "codeTitle": "Check your email",
+    "codeSentTo": "We sent a 6-digit code to {email}.",
+    "code": "Verification code",
+    "verify": "Verify code",
+    "resendIn": "Resend a code in {seconds}s",
+    "resend": "Resend a code",
+    "changeEmail": "Use another email",
+    "codeResent": "New code sent.",
+    "terms": "By continuing, you agree to the <terms>terms of use and privacy</terms>.",
+    "errors": {
+      "INVALID_OTP": "Wrong code. Check the 6 digits or ask for a new code.",
+      "OTP_EXPIRED": "This code has expired. Ask for a new one.",
+      "TOO_MANY_ATTEMPTS": "Too many attempts. Ask for a new code.",
+      "INVALID_EMAIL_OR_PASSWORD": "Wrong email or password.",
+      "BANNED_USER": "This account is suspended. Contact support.",
+      "RATE_LIMITED": "Too many attempts. Try again in a minute.",
+      "default": "Sign-in failed. Try again."
+    }
+  },
+  "resetPassword": {
+    "title": "Set a new password",
+    "subtitle": "We will email you a code to confirm it is you.",
+    "sendCode": "Get a code",
+    "newPassword": "New password",
+    "passwordHint": "At least 8 characters.",
+    "submit": "Save password",
+    "done": "Password saved. You can now sign in.",
+    "backToSignIn": "Back to sign in"
+  },
+  "welcome": {
+    "title": "Welcome to Exams",
+    "subtitle": "One more step and you can get started.",
+    "name": "Your name",
+    "nameHint": "As it appears on your ID.",
+    "role": "You are mainly here to…",
+    "roles": {
+      "candidate": {
+        "title": "Book my seat",
+        "description": "I post my request and follow my booking."
+      },
+      "assistant": {
+        "title": "Book for others",
+        "description": "I have a session open on the centre's website and I take requests."
+      }
+    },
+    "roleHint": "You can change this anytime from your account.",
+    "termsTitle": "In short",
+    "termsPoints": [
+      "The price is standard and shown before you commit.",
+      "Exam-centre credentials are only visible to the assistant who takes your request, then deleted.",
+      "A dispute or an unpaid booking can lead to sanctions."
+    ],
+    "acceptTerms": "I accept the terms of use and privacy.",
+    "readTerms": "Read the full terms",
+    "submit": "Get started"
+  },
+  "app": {
+    "nav": {
+      "home": "Home",
+      "account": "My account",
+      "main": "Navigation"
+    },
+    "signOut": "Sign out",
+    "roleLabel": {
+      "candidate": "Candidate",
+      "assistant": "Assistant"
+    }
+  },
+  "homePage": {
+    "title": "Hello {name}",
+    "candidate": {
+      "title": "Your first request is coming soon",
+      "description": "Requests open together with the exam session catalogue."
+    },
+    "assistant": {
+      "title": "The request queue is coming soon",
+      "description": "You will be able to take requests as soon as the queue opens."
+    }
+  },
+  "account": {
+    "title": "My account",
+    "activeRole": "Active role",
+    "activeRoleHint": "Changes what you see in the app.",
+    "roleSaved": "Role updated.",
+    "language": "Language",
+    "languages": {
+      "fr": "Français",
+      "en": "English"
+    },
+    "devices": "Signed-in devices",
+    "devicesHint": "Sign out any device you do not recognise.",
+    "thisDevice": "This device",
+    "lastActive": "Last active: {date}",
+    "unknownDevice": "Unknown device",
+    "signOutDevice": "Sign out",
+    "confirmTitle": "Sign out this device?",
+    "confirmBody": "Whoever uses it will have to sign in again.",
+    "cancel": "Cancel",
+    "deviceSignedOut": "Device signed out."
+  },
+  "emails": {
+    "otp": {
+      "preview": "Your code: {code}",
+      "subject": {
+        "sign-in": "Your sign-in code: {code}",
+        "email-verification": "Confirm your email: {code}",
+        "forget-password": "Your password code: {code}",
+        "change-email": "Confirm your new email: {code}",
+        "two-factor": "Security code: {code}"
+      },
+      "intro": "Enter this code on Exams:",
+      "expiry": "It expires in {minutes} minutes.",
+      "ignore": "If you did not request this, ignore this email."
+    }
+  },
+  "legal": {
+    "title": "Terms of use and privacy",
+    "draft": "Draft version: the final text will be published before launch.",
+    "sections": [
+      {
+        "title": "The service",
+        "body": "Exams connects candidates who want to book an exam seat with assistants who book it for them. Exams does not sell seats and is not affiliated with exam centres."
+      },
+      {
+        "title": "Price",
+        "body": "Exams sets the price for each centre and level, and shows it before you commit. It includes the assistant's share and a platform commission."
+      },
+      {
+        "title": "Your exam-centre credentials",
+        "body": "They are encrypted, visible only to the assistant who takes your request during the booking, then deleted. Change your password after the booking."
+      },
+      {
+        "title": "Payment and disputes",
+        "body": "After the booking, you pay the assistant and the platform directly. If you disagree, Exams reviews the evidence and decides. An unpaid booking or an abusive dispute can lead to a suspension."
+      },
+      {
+        "title": "Your data",
+        "body": "We only collect what the booking and its follow-up need. You can ask us to export or delete your data."
+      }
+    ],
+    "back": "Back to home"
   }
 }

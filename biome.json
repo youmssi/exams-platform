@@ -13,6 +13,7 @@
       "!.next",
       "!dist",
       "!build",
+      "!.claude",
       "!src/components/ui",
       "!src/generated"
     ]
@@ -37,8 +38,8 @@
           "options": {
             "patterns": [
               {
-                "group": ["@/modules/*/**"],
-                "message": "Import a module through its public API only: '@/modules/<name>'. Inside a module, use relative imports."
+                "group": ["@/modules/*/**", "!@/modules/*/client"],
+                "message": "Import a module through its public API only: '@/modules/<name>' (server) or '@/modules/<name>/client' (client components). Inside a module, use relative imports."
               }
             ]
           }

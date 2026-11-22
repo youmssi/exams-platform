@@ -12,8 +12,8 @@ Next.js 16 (App Router, Cache Components, React Compiler) · React 19 · TypeScr
 
 ## Architecture : monolithe modulaire
 
-- Le code métier vit dans `src/modules/<module>/`. Chaque module expose **uniquement** son `index.ts`.
-- Hors d'un module, on importe `@/modules/<module>` et jamais un fichier interne. Biome bloque les imports internes (`noRestrictedImports`).
+- Le code métier vit dans `src/modules/<module>/`. Chaque module expose **uniquement** deux points d'entrée : `index.ts` (API serveur, utilisable par les pages) et, si besoin, `client.ts` (ce que les composants client peuvent importer).
+- Hors d'un module, on importe `@/modules/<module>` ou `@/modules/<module>/client`, jamais un fichier interne. Biome bloque les imports internes (`noRestrictedImports`).
 - Dans un module, on utilise des imports relatifs.
 - Les règles métier pures vont dans `domain/` et sont testées avec Vitest. Elles ne dépendent ni de Prisma, ni de Next, ni de React.
 - Aucune valeur métier en dur (prix, délais, commission, plafond) : elles viennent du catalogue (`Centre × Niveau`) ou de la configuration.
@@ -24,7 +24,8 @@ Structure d'un module :
 
 ```
 src/modules/<module>/
-  index.ts          API publique (router, types, composants exportés)
+  index.ts          API publique serveur (router, gardes, composants pour les pages)
+  client.ts         API publique client (optionnelle)
   domain/           règles pures + tests (*.test.ts)
   server/           router.ts (tRPC), service.ts, repository.ts
   ui/               composants React du module

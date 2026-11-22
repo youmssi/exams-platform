@@ -1,16 +1,6 @@
-import { initTRPC } from "@trpc/server";
-import { cache } from "react";
+import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-
-/**
- * Request context. The auth session is added in EXM-002.
- * @see https://trpc.io/docs/server/context
- */
-export const createTRPCContext = cache(async () => {
-  return {};
-});
-
-type Context = Awaited<ReturnType<typeof createTRPCContext>>;
+import type { Context } from "./context";
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
@@ -19,3 +9,12 @@ const t = initTRPC.context<Context>().create({
 export const createTRPCRouter = t.router;
 export const createCallerFactory = t.createCallerFactory;
 export const baseProcedure = t.procedure;
+
+/** Signed-in, not banned. */
+export const protectedProcedure = baseProcedure.use(({ ctx, next }) => {
+  const { session } = ctx;
+  if (!session || session.user.banned) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({ ctx: { ...ctx, session } });
+});
