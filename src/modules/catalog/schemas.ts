@@ -15,7 +15,29 @@ export const countryInput = z.object({
       (zone) => Intl.supportedValuesOf("timeZone").includes(zone),
       "timeZone",
     ),
+  /** Mobile Money operators assistants are paid with (assistant profile). */
+  mobileMoneyOperators: z.array(z.string().trim().min(1)),
   active: z.boolean(),
+});
+
+/** Lists the admin types as comma-separated text (modules, operators). */
+const splitList = (text: string) =>
+  text
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+const joinList = (items: string[]) => items.join(", ");
+
+export const countryFormSchema = countryInput.extend({
+  mobileMoneyOperators: z.string(),
+});
+export type CountryFormValues = z.infer<typeof countryFormSchema>;
+export const toCountryInput = ({
+  mobileMoneyOperators,
+  ...rest
+}: CountryFormValues) => ({
+  ...rest,
+  mobileMoneyOperators: splitList(mobileMoneyOperators),
 });
 
 export const centerInput = z.object({
@@ -73,10 +95,7 @@ export const toOfferInput = ({
 }: OfferFormValues): OfferInput => ({
   ...rest,
   commissionRateBp: Math.round(commissionPercent * 100),
-  modules: modules
-    .split(",")
-    .map((module) => module.trim())
-    .filter(Boolean),
+  modules: splitList(modules),
 });
 
 export const toOfferForm = ({
@@ -86,10 +105,17 @@ export const toOfferForm = ({
 }: OfferInput): OfferFormValues => ({
   ...rest,
   commissionPercent: commissionRateBp / 100,
-  modules: modules.join(", "),
+  modules: joinList(modules),
 });
 
 export type CountryInput = z.infer<typeof countryInput>;
+export const toCountryForm = ({
+  mobileMoneyOperators,
+  ...rest
+}: CountryInput): CountryFormValues => ({
+  ...rest,
+  mobileMoneyOperators: joinList(mobileMoneyOperators),
+});
 export type CenterInput = z.infer<typeof centerInput>;
 export type OfferInput = z.infer<typeof offerInput>;
 

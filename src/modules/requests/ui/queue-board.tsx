@@ -58,7 +58,7 @@ function Queue({ state }: { state: LiveState }) {
   const t = useTranslations("queue");
   const trpc = useTRPC();
   const {
-    data: { busy, requests },
+    data: { state: queueState, requests },
   } = useSuspenseQuery({
     ...trpc.requests.queue.queryOptions(),
     refetchInterval: state.live ? POLL_LIVE_MS : POLL_FALLBACK_MS,
@@ -75,16 +75,22 @@ function Queue({ state }: { state: LiveState }) {
 
   const sessions = groupBySession(visible);
 
-  if (busy) {
+  if (queueState !== "open") {
     return (
       <Empty className="border">
         <EmptyHeader>
-          <EmptyTitle>{t("busy.title")}</EmptyTitle>
-          <EmptyDescription>{t("busy.description")}</EmptyDescription>
+          <EmptyTitle>{t(`${queueState}.title`)}</EmptyTitle>
+          <EmptyDescription>{t(`${queueState}.description`)}</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button render={<Link href={routes.operation} />}>
-            {t("busy.action")}
+          <Button
+            render={
+              <Link
+                href={queueState === "busy" ? routes.operation : routes.account}
+              />
+            }
+          >
+            {t(`${queueState}.action`)}
           </Button>
         </EmptyContent>
       </Empty>
@@ -218,6 +224,11 @@ function RequestRow({
         router.push(routes.operation);
       },
       onError: (error) => {
+        if (error.message === "profileIncomplete") {
+          toast.error(t("profileIncomplete.title"));
+          router.push(routes.account);
+          return;
+        }
         if (error.message === "busy") {
           toast.error(t("errors.busy"));
           router.push(routes.operation);

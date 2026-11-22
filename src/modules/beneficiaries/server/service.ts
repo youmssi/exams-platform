@@ -61,6 +61,15 @@ async function ensureSelf(owner: Owner) {
   }
 }
 
+/** Whether the account holder can publish for themselves. */
+export async function isSelfReady(ownerId: string) {
+  const self = await db.beneficiary.findFirst({
+    where: { ownerId, isSelf: true },
+    select: PUBLIC_FIELDS,
+  });
+  return Boolean(self && toPublic(self).isReady);
+}
+
 export async function listBeneficiaries(owner: Owner) {
   await ensureSelf(owner);
   const rows = await db.beneficiary.findMany({

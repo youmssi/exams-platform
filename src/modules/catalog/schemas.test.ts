@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { countryInput, offerInput, toOfferForm, toOfferInput } from "./schemas";
+import {
+  countryInput,
+  offerInput,
+  toCountryForm,
+  toCountryInput,
+  toOfferForm,
+  toOfferInput,
+} from "./schemas";
 
 const offer = {
   centerId: "center_1",
@@ -58,6 +65,7 @@ describe("countryInput", () => {
         code: "CM",
         currency: "XAF",
         timeZone: "Africa/Douala",
+        mobileMoneyOperators: ["MTN Mobile Money", "Orange Money"],
         active: true,
       }).success,
     ).toBe(true);
@@ -66,6 +74,7 @@ describe("countryInput", () => {
         code: "cm",
         currency: "XAF",
         timeZone: "Africa/Douala",
+        mobileMoneyOperators: ["MTN Mobile Money", "Orange Money"],
         active: true,
       }).success,
     ).toBe(false);
@@ -77,5 +86,26 @@ describe("countryInput", () => {
         active: true,
       }).success,
     ).toBe(false);
+  });
+});
+
+describe("country form", () => {
+  it("round-trips Mobile Money operators as comma-separated text", () => {
+    const country = {
+      code: "CM",
+      currency: "XAF",
+      timeZone: "Africa/Douala",
+      mobileMoneyOperators: ["MTN Mobile Money", "Orange Money"],
+      active: true,
+    };
+    expect(toCountryForm(country).mobileMoneyOperators).toBe(
+      "MTN Mobile Money, Orange Money",
+    );
+    expect(
+      toCountryInput({
+        ...toCountryForm(country),
+        mobileMoneyOperators: " A ,, B ",
+      }).mobileMoneyOperators,
+    ).toEqual(["A", "B"]);
   });
 });

@@ -7,7 +7,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { requireOnboardedUser } from "@/modules/identity";
+import { RoleSwitch, requireOnboardedUser } from "@/modules/identity";
 import { channelsFor } from "@/modules/realtime";
 import { PresenceBeacon, RealtimeProvider } from "@/modules/realtime/client";
 
@@ -33,6 +33,9 @@ async function Shell({ children }: { children: React.ReactNode }) {
               orientation="vertical"
               className="mr-2 data-vertical:h-4 data-vertical:self-auto"
             />
+            <div className="ml-auto">
+              <RoleSwitch activeRole={user.activeRole} />
+            </div>
           </header>
           <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 p-4 pt-0">
             {children}

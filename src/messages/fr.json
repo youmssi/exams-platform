@@ -139,26 +139,42 @@
     "roleLabel": {
       "candidate": "Candidat",
       "assistant": "Assistant"
+    },
+    "roleSwitch": {
+      "label": "Rôle actif",
+      "candidate": "Candidat",
+      "assistant": "Assistant"
     }
   },
   "homePage": {
     "title": "Bonjour {name}",
     "candidate": {
-      "title": "Publiez votre demande",
-      "description": "Elle partira à l'ouverture des inscriptions.",
-      "action": "Voir les sessions"
+      "setup": {
+        "title": "Complétez votre profil candidat",
+        "description": "Nom, naissance, téléphone et compte du centre.",
+        "action": "Compléter mon profil"
+      },
+      "ready": {
+        "title": "Publiez votre demande",
+        "description": "Elle partira à l'ouverture des inscriptions.",
+        "action": "Voir les sessions"
+      }
     },
     "assistant": {
-      "title": "Des demandes vous attendent",
-      "description": "Elles arrivent en direct.",
-      "action": "Voir la file"
+      "setup": {
+        "title": "Complétez votre profil assistant",
+        "description": "Téléphone et compte Mobile Money.",
+        "action": "Compléter mon profil"
+      },
+      "ready": {
+        "title": "Des demandes vous attendent",
+        "description": "Elles arrivent en direct.",
+        "action": "Voir la file"
+      }
     }
   },
   "account": {
     "title": "Mon compte",
-    "activeRole": "Rôle actif",
-    "activeRoleHint": "Change ce que vous voyez.",
-    "roleSaved": "Rôle mis à jour.",
     "language": "Langue",
     "languages": {
       "fr": "Français",
@@ -191,7 +207,9 @@
       "confirmTitle": "3. Saisissez le code affiché par l'application",
       "confirm": "Confirmer l'activation",
       "done": "Vérification en deux étapes activée."
-    }
+    },
+    "profiles": "Mes profils",
+    "profilesHint": "Un compte, deux rôles. Complétez le profil du rôle que vous utilisez."
   },
   "emails": {
     "otp": {
@@ -373,7 +391,9 @@
         "currencyHint": "3 lettres, par exemple XAF.",
         "timeZone": "Fuseau horaire",
         "timeZoneHint": "Par exemple Africa/Douala. Les heures sont affichées dans ce fuseau.",
-        "active": "Visible par les utilisateurs"
+        "active": "Visible par les utilisateurs",
+        "operators": "Opérateurs Mobile Money",
+        "operatorsHint": "Séparés par des virgules, ex. MTN Mobile Money, Orange Money."
       },
       "center": {
         "title": "Centre",
@@ -597,6 +617,11 @@
     "errors": {
       "alreadyTaken": "Déjà prise par un autre assistant.",
       "busy": "Vous avez déjà une opération en cours."
+    },
+    "profileIncomplete": {
+      "title": "Complétez votre profil assistant",
+      "description": "Téléphone et compte Mobile Money, avant de prendre une demande.",
+      "action": "Compléter mon profil"
     }
   },
   "countdown": {
@@ -639,5 +664,31 @@
     "keep": "Continuer",
     "released": "Demande libérée.",
     "openSite": "Site du centre"
+  },
+  "candidateProfile": {
+    "title": "Profil candidat",
+    "ready": "Prêt",
+    "incomplete": "À compléter",
+    "why": "Nécessaire pour publier une demande.",
+    "complete": "Compléter",
+    "edit": "Modifier"
+  },
+  "assistantProfile": {
+    "title": "Profil assistant",
+    "ready": "Prêt",
+    "incomplete": "À compléter",
+    "why": "Nécessaire pour prendre une demande.",
+    "complete": "Compléter",
+    "edit": "Modifier",
+    "phone": "Téléphone",
+    "phoneHint": "Pour vous joindre pendant une réservation.",
+    "payout": "Paiement",
+    "country": "Pays",
+    "operator": "Opérateur Mobile Money",
+    "momoNumber": "Numéro Mobile Money",
+    "momoName": "Nom du titulaire",
+    "momoNameHint": "Tel qu'il s'affiche dans l'application Mobile Money.",
+    "save": "Enregistrer",
+    "saved": "Profil assistant enregistré."
   }
 }
