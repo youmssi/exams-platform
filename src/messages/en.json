@@ -9,6 +9,126 @@
     "cta": "Sign in",
     "continue": "Continue"
   },
+  "landing": {
+    "nav": {
+      "label": "Main navigation",
+      "how": "How it works",
+      "security": "Security",
+      "prices": "Pricing",
+      "signIn": "Sign in"
+    },
+    "hero": {
+      "eyebrow": "A more reassuring way to book exams",
+      "title": "Your next exam seat,",
+      "accent": "without the runaround.",
+      "description": "Exams connects candidates with assistants who book on their behalf. See standard prices upfront, follow each step in real time, and confirm the booking and payment on both sides.",
+      "cta": "Find a session",
+      "secondary": "See how it works",
+      "note": "Language exams · Standard pricing · Live updates"
+    },
+    "visual": {
+      "live": "Real-time tracking",
+      "session": "SESSION · B1",
+      "opening": "ILLUSTRATIVE JOURNEY",
+      "example": "illustrative example",
+      "status": "Confirmed",
+      "timeline": "Your request is moving",
+      "updated": "Key milestones",
+      "steps": {
+        "published": {
+          "title": "Request posted",
+          "body": "Your session and details are ready."
+        },
+        "taken": {
+          "title": "An assistant takes it",
+          "body": "The booking progresses step by step."
+        },
+        "booked": {
+          "title": "Booking confirmed",
+          "body": "You confirm the booking before payment."
+        }
+      },
+      "safeTitle": "Information protected",
+      "safeBody": "Limited access during booking",
+      "priceLabel": "Price",
+      "priceValue": "Standard, shown before you continue"
+    },
+    "proof": {
+      "priceTitle": "Standard pricing",
+      "priceBody": "See the price before you commit.",
+      "liveTitle": "Live updates",
+      "liveBody": "Each important step is confirmed.",
+      "privateTitle": "Protected data",
+      "privateBody": "Your credentials stay confidential."
+    },
+    "journey": {
+      "kicker": "Simple from start to finish",
+      "title": "One request. A clear journey.",
+      "body": "Know what is happening from the moment you post through to payment.",
+      "steps": {
+        "one": {
+          "title": "Choose your session",
+          "body": "Select the centre, level and exam date that work for you."
+        },
+        "two": {
+          "title": "Follow the booking",
+          "body": "An assistant takes your request and moves forward with you, one step at a time."
+        },
+        "three": {
+          "title": "Confirm and pay",
+          "body": "Both sides confirm the booking before payment is made."
+        }
+      },
+      "note": "Booking for someone else? Add their information with their consent; it stays encrypted and limited to what the booking requires."
+    },
+    "security": {
+      "kicker": "Trust and privacy",
+      "title": "Your information stays in safe hands.",
+      "body": "Booking may require information for the exam-centre account. It is protected, visible only to the assistant who takes the request, and deleted when the operation is closed.",
+      "cta": "Read the privacy policy",
+      "points": {
+        "encrypted": {
+          "title": "Encrypted credentials",
+          "body": "Exam-centre passwords protected with AES-256-GCM."
+        },
+        "limited": {
+          "title": "Limited access",
+          "body": "Only the assistant taking the request can see them."
+        },
+        "confirmed": {
+          "title": "Confirmed on both sides",
+          "body": "Booking and payment status stay clear."
+        },
+        "deleted": {
+          "title": "Deleted at closure",
+          "body": "Credentials are erased when the operation ends."
+        }
+      }
+    },
+    "pricing": {
+      "kicker": "No surprises",
+      "title": "Standard pricing, made clear.",
+      "body": "The amount depends on the centre and level. Check active catalogue prices before posting your request.",
+      "cardTitle": "Catalogue pricing",
+      "cardBody": "Currently configured active offers",
+      "badge": "Live catalogue",
+      "empty": "Prices for active offers will appear here when available. The applicable amount is always shown before you commit.",
+      "standard": "Standard price",
+      "split": "The amount includes the assistant’s share and the platform commission. The exact breakdown is shown before you commit; no unknown fees are added to the displayed price.",
+      "cta": "Browse sessions"
+    },
+    "final": {
+      "kicker": "Ready to begin?",
+      "title": "Your next session starts here.",
+      "body": "Explore available sessions and take things at your own pace, with clear prices and precise updates.",
+      "cta": "Get started"
+    },
+    "footer": {
+      "note": "A transparent way to connect for language exams.",
+      "terms": "Terms of use",
+      "privacy": "Privacy"
+    }
+  },
   "common": {
     "error": "Something went wrong."
   },

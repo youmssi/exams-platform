@@ -9,6 +9,126 @@
     "cta": "Se connecter",
     "continue": "Continuer"
   },
+  "landing": {
+    "nav": {
+      "label": "Navigation principale",
+      "how": "Comment ça marche",
+      "security": "Sécurité",
+      "prices": "Prix",
+      "signIn": "Se connecter"
+    },
+    "hero": {
+      "eyebrow": "La réservation d’examens, plus sereine",
+      "title": "Votre prochaine place d’examen,",
+      "accent": "sans le parcours du combattant.",
+      "description": "Exams met en relation les candidats et les assistants qui réservent pour eux. Un prix standard affiché, des étapes suivies en direct et un règlement confirmé des deux côtés.",
+      "cta": "Trouver une session",
+      "secondary": "Découvrir le parcours",
+      "note": "Examens de langue · Prix standard · Suivi en temps réel"
+    },
+    "visual": {
+      "live": "Suivi en temps réel",
+      "session": "SESSION · B1",
+      "opening": "EXEMPLE DE PARCOURS",
+      "example": "exemple illustratif",
+      "status": "Confirmée",
+      "timeline": "Votre demande avance",
+      "updated": "Étapes clés",
+      "steps": {
+        "published": {
+          "title": "Demande publiée",
+          "body": "Votre session et vos informations sont prêtes."
+        },
+        "taken": {
+          "title": "Un assistant la prend",
+          "body": "La réservation est suivie étape par étape."
+        },
+        "booked": {
+          "title": "Réservation confirmée",
+          "body": "Vous confirmez la réservation avant le règlement."
+        }
+      },
+      "safeTitle": "Informations protégées",
+      "safeBody": "Accès limité pendant la réservation",
+      "priceLabel": "Tarif",
+      "priceValue": "Standard, affiché avant de continuer"
+    },
+    "proof": {
+      "priceTitle": "Prix standard",
+      "priceBody": "Le tarif est visible avant votre engagement.",
+      "liveTitle": "Suivi en direct",
+      "liveBody": "Chaque étape importante est confirmée.",
+      "privateTitle": "Données protégées",
+      "privateBody": "Les identifiants restent confidentiels."
+    },
+    "journey": {
+      "kicker": "Simple, du début à la fin",
+      "title": "Une demande. Un parcours clair.",
+      "body": "Vous gardez la visibilité sur ce qui se passe, de la publication jusqu’au règlement.",
+      "steps": {
+        "one": {
+          "title": "Choisissez votre session",
+          "body": "Sélectionnez le centre, le niveau et la date d’examen qui vous conviennent."
+        },
+        "two": {
+          "title": "Suivez la réservation",
+          "body": "Un assistant prend votre demande et avance avec vous, étape par étape."
+        },
+        "three": {
+          "title": "Confirmez et réglez",
+          "body": "La réservation est confirmée par les deux côtés avant les règlements."
+        }
+      },
+      "note": "Vous réservez pour un proche ? Ajoutez ses informations avec son accord ; elles restent chiffrées et limitées au besoin de réservation."
+    },
+    "security": {
+      "kicker": "Confiance et confidentialité",
+      "title": "Vos informations restent entre de bonnes mains.",
+      "body": "La réservation nécessite parfois des informations liées au compte du centre. Elles sont protégées, accessibles uniquement à l’assistant qui prend la demande et supprimées à la clôture de l’opération.",
+      "cta": "Lire la politique de confidentialité",
+      "points": {
+        "encrypted": {
+          "title": "Identifiants chiffrés",
+          "body": "Protection AES-256-GCM des mots de passe du centre."
+        },
+        "limited": {
+          "title": "Accès limité",
+          "body": "Seul l’assistant qui prend la demande peut les voir."
+        },
+        "confirmed": {
+          "title": "Confirmation des deux côtés",
+          "body": "Le suivi distingue clairement réservation et règlement."
+        },
+        "deleted": {
+          "title": "Suppression à la clôture",
+          "body": "Les identifiants sont effacés quand l’opération se termine."
+        }
+      }
+    },
+    "pricing": {
+      "kicker": "Prix sans surprise",
+      "title": "Le tarif standard, en toute clarté.",
+      "body": "Le montant dépend du centre et du niveau. Consultez les tarifs actifs du catalogue avant de publier votre demande.",
+      "cardTitle": "Tarifs du catalogue",
+      "cardBody": "Offres actives actuellement configurées",
+      "badge": "Mis à jour depuis le catalogue",
+      "empty": "Les tarifs des offres actives seront affichés ici dès qu’ils seront disponibles. Le montant applicable est toujours présenté avant que vous vous engagiez.",
+      "standard": "Prix standard",
+      "split": "Le montant comprend la part de l’assistant et la commission de la plateforme. La répartition exacte est présentée avant votre engagement ; aucun frais inconnu ne s’ajoute au tarif affiché.",
+      "cta": "Voir les sessions"
+    },
+    "final": {
+      "kicker": "Prêt à commencer ?",
+      "title": "Votre prochaine session commence ici.",
+      "body": "Parcourez les sessions disponibles et avancez à votre rythme, avec un prix clair et un suivi précis.",
+      "cta": "Commencer"
+    },
+    "footer": {
+      "note": "Une mise en relation transparente pour vos examens de langue.",
+      "terms": "Conditions d’utilisation",
+      "privacy": "Confidentialité"
+    }
+  },
   "common": {
     "error": "Une erreur est survenue."
   },

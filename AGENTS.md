@@ -110,3 +110,13 @@ npm run lint:fix    # corrige le format et les imports
 - Identifiants des centres d'examen : chiffrés (AES-256-GCM), visibles uniquement par l'assistant qui a pris la demande, effacés à la clôture.
 - Jamais de secret dans le code ou dans `.env.example`.
 - Toute action critique est vérifiée côté serveur (rôle, statut de l'opération, propriétaire) ; l'interface ne fait jamais foi.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
