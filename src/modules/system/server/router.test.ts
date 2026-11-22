@@ -4,7 +4,7 @@ import { systemRouter } from "./router";
 
 describe("systemRouter", () => {
   it("reports a healthy status", async () => {
-    const caller = createCallerFactory(systemRouter)({});
+    const caller = createCallerFactory(systemRouter)({ session: null });
     await expect(caller.health()).resolves.toEqual({ status: "ok" });
   });
 });
