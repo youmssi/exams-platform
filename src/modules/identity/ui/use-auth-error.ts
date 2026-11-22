@@ -8,6 +8,9 @@ const KNOWN = new Set([
   "TOO_MANY_ATTEMPTS",
   "INVALID_EMAIL_OR_PASSWORD",
   "BANNED_USER",
+  "INVALID_CODE",
+  "INVALID_BACKUP_CODE",
+  "INVALID_TWO_FACTOR_COOKIE",
 ]);
 
 type AuthError = { code?: string; status?: number } | null | undefined;

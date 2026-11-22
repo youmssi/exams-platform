@@ -32,6 +32,13 @@ npm run dev                  # http://localhost:3000 (fr) et /en
 | [`docs/ui/component-map.md`](docs/ui/component-map.md) | Inventaire shadcn et composants par workflow |
 | [`docs/stories/`](docs/stories/README.md) | Backlog et stories |
 
+## Premier administrateur
+
+1. Se connecter une première fois sur l'app (le compte est créé).
+2. Dans la console Neon (branche `main`), exécuter : `UPDATE "user" SET role = 'admin' WHERE email = '<email>';`
+3. Dans « Mon compte » : définir un mot de passe si besoin, puis activer la vérification en deux étapes.
+4. Se reconnecter avec mot de passe + code de l'application : le menu « Administration » apparaît.
+
 ## Workflow
 
 `exm-<code>-<titre>` → `develop` → `main` (production). Détails dans [`AGENTS.md`](AGENTS.md).

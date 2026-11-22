@@ -49,12 +49,20 @@ import { routing } from "@/i18n/routing";
 import { useTRPC } from "@/trpc/client";
 import { authClient } from "../auth-client";
 import { ROLES, type Role } from "../schemas";
+import { TwoFactorCard } from "./two-factor-card";
 
-export function AccountSettings({ activeRole }: { activeRole: Role }) {
+type AccountSettingsProps = {
+  activeRole: Role;
+  /** Admins manage their second factor here. */
+  admin?: { twoFactorEnabled: boolean };
+};
+
+export function AccountSettings({ activeRole, admin }: AccountSettingsProps) {
   const t = useTranslations("account");
   return (
     <div className="flex flex-col gap-6">
       <h1 className="font-semibold text-2xl">{t("title")}</h1>
+      {admin && <TwoFactorCard enabled={admin.twoFactorEnabled} />}
       <RoleCard activeRole={activeRole} />
       <LanguageCard />
       <DevicesCard />

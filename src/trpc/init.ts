@@ -18,3 +18,12 @@ export const protectedProcedure = baseProcedure.use(({ ctx, next }) => {
   }
   return next({ ctx: { ...ctx, session } });
 });
+
+/** Admin whose session was opened with password + authenticator app. */
+export const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
+  const { user, session } = ctx.session;
+  if (user.role !== "admin" || !session.secondFactorAt) {
+    throw new TRPCError({ code: "FORBIDDEN" });
+  }
+  return next();
+});

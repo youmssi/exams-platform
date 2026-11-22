@@ -120,7 +120,8 @@ Les délais viennent de `Offer`. Chaque fonction relit l'état avant d'agir (ide
 
 - Identifiants du centre : AES-256-GCM, clé `CREDENTIALS_ENCRYPTION_KEY` (rotation prévue), déchiffrés seulement pour l'assistant de l'opération active, effacés à la clôture.
 - Autorisation dans chaque procédure tRPC : `protectedProcedure`, `assistantProcedure`, `adminProcedure`, plus la vérification du propriétaire et du statut.
-- Better Auth : vérification d'email, limite de tentatives, 2FA obligatoire pour les admins, bannissement et révocation des sessions par le plugin admin.
+- Better Auth : limite de tentatives, bannissement et révocation des sessions par le plugin admin.
+- Admins : 2FA par application d'authentification (TOTP) obligatoire. Une session n'est « admin » que si elle a été ouverte par mot de passe + code TOTP ou code de secours (`session.secondFactorAt`, posé à la création de la session). Le code par email et Google/Microsoft ouvrent une session normale, sans accès admin.
 - Preuves de litige sur R2 : bucket privé, envoi par URL signée (5 min), lecture par URL signée réservée à l'admin et aux parties.
 
 ## 8. Environnements

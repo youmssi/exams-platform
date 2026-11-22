@@ -14,11 +14,25 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
+import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { useFieldErrors } from "./use-field-errors";
 
 type TextFieldProps = Omit<
@@ -155,5 +169,110 @@ export function ChoiceCardsField({
       </RadioGroup>
       <FieldError errors={errors} />
     </FieldSet>
+  );
+}
+
+type NumberFieldProps = {
+  label: ReactNode;
+  description?: ReactNode;
+  /** Unit shown after the value, e.g. "FCFA", "%", "min". */
+  unit?: ReactNode;
+  step?: number;
+  min?: number;
+};
+
+export function NumberField({
+  label,
+  description,
+  unit,
+  step = 1,
+  min = 0,
+}: NumberFieldProps) {
+  const { field, isInvalid, errors } = useFieldErrors();
+  const value = field.state.value as number;
+  return (
+    <Field data-invalid={isInvalid}>
+      <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+      <InputGroup>
+        <InputGroupInput
+          id={field.name}
+          name={field.name}
+          type="number"
+          inputMode="numeric"
+          step={step}
+          min={min}
+          value={Number.isNaN(value) ? "" : value}
+          onBlur={field.handleBlur}
+          onChange={(event) => field.handleChange(event.target.valueAsNumber)}
+          aria-invalid={isInvalid}
+        />
+        {unit && (
+          <InputGroupAddon align="inline-end">
+            <InputGroupText>{unit}</InputGroupText>
+          </InputGroupAddon>
+        )}
+      </InputGroup>
+      {description && <FieldDescription>{description}</FieldDescription>}
+      <FieldError errors={errors} />
+    </Field>
+  );
+}
+
+type SelectFieldProps = {
+  label: ReactNode;
+  placeholder?: string;
+  items: { value: string; label: string }[];
+};
+
+export function SelectField({ label, placeholder, items }: SelectFieldProps) {
+  const { field, isInvalid, errors } = useFieldErrors();
+  return (
+    <Field data-invalid={isInvalid}>
+      <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+      <Select
+        items={items}
+        value={(field.state.value as string) || null}
+        onValueChange={(value) => field.handleChange(value ?? "")}
+      >
+        <SelectTrigger
+          id={field.name}
+          aria-invalid={isInvalid}
+          onBlur={field.handleBlur}
+        >
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent>
+          {items.map((item) => (
+            <SelectItem key={item.value} value={item.value}>
+              {item.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <FieldError errors={errors} />
+    </Field>
+  );
+}
+
+export function SwitchField({
+  label,
+  description,
+}: {
+  label: ReactNode;
+  description?: ReactNode;
+}) {
+  const { field } = useFieldErrors();
+  return (
+    <Field orientation="horizontal">
+      <FieldContent>
+        <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+        {description && <FieldDescription>{description}</FieldDescription>}
+      </FieldContent>
+      <Switch
+        id={field.name}
+        checked={field.state.value as boolean}
+        onCheckedChange={(checked) => field.handleChange(checked)}
+      />
+    </Field>
   );
 }

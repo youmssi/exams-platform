@@ -18,7 +18,7 @@ Le prix standard est le cœur du produit. Il doit être fixé par l'admin, par c
 - [ ] Bonus valide seulement par multiples du pas et ≤ plafond.
 - [ ] Modifier un réglage n'affecte pas les demandes déjà publiées (instantané du prix).
 - [ ] Chaque modification est enregistrée dans le journal d'audit.
-- [ ] `adminProcedure` : rôle admin **et** 2FA activée (code par email, plugin `twoFactor` déjà configuré en EXM-002). L'admin sans 2FA est guidé vers son activation depuis « Mon compte ».
+- [ ] `adminProcedure` : rôle admin **et** session ouverte avec mot de passe + application d'authentification (TOTP, décision produit). Un code par email ne compte pas comme second facteur. L'admin sans 2FA est guidé vers son activation depuis « Mon compte » (QR code, clé manuelle, codes de secours).
 
 #### Critères d'acceptation UX
 - [ ] Le prix affiche toujours la devise et ne montre pas de décimales en XAF (« 3 000 FCFA »). [CONT-20]
