@@ -5,7 +5,7 @@ import { ShieldCheckIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { FieldGroup } from "@/components/ui/field";
+import { FieldGroup, FieldLegend, FieldSet } from "@/components/ui/field";
 import { useAppForm } from "@/shared/form";
 import { useTRPC } from "@/trpc/client";
 import { beneficiaryInput, newFriendInput } from "../schemas";
@@ -45,7 +45,14 @@ export function BeneficiaryForm({ beneficiary, onSaved }: Props) {
   const schema = isNewFriend ? newFriendInput : beneficiaryInput;
   const form = useAppForm({
     defaultValues: {
-      fullName: beneficiary?.fullName ?? "",
+      firstName: beneficiary?.firstName ?? "",
+      lastName: beneficiary?.lastName ?? "",
+      birthDate: beneficiary?.birthDate?.toISOString().slice(0, 10) ?? "",
+      birthPlace: beneficiary?.birthPlace ?? "",
+      phone: beneficiary?.phone ?? "",
+      city: beneficiary?.city ?? "",
+      district: beneficiary?.district ?? "",
+      participantNumber: beneficiary?.participantNumber ?? "",
       email: beneficiary?.email ?? "",
       password: "",
       consent: false,
@@ -67,39 +74,104 @@ export function BeneficiaryForm({ beneficiary, onSaved }: Props) {
       }}
     >
       <FieldGroup>
-        <form.AppField name="fullName">
-          {(field) => (
-            <field.TextField
-              label={t("fields.fullName")}
-              description={t("fields.fullNameHint")}
-              autoComplete="off"
-            />
-          )}
-        </form.AppField>
-        <form.AppField name="email">
-          {(field) => (
-            <field.TextField
-              label={t("fields.email")}
-              description={t("fields.emailHint")}
-              type="email"
-              inputMode="email"
-              autoComplete="off"
-            />
-          )}
-        </form.AppField>
-        <form.AppField name="password">
-          {(field) => (
-            <field.PasswordField
-              label={t("fields.password")}
-              description={
-                beneficiary?.hasPassword
-                  ? t("fields.passwordSaved")
-                  : t("fields.passwordHint")
-              }
-              autoComplete="off"
-            />
-          )}
-        </form.AppField>
+        <FieldSet>
+          <FieldLegend>{t("sections.identity")}</FieldLegend>
+          <FieldGroup className="grid gap-4 sm:grid-cols-2">
+            <form.AppField name="firstName">
+              {(field) => (
+                <field.TextField
+                  label={t("fields.firstName")}
+                  autoComplete="off"
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="lastName">
+              {(field) => (
+                <field.TextField
+                  label={t("fields.lastName")}
+                  autoComplete="off"
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="birthDate">
+              {(field) => (
+                <field.TextField label={t("fields.birthDate")} type="date" />
+              )}
+            </form.AppField>
+            <form.AppField name="birthPlace">
+              {(field) => (
+                <field.TextField
+                  label={t("fields.birthPlace")}
+                  autoComplete="off"
+                />
+              )}
+            </form.AppField>
+          </FieldGroup>
+        </FieldSet>
+        <FieldSet>
+          <FieldLegend>{t("sections.contact")}</FieldLegend>
+          <FieldGroup className="grid gap-4 sm:grid-cols-2">
+            <form.AppField name="phone">
+              {(field) => (
+                <field.TextField
+                  label={t("fields.phone")}
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="off"
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="city">
+              {(field) => (
+                <field.TextField label={t("fields.city")} autoComplete="off" />
+              )}
+            </form.AppField>
+            <form.AppField name="district">
+              {(field) => (
+                <field.TextField
+                  label={t("fields.district")}
+                  autoComplete="off"
+                />
+              )}
+            </form.AppField>
+          </FieldGroup>
+        </FieldSet>
+        <FieldSet>
+          <FieldLegend>{t("sections.centre")}</FieldLegend>
+          <FieldGroup>
+            <form.AppField name="email">
+              {(field) => (
+                <field.TextField
+                  label={t("fields.email")}
+                  type="email"
+                  inputMode="email"
+                  autoComplete="off"
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="password">
+              {(field) => (
+                <field.PasswordField
+                  label={t("fields.password")}
+                  description={
+                    beneficiary?.hasPassword
+                      ? t("fields.passwordSaved")
+                      : undefined
+                  }
+                  autoComplete="off"
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="participantNumber">
+              {(field) => (
+                <field.TextField
+                  label={t("fields.participantNumber")}
+                  autoComplete="off"
+                />
+              )}
+            </form.AppField>
+          </FieldGroup>
+        </FieldSet>
         <Alert>
           <ShieldCheckIcon />
           <AlertDescription>{t("privacy")}</AlertDescription>

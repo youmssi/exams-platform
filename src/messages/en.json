@@ -6,7 +6,8 @@
   "home": {
     "title": "Book your exam seat, simply.",
     "subtitle": "Standard price, no unknown middlemen, real-time tracking.",
-    "cta": "Sign in"
+    "cta": "Sign in",
+    "continue": "Continue"
   },
   "common": {
     "error": "Something went wrong."
@@ -35,7 +36,10 @@
     "dateTime": "Pick a date and time.",
     "opensAfterExam": "Registrations open before the exam date.",
     "tooShort": "Add a few details.",
-    "pickBeneficiary": "Pick at least one person."
+    "pickBeneficiary": "Pick at least one person.",
+    "pastDate": "Choose a past date.",
+    "phone": "Enter a valid number, for example 6 97 47 14 30.",
+    "pickModule": "Choose at least one module."
   },
   "auth": {
     "title": "Sign in to Exams",
@@ -434,8 +438,8 @@
     "self": "Me",
     "noName": "Name to complete",
     "status": {
-      "ready": "Credentials saved",
-      "missingPassword": "Centre password missing"
+      "ready": "Ready",
+      "incomplete": "Profile to complete"
     },
     "limitReached": "Limit of 5 people reached. Remove one to add another.",
     "removeTitle": "Remove {name}?",
@@ -445,16 +449,25 @@
     "cancel": "Cancel",
     "privacy": "Encrypted. Only the assistant sees it, during the booking.",
     "fields": {
-      "fullName": "Full name",
-      "fullNameHint": "As on the ID.",
-      "email": "Exam-centre account email",
-      "emailHint": "The one used on the centre's website.",
-      "password": "Exam-centre account password",
-      "passwordHint": "Required to post.",
+      "firstName": "First name(s)",
+      "lastName": "Last name(s)",
+      "birthDate": "Date of birth",
+      "birthPlace": "Place of birth",
+      "phone": "Phone",
+      "city": "City (optional)",
+      "district": "District (optional)",
+      "email": "Account email",
+      "password": "Account password",
       "passwordSaved": "Saved. Leave empty to keep it.",
-      "consent": "This person agreed."
+      "participantNumber": "Participant no. (optional)",
+      "consent": "This person gave me their consent."
     },
-    "hasOpenRequest": "This person has an open request. Cancel it first in “My requests”."
+    "hasOpenRequest": "This person has an open request. Cancel it first in “My requests”.",
+    "sections": {
+      "identity": "Identity (as on the ID)",
+      "contact": "Contact",
+      "centre": "Centre account"
+    }
   },
   "sessions": {
     "title": "Exam sessions",
@@ -506,7 +519,6 @@
   },
   "publish": {
     "who": "For whom?",
-    "missingPassword": "Add the centre password",
     "addBonus": "Add a bonus (optional)",
     "bonusSet": "Bonus: {bonus}",
     "bonusHint": "Moves your request up the queue.",
@@ -522,10 +534,15 @@
     "scheduledToast": "{count, plural, one {Request scheduled.} other {# requests scheduled.}}",
     "errors": {
       "alreadyRequested": "A request is already open for this person and session.",
-      "missingPassword": "A person's centre password is missing.",
       "sessionPast": "This session is over.",
-      "invalidBonus": "This bonus is not allowed."
-    }
+      "invalidBonus": "This bonus is not allowed.",
+      "incompleteProfile": "Complete each person's profile before publishing.",
+      "invalidModules": "Choose modules from this level."
+    },
+    "completeProfile": "Complete the profile",
+    "modules": "Modules",
+    "fullExam": "Full exam.",
+    "pickModules": "Only the selected modules."
   },
   "myRequests": {
     "title": "My requests",
@@ -544,6 +561,7 @@
     "empty": {
       "title": "No request yet",
       "description": "Pick a session to start."
-    }
+    },
+    "fullExam": "Full"
   }
 }

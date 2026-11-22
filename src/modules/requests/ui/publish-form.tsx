@@ -43,7 +43,8 @@ import type { UpcomingSession } from "./types";
 
 const ERRORS = new Set([
   "alreadyRequested",
-  "missingPassword",
+  "incompleteProfile",
+  "invalidModules",
   "sessionPast",
   "invalidBonus",
 ]);
@@ -68,10 +69,11 @@ export function PublishForm({
   const { offer } = session;
   const { currency, timeZone } = offer.center.country;
 
-  const ready = beneficiaries.filter((beneficiary) => beneficiary.hasPassword);
+  const ready = beneficiaries.filter((beneficiary) => beneficiary.isReady);
   const [selected, setSelected] = useState<string[]>(
     ready.length === 1 ? [ready[0].id] : [],
   );
+  const [modules, setModules] = useState(offer.modules);
   const [bonus, setBonus] = useState(0);
 
   const money = (amount: number) =>
@@ -133,10 +135,11 @@ export function PublishForm({
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
-        if (selected.length)
+        if (selected.length && modules.length)
           publish.mutate({
             sessionId: session.id,
             beneficiaryIds: selected,
+            modules,
             bonus,
           });
       }}
@@ -157,22 +160,22 @@ export function PublishForm({
               <Field
                 key={beneficiary.id}
                 orientation="horizontal"
-                data-disabled={!beneficiary.hasPassword}
+                data-disabled={!beneficiary.isReady}
               >
                 <Checkbox
                   id={`beneficiary-${beneficiary.id}`}
                   checked={selected.includes(beneficiary.id)}
-                  disabled={!beneficiary.hasPassword}
+                  disabled={!beneficiary.isReady}
                   onCheckedChange={(checked) => toggle(beneficiary.id, checked)}
                 />
                 <FieldContent>
                   <FieldLabel htmlFor={`beneficiary-${beneficiary.id}`}>
-                    {beneficiary.fullName}
+                    {beneficiary.name || beneficiary.email}
                   </FieldLabel>
-                  {!beneficiary.hasPassword && (
+                  {!beneficiary.isReady && (
                     <FieldDescription>
                       <Link href={routes.beneficiaries}>
-                        {t("missingPassword")}
+                        {t("completeProfile")}
                       </Link>
                     </FieldDescription>
                   )}
@@ -180,6 +183,29 @@ export function PublishForm({
               </Field>
             ))}
           </FieldGroup>
+        </FieldSet>
+
+        <FieldSet>
+          <FieldLegend variant="label">{t("modules")}</FieldLegend>
+          <ToggleGroup
+            multiple
+            variant="outline"
+            size="sm"
+            className="flex-wrap"
+            value={modules}
+            onValueChange={setModules}
+          >
+            {offer.modules.map((module) => (
+              <ToggleGroupItem key={module} value={module}>
+                {module}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+          <FieldDescription>
+            {modules.length === offer.modules.length
+              ? t("fullExam")
+              : t("pickModules")}
+          </FieldDescription>
         </FieldSet>
 
         {offer.bonusCap > 0 && (
@@ -237,7 +263,10 @@ export function PublishForm({
 
         <FieldDescription>{t("payLater")}</FieldDescription>
 
-        <Button type="submit" disabled={!selected.length || publish.isPending}>
+        <Button
+          type="submit"
+          disabled={!selected.length || !modules.length || publish.isPending}
+        >
           {publish.isPending && <Spinner />}
           {selected.length ? submitLabel : t("pickSomeone")}
         </Button>

@@ -52,7 +52,8 @@ Réglables par l'admin pour chaque centre × niveau. Valeurs de départ :
 ## 5. Bénéficiaires et compte groupe
 
 - Un compte candidat gère **jusqu'à 5 bénéficiaires** (lui-même compris).
-- Chaque bénéficiaire a son profil : nom, email, identifiants du compte du centre (chiffrés).
+- Chaque bénéficiaire a son profil : prénom(s) et nom(s) officiels, date et lieu de naissance, téléphone (obligatoires), ville, quartier, numéro de participant (facultatifs), identifiants du compte du centre (mot de passe chiffré).
+- Une demande porte sur l'examen complet ou sur certains modules (ex. B2 Lesen + Hören) ; le prix du service est le même.
 - À l'ajout d'un tiers : case obligatoire « J'ai l'accord de cette personne pour gérer ses informations ».
 - **Une demande par bénéficiaire** ; chacune est prise indépendamment.
 - Le titulaire confirme la réception du mail et paie pour chacun. Il est **responsable** : un impayé sur un bénéficiaire met le titulaire en liste noire.
