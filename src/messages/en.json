@@ -139,26 +139,42 @@
     "roleLabel": {
       "candidate": "Candidate",
       "assistant": "Assistant"
+    },
+    "roleSwitch": {
+      "label": "Active role",
+      "candidate": "Candidate",
+      "assistant": "Assistant"
     }
   },
   "homePage": {
     "title": "Hello {name}",
     "candidate": {
-      "title": "Post your request",
-      "description": "It goes out when registrations open.",
-      "action": "See sessions"
+      "setup": {
+        "title": "Complete your candidate profile",
+        "description": "Name, birth details, phone and centre account.",
+        "action": "Complete my profile"
+      },
+      "ready": {
+        "title": "Publish your request",
+        "description": "It goes out when registrations open.",
+        "action": "See sessions"
+      }
     },
     "assistant": {
-      "title": "Requests are waiting",
-      "description": "They arrive live.",
-      "action": "Open the queue"
+      "setup": {
+        "title": "Complete your assistant profile",
+        "description": "Phone and Mobile Money account.",
+        "action": "Complete my profile"
+      },
+      "ready": {
+        "title": "Requests are waiting",
+        "description": "They arrive live.",
+        "action": "Open the queue"
+      }
     }
   },
   "account": {
     "title": "My account",
-    "activeRole": "Active role",
-    "activeRoleHint": "Changes what you see.",
-    "roleSaved": "Role updated.",
     "language": "Language",
     "languages": {
       "fr": "Français",
@@ -191,7 +207,9 @@
       "confirmTitle": "3. Enter the code shown in the app",
       "confirm": "Confirm",
       "done": "Two-step verification enabled."
-    }
+    },
+    "profiles": "My profiles",
+    "profilesHint": "One account, two roles. Complete the profile of the role you use."
   },
   "emails": {
     "otp": {
@@ -373,7 +391,9 @@
         "currencyHint": "3 letters, for example XAF.",
         "timeZone": "Time zone",
         "timeZoneHint": "For example Africa/Douala. Times are shown in this zone.",
-        "active": "Visible to users"
+        "active": "Visible to users",
+        "operators": "Mobile Money operators",
+        "operatorsHint": "Comma-separated, e.g. MTN Mobile Money, Orange Money."
       },
       "center": {
         "title": "Centre",
@@ -597,6 +617,11 @@
     "errors": {
       "alreadyTaken": "Already taken by another assistant.",
       "busy": "You already have an operation in progress."
+    },
+    "profileIncomplete": {
+      "title": "Complete your assistant profile",
+      "description": "Phone and Mobile Money account, before taking a request.",
+      "action": "Complete my profile"
     }
   },
   "countdown": {
@@ -639,5 +664,31 @@
     "keep": "Continue",
     "released": "Request released.",
     "openSite": "Centre website"
+  },
+  "candidateProfile": {
+    "title": "Candidate profile",
+    "ready": "Ready",
+    "incomplete": "To complete",
+    "why": "Needed to publish a request.",
+    "complete": "Complete",
+    "edit": "Edit"
+  },
+  "assistantProfile": {
+    "title": "Assistant profile",
+    "ready": "Ready",
+    "incomplete": "To complete",
+    "why": "Needed to take a request.",
+    "complete": "Complete",
+    "edit": "Edit",
+    "phone": "Phone",
+    "phoneHint": "To reach you during a booking.",
+    "payout": "Payout",
+    "country": "Country",
+    "operator": "Mobile Money operator",
+    "momoNumber": "Mobile Money number",
+    "momoName": "Account holder name",
+    "momoNameHint": "As shown in the Mobile Money app.",
+    "save": "Save",
+    "saved": "Assistant profile saved."
   }
 }

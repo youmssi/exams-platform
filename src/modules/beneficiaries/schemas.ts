@@ -1,7 +1,7 @@
 import { z } from "zod";
+import { nameSchema as name, phoneSchema } from "@/shared/schemas";
 
 /** Messages are translation keys from the `validation` namespace. */
-const name = z.string().trim().min(1, "required").max(80, "tooLong");
 const optional = z.string().trim().max(80, "tooLong");
 
 export const beneficiaryInput = z.object({
@@ -11,10 +11,7 @@ export const beneficiaryInput = z.object({
     .date("date")
     .refine((date) => date < new Date().toISOString().slice(0, 10), "pastDate"),
   birthPlace: name,
-  phone: z
-    .string()
-    .trim()
-    .regex(/^\+?[\d\s.-]{8,20}$/, "phone"),
+  phone: phoneSchema,
   city: optional,
   district: optional,
   participantNumber: optional,

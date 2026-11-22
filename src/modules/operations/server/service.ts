@@ -1,6 +1,7 @@
 import "server-only";
 import { TRPCError } from "@trpc/server";
 import { type OperationStatus, Prisma } from "@/generated/prisma/client";
+import { isAssistantReady } from "@/modules/assistants";
 import { displayName } from "@/modules/beneficiaries";
 import { isFullExam } from "@/modules/catalog";
 import { presenceKey } from "@/modules/realtime";
@@ -50,6 +51,8 @@ function next(status: OperationStatus, event: OperationEvent) {
 
 /** Atomic claim: the partial unique indexes guarantee one active operation per request and per assistant. */
 export async function claimRequest(assistantId: string, requestId: string) {
+  if (!(await isAssistantReady(assistantId)))
+    throw new TRPCError({ code: "FORBIDDEN", message: "profileIncomplete" });
   return db.$transaction(async (tx) => {
     await expireOverdue(tx, { OR: [{ requestId }, { assistantId }] });
     const now = new Date();

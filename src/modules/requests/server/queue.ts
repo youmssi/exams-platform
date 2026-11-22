@@ -1,4 +1,5 @@
 import "server-only";
+import { isAssistantReady } from "@/modules/assistants";
 import { isFullExam } from "@/modules/catalog";
 import { activeOperation } from "@/modules/operations";
 import { presenceKey } from "@/modules/realtime";
@@ -12,10 +13,12 @@ import { compareQueue } from "../domain/queue";
  */
 export async function listQueue(assistantId: string) {
   const now = new Date();
-  const busy = await db.operation.count({
-    where: { assistantId, ...activeOperation(now) },
-  });
-  if (busy) return { busy: true, requests: [] };
+  const [ready, busy] = await Promise.all([
+    isAssistantReady(assistantId),
+    db.operation.count({ where: { assistantId, ...activeOperation(now) } }),
+  ]);
+  if (!ready) return { state: "profileIncomplete" as const, requests: [] };
+  if (busy) return { state: "busy" as const, requests: [] };
   const requests = await db.request.findMany({
     where: {
       status: "OPEN",
@@ -51,7 +54,7 @@ export async function listQueue(assistantId: string) {
     },
   });
   return {
-    busy: false,
+    state: "open" as const,
     requests: requests.sort(compareQueue).map(({ ownerId, ...request }) => ({
       ...request,
       candidateKey: presenceKey(ownerId),

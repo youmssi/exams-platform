@@ -13,4 +13,5 @@ export {
 export { AccountSettings } from "./ui/account-settings";
 export { OnboardingForm } from "./ui/onboarding-form";
 export { ResetPasswordForm } from "./ui/reset-password-form";
+export { RoleSwitch } from "./ui/role-switch";
 export { SignInForm } from "./ui/sign-in-form";

@@ -49,6 +49,12 @@ Réglables par l'admin pour chaque centre × niveau. Valeurs de départ :
 - Un changement de prix ne s'applique qu'aux **nouvelles** demandes ; une demande publiée garde son prix.
 - Tri de la file : bonus décroissant, puis ancienneté.
 
+## 4 bis. Un compte, deux rôles
+
+- Le même compte peut être **candidat** et **assistant**. Un sélecteur toujours visible change le rôle actif ; menu, accueil et droits suivent le rôle, vérifiés côté serveur.
+- Avant de publier pour soi : profil candidat complet (le bénéficiaire « Moi »).
+- Avant de prendre une demande : profil assistant (téléphone, compte Mobile Money : opérateur du pays, numéro, nom du titulaire). Pièce d'identité et validation par un administrateur : EXM-014.
+
 ## 5. Bénéficiaires et compte groupe
 
 - Un compte candidat gère **jusqu'à 5 bénéficiaires** (lui-même compris).
