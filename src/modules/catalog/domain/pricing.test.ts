@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isValidBonus, priceBreakdown } from "./pricing";
+import { bonusOptions, isValidBonus, priceBreakdown } from "./pricing";
 
 const b1 = {
   standardPrice: 3000,
@@ -57,5 +57,11 @@ describe("isValidBonus", () => {
 
   it.each([-500, 250, 3500, 1.5])("rejects %d", (bonus) => {
     expect(isValidBonus(b1, bonus)).toBe(false);
+  });
+});
+
+describe("bonusOptions", () => {
+  it("lists every step up to the cap", () => {
+    expect(bonusOptions(b1)).toEqual([0, 500, 1000, 1500, 2000, 2500, 3000]);
   });
 });

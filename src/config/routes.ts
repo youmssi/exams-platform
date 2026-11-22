@@ -7,6 +7,8 @@ export const routes = {
   home: "/home",
   account: "/account",
   beneficiaries: "/beneficiaries",
+  sessions: "/sessions",
+  requests: "/requests",
   terms: "/terms",
   adminCatalog: "/admin/catalog",
 } as const;

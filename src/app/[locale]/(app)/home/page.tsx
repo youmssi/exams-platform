@@ -1,11 +1,15 @@
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Empty,
+  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { routes } from "@/config/routes";
+import { Link } from "@/i18n/navigation";
 import { requireOnboardedUser } from "@/modules/identity";
 
 async function Home() {
@@ -23,6 +27,11 @@ async function Home() {
             {t(`${user.activeRole}.description`)}
           </EmptyDescription>
         </EmptyHeader>
+        <EmptyContent>
+          <Button render={<Link href={routes.sessions} />}>
+            {t(`${user.activeRole}.action`)}
+          </Button>
+        </EmptyContent>
       </Empty>
     </>
   );

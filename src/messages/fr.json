@@ -30,7 +30,12 @@
     "url": "Saisissez une adresse web complète, par exemple https://…",
     "modules": "Indiquez au moins un module.",
     "bonusCapStep": "Le plafond doit être un multiple du pas du bonus.",
-    "consentRequired": "Confirmez avoir l'accord de cette personne."
+    "consentRequired": "Confirmez avoir l'accord de cette personne.",
+    "date": "Choisissez une date.",
+    "dateTime": "Choisissez une date et une heure.",
+    "opensAfterExam": "Les inscriptions ouvrent avant la date de l'examen.",
+    "tooShort": "Ajoutez quelques détails.",
+    "pickBeneficiary": "Choisissez au moins une personne."
   },
   "auth": {
     "title": "Connexion à Exams",
@@ -121,7 +126,9 @@
       "main": "Navigation",
       "admin": "Administration",
       "catalog": "Catalogue",
-      "beneficiaries": "Bénéficiaires"
+      "beneficiaries": "Bénéficiaires",
+      "sessions": "Sessions",
+      "requests": "Mes demandes"
     },
     "signOut": "Se déconnecter",
     "roleLabel": {
@@ -132,12 +139,14 @@
   "homePage": {
     "title": "Bonjour {name}",
     "candidate": {
-      "title": "Votre première demande arrive bientôt",
-      "description": "La publication des demandes ouvre avec le catalogue des sessions."
+      "title": "Publiez votre demande",
+      "description": "Choisissez la session, la personne, et c'est parti : la demande partira à l'ouverture des inscriptions.",
+      "action": "Voir les sessions"
     },
     "assistant": {
       "title": "La file des demandes arrive bientôt",
-      "description": "Vous pourrez prendre des demandes dès l'ouverture de la file."
+      "description": "Vous pourrez prendre des demandes dès l'ouverture de la file.",
+      "action": "Voir les sessions"
     }
   },
   "account": {
@@ -363,6 +372,97 @@
       "passwordHint": "Facultatif maintenant, nécessaire pour publier une demande.",
       "passwordSaved": "Un mot de passe est enregistré. Laissez vide pour le garder.",
       "consent": "J'ai l'accord de cette personne pour gérer ses informations et réserver pour elle."
+    },
+    "hasOpenRequest": "Cette personne a une demande en cours. Annulez-la d'abord dans « Mes demandes »."
+  },
+  "sessions": {
+    "title": "Sessions d'examen",
+    "subtitle": "Choisissez une session pour publier votre demande. Elle partira toute seule à l'ouverture des inscriptions.",
+    "create": "Ajouter une session",
+    "requestAddition": "Demander un nouveau centre ou niveau",
+    "missingCentre": "Votre centre ou niveau n'est pas là ? Demandez-le.",
+    "verified": "Confirmée",
+    "unverified": "Non vérifiée · {count}/3 confirmations",
+    "confirm": "Je confirme cette date",
+    "confirmed": "Merci, confirmation enregistrée.",
+    "publish": "Publier une demande",
+    "examOn": "Examen le {date}",
+    "opensAt": "Inscriptions le {date}",
+    "empty": {
+      "title": "Aucune session à venir",
+      "description": "Ajoutez la prochaine date publiée par le centre, ou demandez un nouveau centre."
+    },
+    "dialogs": {
+      "create": "Ajouter une session",
+      "catalogRequest": "Demander un ajout",
+      "publish": "Publier une demande"
+    },
+    "form": {
+      "offer": "Centre et niveau",
+      "examDate": "Date de l'examen",
+      "opensAt": "Ouverture des inscriptions",
+      "opensAtHint": "Heure locale du centre ({zone}).",
+      "officialUrl": "Lien officiel (facultatif)",
+      "officialUrlHint": "La page du centre qui annonce cette date.",
+      "submit": "Ajouter la session",
+      "created": "Session ajoutée.",
+      "existing": "Cette session existe déjà : vous pouvez publier directement."
+    },
+    "catalogRequest": {
+      "kind": "Que manque-t-il ?",
+      "kinds": {
+        "COUNTRY": "Un pays",
+        "CENTER": "Un centre",
+        "LEVEL": "Un niveau",
+        "OTHER": "Autre chose"
+      },
+      "details": "Précisions",
+      "detailsHint": "Par exemple : Goethe-Institut Douala, niveau A2, première date en mars.",
+      "officialUrl": "Lien officiel (facultatif)",
+      "submit": "Envoyer la demande",
+      "sent": "Demande envoyée. L'équipe l'ajoutera au catalogue."
+    }
+  },
+  "publish": {
+    "who": "Pour qui ?",
+    "missingPassword": "Ajouter le mot de passe du centre",
+    "addBonus": "Ajouter un bonus (facultatif)",
+    "bonusSet": "Bonus : {bonus}",
+    "bonusHint": "Un bonus fait remonter votre demande dans la file. Il est plafonné.",
+    "noBonus": "Sans bonus",
+    "summary": "Total par personne : {total}",
+    "split": "Assistant {assistant} · Plateforme {platform}",
+    "totalFor": "{count} personnes : {total} au total",
+    "payLater": "Vous ne payez qu'après la réservation, une fois le mail de confirmation du centre reçu.",
+    "submit": "{count, plural, one {Publier la demande — {total}} other {Publier # demandes — {total}}}",
+    "schedule": "{count, plural, one {Programmer pour le {date}} other {Programmer # demandes pour le {date}}}",
+    "pickSomeone": "Choisissez au moins une personne",
+    "publishedToast": "{count, plural, one {Demande publiée.} other {# demandes publiées.}}",
+    "scheduledToast": "{count, plural, one {Demande programmée.} other {# demandes programmées.}}",
+    "errors": {
+      "alreadyRequested": "Une demande est déjà ouverte pour cette personne et cette session.",
+      "missingPassword": "Le mot de passe du centre manque pour une personne.",
+      "sessionPast": "Cette session est passée.",
+      "invalidBonus": "Ce bonus n'est pas autorisé."
+    }
+  },
+  "myRequests": {
+    "title": "Mes demandes",
+    "new": "Publier une demande",
+    "status": {
+      "scheduled": "Programmée",
+      "published": "Publiée",
+      "cancelled": "Annulée"
+    },
+    "publishesAt": "publiée le {date}",
+    "cancel": "Annuler la demande",
+    "cancelTitle": "Annuler la demande de {name} ?",
+    "cancelBody": "Elle disparaît de la file. Vous pourrez en publier une nouvelle.",
+    "keep": "Garder",
+    "cancelled": "Demande annulée.",
+    "empty": {
+      "title": "Aucune demande pour l'instant",
+      "description": "Choisissez une session et publiez votre demande : elle partira à l'ouverture des inscriptions."
     }
   }
 }

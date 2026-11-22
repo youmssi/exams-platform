@@ -4,7 +4,8 @@
  */
 export type AnalyticsEvent =
   | { name: "auth_started"; data: { method: AuthMethod } }
-  | { name: "auth_completed"; data: { method: AuthMethod } };
+  | { name: "auth_completed"; data: { method: AuthMethod } }
+  | { name: "request_published"; data: { count: number; bonus: number } };
 
 type AuthMethod = "code" | "password" | "google" | "microsoft";
 

@@ -17,9 +17,11 @@ Le jour J, tout se joue en minutes. Le candidat doit avoir préparé sa demande 
 #### Critères d'acceptation
 - [ ] Création de session par tout utilisateur vérifié ; doublon (offre + date) refusé avec un lien vers la session existante.
 - [ ] Statut « non vérifiée » → « confirmée » après 3 confirmations distinctes ou validation admin.
-- [ ] Une seule demande active par bénéficiaire et par session.
+- [ ] Une seule demande active par bénéficiaire et par session (index unique partiel en base).
+- [ ] Un bénéficiaire avec une demande ouverte ne peut pas être supprimé (reporté d'EXM-004).
+- [ ] Les dates sont saisies dans le fuseau du centre et stockées en UTC (`src/shared/time-zone.ts`, testé).
 - [ ] Prix figé à la publication (`priceSnapshot`) ; bonus validé par `catalog/domain`.
-- [ ] Avant `registrationOpensAt` : brouillon, publié automatiquement par une tâche Inngest.
+- [ ] Avant `registrationOpensAt` : demande « programmée ». Pas de tâche planifiée : chaque demande porte `publishAt` (ouverture des inscriptions, ou maintenant si déjà ouvertes) et la file n'affiche que celles dont `publishAt` est passé.
 - [ ] Publication groupée : N bénéficiaires ⇒ N demandes, dans une seule transaction.
 - [ ] Annulation possible tant que la demande n'est pas prise.
 
@@ -40,9 +42,9 @@ Le jour J, tout se joue en minutes. Le candidat doit avoir préparé sa demande 
 
 #### Composants shadcn
 - Sessions : `combobox` (centre/niveau), `item`, `badge`, `empty`, `skeleton`.
-- Créer une session : `dialog`/`drawer`, `select`, `date-picker`, `field`.
+- Créer une session : `dialog`/`drawer` (`ResponsiveDialog`), `select`, `field`. Dates : sélecteurs natifs `date` et `datetime-local` (calendrier du téléphone, heure incluse), plutôt que `date-picker` qui ne gère pas l'heure.
 - Publier : `checkbox` (bénéficiaires), `card` (récapitulatif), `collapsible` + `toggle-group` (bonus), `button`, `progress`.
-- Demander un ajout, signaler : `dialog`, `radio-group`, `textarea`.
+- Demander un ajout : `dialog`, `radio-group` (cartes), `textarea`. « Signaler une session » rejoint les signalements d'EXM-010.
 
 #### Hors périmètre
 File publique et prise (EXM-006, EXM-007).

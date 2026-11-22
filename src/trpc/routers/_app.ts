@@ -1,6 +1,7 @@
 import { beneficiariesRouter } from "@/modules/beneficiaries";
 import { catalogRouter } from "@/modules/catalog";
 import { identityRouter } from "@/modules/identity";
+import { requestsRouter } from "@/modules/requests";
 import { systemRouter } from "@/modules/system";
 import { createTRPCRouter } from "../init";
 
@@ -12,6 +13,7 @@ export const appRouter = createTRPCRouter({
   beneficiaries: beneficiariesRouter,
   catalog: catalogRouter,
   identity: identityRouter,
+  requests: requestsRouter,
   system: systemRouter,
 });
 

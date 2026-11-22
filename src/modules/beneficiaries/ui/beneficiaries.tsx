@@ -122,7 +122,12 @@ function BeneficiaryItem({
         });
         toast.success(t("removed", { name: beneficiary.fullName }));
       },
-      onError: () => toast.error(tCommon("error")),
+      onError: (error) =>
+        toast.error(
+          error.message === "hasOpenRequest"
+            ? t("hasOpenRequest")
+            : tCommon("error"),
+        ),
     }),
   );
 

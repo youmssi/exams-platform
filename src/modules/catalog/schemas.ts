@@ -92,3 +92,39 @@ export const toOfferForm = ({
 export type CountryInput = z.infer<typeof countryInput>;
 export type CenterInput = z.infer<typeof centerInput>;
 export type OfferInput = z.infer<typeof offerInput>;
+
+const localDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "date");
+const localDateTime = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/, "dateTime");
+
+/** Dates are typed in the centre's time zone; the server converts them to UTC. */
+export const sessionInput = z
+  .object({
+    offerId: id,
+    examDate: localDate,
+    registrationOpensAt: localDateTime,
+    officialUrl: z.union([z.url("url"), z.literal("")]),
+  })
+  .refine(
+    (session) => session.registrationOpensAt.slice(0, 10) <= session.examDate,
+    {
+      path: ["registrationOpensAt"],
+      message: "opensAfterExam",
+    },
+  );
+export type SessionInput = z.infer<typeof sessionInput>;
+
+export const CATALOG_REQUEST_KINDS = [
+  "COUNTRY",
+  "CENTER",
+  "LEVEL",
+  "OTHER",
+] as const;
+
+export const catalogRequestInput = z.object({
+  kind: z.enum(CATALOG_REQUEST_KINDS),
+  details: z.string().trim().min(5, "tooShort").max(1000, "tooLong"),
+  officialUrl: z.union([z.url("url"), z.literal("")]),
+});
+export type CatalogRequestInput = z.infer<typeof catalogRequestInput>;
