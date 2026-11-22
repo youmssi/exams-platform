@@ -534,7 +534,8 @@
       "officialUrl": "Lien officiel (facultatif)",
       "submit": "Envoyer la demande",
       "sent": "Demande envoyée. L'équipe l'ajoutera au catalogue."
-    }
+    },
+    "published": "Publiée"
   },
   "publish": {
     "who": "Pour qui ?",
@@ -561,7 +562,8 @@
     "completeProfile": "Compléter le profil",
     "modules": "Modules",
     "fullExam": "Examen complet.",
-    "pickModules": "Seulement les modules sélectionnés."
+    "pickModules": "Seulement les modules sélectionnés.",
+    "alreadyRequested": "Demande déjà publiée pour cette session."
   },
   "myRequests": {
     "title": "Mes demandes",
