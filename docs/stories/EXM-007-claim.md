@@ -14,12 +14,14 @@ La prise doit être instantanée et exclusive. Et un assistant qui ne fait rien 
 | Opération (candidat) | « Un assistant s'occupe de votre demande », compte à rebours, **Me retirer** (et augmenter le bonus) |
 
 #### Critères d'acceptation
-- [ ] `operations/domain` : machine à états complète, testée pour chaque transition autorisée et interdite.
+- [ ] `operations/domain` : machine à états (prise, libération, retrait, échéance), testée pour chaque transition autorisée et interdite ; la réservation s'y ajoute avec EXM-008.
 - [ ] Prise atomique (verrou optimiste) ; une seule opération active par assistant (index partiel).
-- [ ] Assistant suspendu, en litige ouvert ou avec une opération active : prise refusée côté serveur.
+- [ ] Assistant suspendu ou avec une opération active : prise refusée côté serveur ; la file est remplacée par « Terminez votre opération en cours ».
 - [ ] Identifiants déchiffrés uniquement pour l'assistant de l'opération active ; chaque lecture est journalisée.
-- [ ] Inngest `claim-timeout` : après 20 min (réglage de l'offre) sans réservation, la demande revient en tête de file et l'assistant reçoit un avertissement.
+- [ ] Après 20 min (réglage de l'offre) sans réservation, la demande revient dans la file. Décision produit : l'échéance est stockée sur l'opération et appliquée à chaque lecture (comme la publication programmée) ; pas de service de tâches pour l'instant.
 - [ ] Le candidat peut se retirer ; l'assistant est libéré sans avertissement.
+- [ ] Le candidat ne peut pas annuler une demande en cours : il la retire d'abord à l'assistant.
+- [ ] Chaque changement prévient en direct la file et les deux personnes concernées (canal Ably personnel) ; sans Ably, rafraîchissement toutes les 15 s.
 
 #### Critères d'acceptation UX
 - [ ] « Prendre » répond immédiatement (indication de chargement < 100 ms) et ouvre l'opération sans autre étape. [INT-04, PERF-05]
@@ -38,4 +40,7 @@ La prise doit être instantanée et exclusive. Et un assistant qui ne fait rien 
 - `card` (opération), `input-group` + `button` (afficher / copier), `progress` (compte à rebours), `badge` (présence, étape), `alert`, `alert-dialog` (libérer, se retirer), `sonner`.
 
 #### Hors périmètre
-Réservation et confirmation (EXM-008).
+- Réservation et confirmation (EXM-008).
+- Avertissement à l'assistant dont l'échéance passe, et refus de prise pendant un litige (EXM-010).
+- Prise réservée aux assistants vérifiés (EXM-014).
+- Augmenter le bonus après un retrait (EXM-008).

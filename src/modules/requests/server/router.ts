@@ -1,18 +1,14 @@
-import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import { z } from "zod";
 import { publishQueueChange } from "@/modules/realtime";
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
+import {
+  assistantProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "@/trpc/init";
 import { publishInput } from "../schemas";
 import { listQueue } from "./queue";
 import { cancelRequest, listMyRequests, publishRequests } from "./service";
-
-/** Assistants see the queue; candidates never do. */
-const assistantProcedure = protectedProcedure.use(({ ctx, next }) => {
-  if (ctx.session.user.activeRole !== "assistant")
-    throw new TRPCError({ code: "FORBIDDEN" });
-  return next();
-});
 
 /** After a change to the queue, connected assistants refresh it once the response is sent. */
 const notifyQueue = <T>(result: T) => {

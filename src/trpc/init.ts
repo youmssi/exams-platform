@@ -27,3 +27,11 @@ export const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   }
   return next();
 });
+
+/** Signed in with the assistant role active. */
+export const assistantProcedure = protectedProcedure.use(({ ctx, next }) => {
+  if (ctx.session.user.activeRole !== "assistant") {
+    throw new TRPCError({ code: "FORBIDDEN" });
+  }
+  return next();
+});
