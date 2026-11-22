@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "title": "Exams — Réservez votre place d'examen sans stress",
+    "description": "Une plateforme simple, transparente et au prix standard pour réserver vos examens de langue."
+  },
+  "home": {
+    "title": "Réservez votre place d'examen, simplement.",
+    "subtitle": "Prix standard, aucun intermédiaire inconnu, suivi en temps réel.",
+    "cta": "Commencer"
+  },
+  "common": {
+    "loading": "Chargement…",
+    "retry": "Réessayer",
+    "error": "Une erreur est survenue."
+  }
+}
