@@ -5,7 +5,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { ChevronDownIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -197,6 +197,7 @@ export function PublishForm({
           >
             {offer.modules.map((module) => (
               <ToggleGroupItem key={module} value={module}>
+                <CheckIcon className="hidden group-aria-pressed/toggle:block" />
                 {module}
               </ToggleGroupItem>
             ))}
