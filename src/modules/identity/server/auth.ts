@@ -129,6 +129,7 @@ export const auth = betterAuth({
       otpLength: 6,
       expiresIn: OTP_EXPIRES_IN_SECONDS,
       allowedAttempts: 5,
+      storeOTP: "hashed",
       overrideDefaultEmailVerification: true,
       sendVerificationOTP: ({ email, otp, type }, ctx) =>
         sendOtp(email, otp, type, ctx?.request?.headers),

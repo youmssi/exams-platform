@@ -48,6 +48,7 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { useTRPC } from "@/trpc/client";
 import { authClient } from "../auth-client";
+import { deviceLabel } from "../domain/device";
 import { ROLES, type Role } from "../schemas";
 import { TwoFactorCard } from "./two-factor-card";
 
@@ -189,7 +190,7 @@ function DevicesCard() {
                   </ItemMedia>
                   <ItemContent>
                     <ItemTitle>
-                      {session.userAgent ?? t("unknownDevice")}
+                      {deviceLabel(session.userAgent) ?? t("unknownDevice")}
                       {isCurrent && (
                         <Badge variant="secondary">{t("thisDevice")}</Badge>
                       )}
