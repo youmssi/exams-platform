@@ -158,9 +158,8 @@ function EmailStep({
         {withPassword && (
           <form.AppField name="password">
             {(field) => (
-              <field.TextField
+              <field.PasswordField
                 label={t("password")}
-                type="password"
                 autoComplete="current-password"
               />
             )}

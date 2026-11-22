@@ -6,6 +6,7 @@ export const routes = {
   welcome: "/welcome",
   home: "/home",
   account: "/account",
+  beneficiaries: "/beneficiaries",
   terms: "/terms",
   adminCatalog: "/admin/catalog",
 } as const;

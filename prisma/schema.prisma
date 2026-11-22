@@ -13,23 +13,24 @@ datasource db {
 }
 
 model User {
-  id               String      @id
+  id               String        @id
   name             String
   email            String
-  emailVerified    Boolean     @default(false)
+  emailVerified    Boolean       @default(false)
   image            String?
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-  twoFactorEnabled Boolean?    @default(false)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  twoFactorEnabled Boolean?      @default(false)
   role             String?
-  banned           Boolean?    @default(false)
+  banned           Boolean?      @default(false)
   banReason        String?
   banExpires       DateTime?
-  activeRole       String?     @default("candidate")
+  activeRole       String?       @default("candidate")
   termsAcceptedAt  DateTime?
   sessions         Session[]
   accounts         Account[]
   twofactors       TwoFactor[]
+  beneficiaries    Beneficiary[]
 
   @@unique([email])
   @@map("user")
@@ -178,4 +179,22 @@ model AuditLog {
 
   @@index([targetType, targetId])
   @@map("audit_log")
+}
+
+/// A person the account holder books for: themself ("self") or a friend who agreed.
+/// The exam-centre password is encrypted (AES-256-GCM) and never sent back to the owner.
+model Beneficiary {
+  id             String    @id @default(cuid())
+  ownerId        String
+  owner          User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  isSelf         Boolean   @default(false)
+  fullName       String
+  email          String
+  passwordCipher String?
+  consentAt      DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([ownerId])
+  @@map("beneficiary")
 }
