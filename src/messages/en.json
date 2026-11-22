@@ -39,7 +39,7 @@
   },
   "auth": {
     "title": "Sign in to Exams",
-    "subtitle": "No account yet? It is created automatically the first time you sign in.",
+    "subtitle": "No account? It's created when you sign in.",
     "continueWith": "Continue with {provider}",
     "or": "Or",
     "email": "Email address",
@@ -57,7 +57,7 @@
     "resend": "Resend a code",
     "changeEmail": "Use another email",
     "codeResent": "New code sent.",
-    "terms": "By continuing, you agree to the <terms>terms of use and privacy</terms>.",
+    "terms": "By continuing, you accept the <terms>terms</terms> and the <privacy>privacy policy</privacy>.",
     "errors": {
       "INVALID_OTP": "Wrong code. Check the 6 digits or ask for a new code.",
       "OTP_EXPIRED": "This code has expired. Ask for a new one.",
@@ -94,9 +94,9 @@
   },
   "welcome": {
     "title": "Welcome to Exams",
-    "subtitle": "One more step and you can get started.",
+    "subtitle": "One last step.",
     "name": "Your name",
-    "nameHint": "As it appears on your ID.",
+    "nameHint": "As on your ID.",
     "role": "You are mainly here to…",
     "roles": {
       "candidate": {
@@ -108,14 +108,13 @@
         "description": "I have a session open on the centre's website and I take requests."
       }
     },
-    "roleHint": "You can change this anytime from your account.",
     "termsTitle": "In short",
     "termsPoints": [
       "The price is standard and shown before you commit.",
       "Exam-centre credentials are only visible to the assistant who takes your request, then deleted.",
       "A dispute or an unpaid booking can lead to sanctions."
     ],
-    "acceptTerms": "I accept the terms of use and privacy.",
+    "acceptTerms": "I accept the terms of use and the privacy policy.",
     "readTerms": "Read the full terms",
     "submit": "Get started"
   },
@@ -140,7 +139,7 @@
     "title": "Hello {name}",
     "candidate": {
       "title": "Post your request",
-      "description": "Pick the session and the person, and you're done: it goes out when registrations open.",
+      "description": "It goes out when registrations open.",
       "action": "See sessions"
     },
     "assistant": {
@@ -152,7 +151,7 @@
   "account": {
     "title": "My account",
     "activeRole": "Active role",
-    "activeRoleHint": "Changes what you see in the app.",
+    "activeRoleHint": "Changes what you see.",
     "roleSaved": "Role updated.",
     "language": "Language",
     "languages": {
@@ -160,7 +159,7 @@
       "en": "English"
     },
     "devices": "Signed-in devices",
-    "devicesHint": "Sign out any device you do not recognise.",
+    "devicesHint": "Sign out the ones you don't recognise.",
     "thisDevice": "This device",
     "lastActive": "Last active: {date}",
     "unknownDevice": "Unknown device",
@@ -204,31 +203,113 @@
     }
   },
   "legal": {
-    "title": "Terms of use and privacy",
-    "draft": "Draft version: the final text will be published before launch.",
-    "sections": [
-      {
-        "title": "The service",
-        "body": "Exams connects candidates who want to book an exam seat with assistants who book it for them. Exams does not sell seats and is not affiliated with exam centres."
-      },
-      {
-        "title": "Price",
-        "body": "Exams sets the price for each centre and level, and shows it before you commit. It includes the assistant's share and a platform commission."
-      },
-      {
-        "title": "Your exam-centre credentials",
-        "body": "They are encrypted, visible only to the assistant who takes your request during the booking, then deleted. Change your password after the booking."
-      },
-      {
-        "title": "Payment and disputes",
-        "body": "After the booking, you pay the assistant and the platform directly. If you disagree, Exams reviews the evidence and decides. An unpaid booking or an abusive dispute can lead to a suspension."
-      },
-      {
-        "title": "Your data",
-        "body": "We only collect what the booking and its follow-up need. You can ask us to export or delete your data."
-      }
-    ],
-    "back": "Back to home"
+    "terms": {
+      "title": "Terms of use",
+      "sections": [
+        {
+          "title": "The service",
+          "body": [
+            "Exams connects candidates who want to book an exam seat with assistants who book it for them. Exams does not sell seats and is not affiliated with any exam centre."
+          ]
+        },
+        {
+          "title": "Price",
+          "body": [
+            "Exams sets the price for each centre and level and shows it before you commit. It includes the assistant's share and a platform commission."
+          ]
+        },
+        {
+          "title": "Exam-centre credentials",
+          "body": [
+            "Only enter them for yourself or for someone who agreed. They are encrypted, visible only to the assistant who takes the request, then deleted. Change your password after the booking."
+          ]
+        },
+        {
+          "title": "Payment and disputes",
+          "body": [
+            "After the booking, you pay the assistant and the platform directly. If you disagree, Exams reviews the evidence and decides. An unpaid booking, an abusive dispute or fraud can lead to suspension or exclusion."
+          ]
+        },
+        {
+          "title": "Contact",
+          "body": ["contact@mrvin100.de"]
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "sections": [
+        {
+          "title": "Who we are",
+          "body": [
+            "Exams (exams.mrvin100.de) connects language-exam candidates with assistants who book for them. For any question about your data: contact@mrvin100.de."
+          ]
+        },
+        {
+          "title": "Data we collect",
+          "body": [
+            "Account: name, email address, profile picture if you sign in with Google or Microsoft, chosen language and role, date you accepted the terms.",
+            "Beneficiaries: name, email and exam-centre account password of the people you book for, with their consent.",
+            "Requests: session, level, amounts, statuses and dates.",
+            "Security: signed-in devices (browser, system, IP address) and sign-in logs.",
+            "Analytics: page views and anonymous events via Umami, without cookies or personal identification."
+          ]
+        },
+        {
+          "title": "Google (and Microsoft) data",
+          "body": [
+            "If you choose “Continue with Google”, we only receive your name, email address and profile picture (openid, email and profile scopes). We never access your emails, contacts or files.",
+            "This data is only used to create your account and sign you in. It is not sold, not shared for advertising, and not used to train artificial-intelligence models.",
+            "Exams' use of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements."
+          ]
+        },
+        {
+          "title": "Why we use it",
+          "body": [
+            "To run the service: sign-in, posting requests, booking by an assistant, tracking and payment.",
+            "To secure accounts and prevent fraud (rate limits, two-step verification for administrators, sanctions for abuse).",
+            "To send the emails the service needs (sign-in codes, request updates)."
+          ]
+        },
+        {
+          "title": "Sharing",
+          "body": [
+            "A beneficiary's exam-centre password is only visible to the assistant who takes the request, during the booking. Candidates and assistants never see each other's identity, except the deposit account needed for payment.",
+            "Our technical processors: Vercel (hosting), Neon (database, European Union), Resend (email delivery), Umami (analytics). We never sell data."
+          ]
+        },
+        {
+          "title": "Retention",
+          "body": [
+            "The exam-centre password is deleted as soon as the operation is closed.",
+            "Account data is kept while the account exists, then deleted within 30 days of its deletion, unless the law requires otherwise."
+          ]
+        },
+        {
+          "title": "Security",
+          "body": [
+            "Encrypted connections (HTTPS). Exam-centre passwords encrypted with AES-256-GCM. Sign-in codes stored hashed. Administrator access protected by an authenticator app."
+          ]
+        },
+        {
+          "title": "Your rights",
+          "body": [
+            "You can ask to access, correct, export or delete your data, and withdraw consent at any time, by writing to contact@mrvin100.de. You can also revoke Exams' access to your Google account at myaccount.google.com/permissions."
+          ]
+        },
+        {
+          "title": "Changes",
+          "body": [
+            "We will announce any significant change on this page and, if needed, by email."
+          ]
+        }
+      ]
+    },
+    "updated": "Updated on {date}",
+    "updatedOn": "November 22, 2026",
+    "back": "Back to home",
+    "seePrivacy": "Privacy policy",
+    "seeTerms": "Terms of use"
   },
   "admin": {
     "secondFactorRequired": {
@@ -343,10 +424,10 @@
   },
   "beneficiaries": {
     "title": "Beneficiaries",
-    "subtitle": "The people you book for: you and up to {max} people in total. Entered once, ready on the day.",
+    "subtitle": "Up to {max} people, including you.",
     "add": "Add a person",
     "addTitle": "Add a person",
-    "addDescription": "A friend you book for. You manage their request and payment.",
+    "addDescription": "Someone you book for.",
     "editTitle": "Edit {name}",
     "save": "Save",
     "saved": "Saved.",
@@ -362,35 +443,35 @@
     "remove": "Remove",
     "removed": "{name} was removed.",
     "cancel": "Cancel",
-    "privacy": "The password is encrypted. Only the assistant who takes the request sees it, during the booking, then it is deleted.",
+    "privacy": "Encrypted. Only the assistant sees it, during the booking.",
     "fields": {
       "fullName": "Full name",
-      "fullNameHint": "As it appears on the ID.",
+      "fullNameHint": "As on the ID.",
       "email": "Exam-centre account email",
-      "emailHint": "The address used to sign in to the centre's website (e.g. Goethe).",
+      "emailHint": "The one used on the centre's website.",
       "password": "Exam-centre account password",
-      "passwordHint": "Optional now, required to post a request.",
-      "passwordSaved": "A password is saved. Leave empty to keep it.",
-      "consent": "This person agreed that I manage their details and book for them."
+      "passwordHint": "Required to post.",
+      "passwordSaved": "Saved. Leave empty to keep it.",
+      "consent": "This person agreed."
     },
     "hasOpenRequest": "This person has an open request. Cancel it first in “My requests”."
   },
   "sessions": {
     "title": "Exam sessions",
-    "subtitle": "Pick a session to post your request. It goes out on its own when registrations open.",
+    "subtitle": "Pick a session, post, done.",
     "create": "Add a session",
     "requestAddition": "Ask for a new centre or level",
-    "missingCentre": "Your centre or level is missing? Ask for it.",
+    "missingCentre": "Missing centre or level?",
     "verified": "Confirmed",
-    "unverified": "Unverified · {count}/3 confirmations",
-    "confirm": "I confirm this date",
+    "unverified": "To confirm · {count}/3",
+    "confirm": "Confirm",
     "confirmed": "Thanks, confirmation saved.",
-    "publish": "Post a request",
+    "publish": "Post",
     "examOn": "Exam on {date}",
     "opensAt": "Registrations on {date}",
     "empty": {
       "title": "No upcoming session",
-      "description": "Add the next date published by the centre, or ask for a new centre."
+      "description": "Add the centre's next date."
     },
     "dialogs": {
       "create": "Add a session",
@@ -402,8 +483,8 @@
       "examDate": "Exam date",
       "opensAt": "Registrations open",
       "opensAtHint": "Centre local time ({zone}).",
-      "officialUrl": "Official link (optional)",
-      "officialUrlHint": "The centre's page announcing this date.",
+      "officialUrl": "Official link",
+      "officialUrlHint": "Optional.",
       "submit": "Add the session",
       "created": "Session added.",
       "existing": "This session already exists: you can post right away."
@@ -417,7 +498,7 @@
         "OTHER": "Something else"
       },
       "details": "Details",
-      "detailsHint": "For example: Goethe-Institut Douala, level A2, first date in March.",
+      "detailsHint": "E.g. Goethe Douala, A2.",
       "officialUrl": "Official link (optional)",
       "submit": "Send the request",
       "sent": "Request sent. The team will add it to the catalogue."
@@ -428,12 +509,12 @@
     "missingPassword": "Add the centre password",
     "addBonus": "Add a bonus (optional)",
     "bonusSet": "Bonus: {bonus}",
-    "bonusHint": "A bonus moves your request up the queue. It is capped.",
+    "bonusHint": "Moves your request up the queue.",
     "noBonus": "No bonus",
     "summary": "Total per person: {total}",
     "split": "Assistant {assistant} · Platform {platform}",
     "totalFor": "{count} people: {total} in total",
-    "payLater": "You only pay after the booking, once the centre's confirmation email arrives.",
+    "payLater": "You pay after the booking.",
     "submit": "{count, plural, one {Post the request — {total}} other {Post # requests — {total}}}",
     "schedule": "{count, plural, one {Schedule for {date}} other {Schedule # requests for {date}}}",
     "pickSomeone": "Pick at least one person",
@@ -462,7 +543,7 @@
     "cancelled": "Request cancelled.",
     "empty": {
       "title": "No request yet",
-      "description": "Pick a session and post your request: it goes out when registrations open."
+      "description": "Pick a session to start."
     }
   }
 }
