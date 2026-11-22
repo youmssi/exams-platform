@@ -45,6 +45,7 @@ export async function listUpcomingSessions(userId: string) {
         select: {
           id: true,
           level: true,
+          modules: true,
           standardPrice: true,
           commissionRateBp: true,
           commissionMin: true,

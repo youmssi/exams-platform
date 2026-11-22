@@ -17,6 +17,10 @@ const schema = z.object({
   MICROSOFT_CLIENT_ID: z.string().optional(),
   MICROSOFT_CLIENT_SECRET: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
+  /** Without it, the queue falls back to periodic refresh and presence is hidden. */
+  ABLY_API_KEY: z.string().optional(),
+  /** Set by Vercel; keeps preview and production realtime channels apart. */
+  VERCEL_ENV: z.enum(["production", "preview", "development"]).optional(),
   EMAIL_FROM: z.string().min(1),
   /** 32 random bytes, base64. Encrypts exam-centre passwords. */
   CREDENTIALS_ENCRYPTION_KEY: z

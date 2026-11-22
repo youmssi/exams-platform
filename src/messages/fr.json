@@ -6,7 +6,8 @@
   "home": {
     "title": "Réservez votre place d'examen, simplement.",
     "subtitle": "Prix standard, aucun intermédiaire inconnu, suivi en temps réel.",
-    "cta": "Se connecter"
+    "cta": "Se connecter",
+    "continue": "Continuer"
   },
   "common": {
     "error": "Une erreur est survenue."
@@ -35,7 +36,10 @@
     "dateTime": "Choisissez une date et une heure.",
     "opensAfterExam": "Les inscriptions ouvrent avant la date de l'examen.",
     "tooShort": "Ajoutez quelques détails.",
-    "pickBeneficiary": "Choisissez au moins une personne."
+    "pickBeneficiary": "Choisissez au moins une personne.",
+    "pastDate": "Choisissez une date passée.",
+    "phone": "Saisissez un numéro valide, par exemple 6 97 47 14 30.",
+    "pickModule": "Choisissez au moins un module."
   },
   "auth": {
     "title": "Connexion à Exams",
@@ -127,7 +131,8 @@
       "catalog": "Catalogue",
       "beneficiaries": "Bénéficiaires",
       "sessions": "Sessions",
-      "requests": "Mes demandes"
+      "requests": "Mes demandes",
+      "queue": "File"
     },
     "signOut": "Se déconnecter",
     "roleLabel": {
@@ -143,9 +148,9 @@
       "action": "Voir les sessions"
     },
     "assistant": {
-      "title": "La file des demandes arrive bientôt",
-      "description": "Vous pourrez prendre des demandes dès l'ouverture de la file.",
-      "action": "Voir les sessions"
+      "title": "Des demandes vous attendent",
+      "description": "Elles arrivent en direct.",
+      "action": "Voir la file"
     }
   },
   "account": {
@@ -434,8 +439,8 @@
     "self": "Moi",
     "noName": "Nom à compléter",
     "status": {
-      "ready": "Identifiants enregistrés",
-      "missingPassword": "Mot de passe du centre à ajouter"
+      "ready": "Prêt",
+      "incomplete": "Profil à compléter"
     },
     "limitReached": "Limite de 5 personnes atteinte. Supprimez-en une pour en ajouter une autre.",
     "removeTitle": "Supprimer {name} ?",
@@ -445,16 +450,25 @@
     "cancel": "Annuler",
     "privacy": "Chiffré. Visible uniquement par l'assistant, le temps de la réservation.",
     "fields": {
-      "fullName": "Nom complet",
-      "fullNameHint": "Comme sur la pièce d'identité.",
-      "email": "Email du compte du centre",
-      "emailHint": "Celui du compte sur le site du centre.",
-      "password": "Mot de passe du compte du centre",
-      "passwordHint": "Nécessaire pour publier.",
+      "firstName": "Prénom(s)",
+      "lastName": "Nom(s)",
+      "birthDate": "Date de naissance",
+      "birthPlace": "Lieu de naissance",
+      "phone": "Téléphone",
+      "city": "Ville (facultatif)",
+      "district": "Quartier (facultatif)",
+      "email": "Email du compte",
+      "password": "Mot de passe du compte",
       "passwordSaved": "Enregistré. Laissez vide pour le garder.",
+      "participantNumber": "N° de participant (facultatif)",
       "consent": "Cette personne m'a donné son accord."
     },
-    "hasOpenRequest": "Cette personne a une demande en cours. Annulez-la d'abord dans « Mes demandes »."
+    "hasOpenRequest": "Cette personne a une demande en cours. Annulez-la d'abord dans « Mes demandes ».",
+    "sections": {
+      "identity": "Identité (comme sur la pièce)",
+      "contact": "Contact",
+      "centre": "Compte du centre"
+    }
   },
   "sessions": {
     "title": "Sessions d'examen",
@@ -506,7 +520,6 @@
   },
   "publish": {
     "who": "Pour qui ?",
-    "missingPassword": "Ajouter le mot de passe du centre",
     "addBonus": "Ajouter un bonus (facultatif)",
     "bonusSet": "Bonus : {bonus}",
     "bonusHint": "Remonte votre demande dans la file.",
@@ -522,10 +535,15 @@
     "scheduledToast": "{count, plural, one {Demande programmée.} other {# demandes programmées.}}",
     "errors": {
       "alreadyRequested": "Une demande est déjà ouverte pour cette personne et cette session.",
-      "missingPassword": "Le mot de passe du centre manque pour une personne.",
       "sessionPast": "Cette session est passée.",
-      "invalidBonus": "Ce bonus n'est pas autorisé."
-    }
+      "invalidBonus": "Ce bonus n'est pas autorisé.",
+      "incompleteProfile": "Complétez le profil de chaque personne avant de publier.",
+      "invalidModules": "Choisissez des modules de ce niveau."
+    },
+    "completeProfile": "Compléter le profil",
+    "modules": "Modules",
+    "fullExam": "Examen complet.",
+    "pickModules": "Seulement les modules sélectionnés."
   },
   "myRequests": {
     "title": "Mes demandes",
@@ -544,6 +562,26 @@
     "empty": {
       "title": "Aucune demande pour l'instant",
       "description": "Choisissez une session pour commencer."
-    }
+    },
+    "fullExam": "Complet"
+  },
+  "queue": {
+    "title": "File des demandes",
+    "live": "En direct.",
+    "polling": "Mise à jour toutes les 15 s.",
+    "offline": {
+      "title": "Hors ligne",
+      "description": "La file n'est plus à jour. Reconnexion en cours…"
+    },
+    "arrivals": "{count, plural, one {# nouvelle demande} other {# nouvelles demandes}}",
+    "empty": {
+      "title": "Aucune demande pour l'instant",
+      "description": "La file se met à jour toute seule."
+    },
+    "online": "En ligne",
+    "away": "Hors ligne",
+    "fullExam": "Complet",
+    "publishedAgo": "Publiée {ago}",
+    "bonus": "Bonus {bonus}"
   }
 }

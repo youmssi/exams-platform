@@ -100,7 +100,7 @@ function RequestItem({ request }: { request: MyRequest }) {
     <Item variant="outline">
       <ItemContent className="min-w-0">
         <ItemTitle className="flex-wrap">
-          {request.beneficiary.fullName}
+          {request.beneficiaryName}
           <Badge
             variant={
               status === "published"
@@ -115,6 +115,7 @@ function RequestItem({ request }: { request: MyRequest }) {
         </ItemTitle>
         <ItemDescription>
           {offer.center.name} · {offer.level} ·{" "}
+          {request.isFullExam ? t("fullExam") : request.modules.join(", ")} ·{" "}
           {format.dateTime(new Date(request.session.examDate), {
             dateStyle: "medium",
             timeZone: "UTC",
@@ -138,7 +139,7 @@ function RequestItem({ request }: { request: MyRequest }) {
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>
-                  {t("cancelTitle", { name: request.beneficiary.fullName })}
+                  {t("cancelTitle", { name: request.beneficiaryName })}
                 </AlertDialogTitle>
                 <AlertDialogDescription>
                   {t("cancelBody")}

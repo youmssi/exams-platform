@@ -1,7 +1,13 @@
 import "server-only";
 import { TRPCError } from "@trpc/server";
 import { Prisma } from "@/generated/prisma/client";
-import { isValidBonus, priceBreakdown } from "@/modules/catalog";
+import { displayName, isReadyToBook } from "@/modules/beneficiaries";
+import {
+  bookedModules,
+  isFullExam,
+  isValidBonus,
+  priceBreakdown,
+} from "@/modules/catalog";
 import { db } from "@/server/db";
 import { publishAtFor, requestVisibility } from "../domain/visibility";
 import type { PublishInput } from "../schemas";
@@ -19,6 +25,7 @@ export async function publishRequests(ownerId: string, input: PublishInput) {
       offer: {
         select: {
           active: true,
+          modules: true,
           standardPrice: true,
           commissionRateBp: true,
           commissionMin: true,
@@ -37,15 +44,31 @@ export async function publishRequests(ownerId: string, input: PublishInput) {
   if (!isValidBonus(session.offer, input.bonus)) {
     throw new TRPCError({ code: "BAD_REQUEST", message: "invalidBonus" });
   }
+  const modules = bookedModules(session.offer.modules, input.modules);
+  if (!modules)
+    throw new TRPCError({ code: "BAD_REQUEST", message: "invalidModules" });
 
   const beneficiaries = await db.beneficiary.findMany({
     where: { id: { in: input.beneficiaryIds }, ownerId },
-    select: { id: true, passwordCipher: true },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      birthDate: true,
+      birthPlace: true,
+      phone: true,
+      passwordCipher: true,
+    },
   });
   if (beneficiaries.length !== input.beneficiaryIds.length)
     throw new TRPCError({ code: "NOT_FOUND" });
-  if (beneficiaries.some((beneficiary) => !beneficiary.passwordCipher)) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "missingPassword" });
+  if (
+    beneficiaries.some(
+      ({ passwordCipher, ...profile }) =>
+        !isReadyToBook({ ...profile, hasPassword: passwordCipher !== null }),
+    )
+  ) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "incompleteProfile" });
   }
 
   const price = priceBreakdown(session.offer, input.bonus);
@@ -57,6 +80,7 @@ export async function publishRequests(ownerId: string, input: PublishInput) {
         beneficiaryId: beneficiary.id,
         ownerId,
         publishAt,
+        modules,
         currency: session.offer.center.country.currency,
         standardPrice: session.offer.standardPrice,
         bonus: input.bonus,
@@ -92,13 +116,15 @@ export async function listMyRequests(ownerId: string) {
       currency: true,
       bonus: true,
       total: true,
-      beneficiary: { select: { fullName: true } },
+      modules: true,
+      beneficiary: { select: { firstName: true, lastName: true } },
       session: {
         select: {
           examDate: true,
           offer: {
             select: {
               level: true,
+              modules: true,
               center: { select: { name: true, city: true } },
             },
           },
@@ -106,8 +132,10 @@ export async function listMyRequests(ownerId: string) {
       },
     },
   });
-  return requests.map((request) => ({
+  return requests.map(({ beneficiary, ...request }) => ({
     ...request,
+    beneficiaryName: displayName(beneficiary),
+    isFullExam: isFullExam(request.session.offer.modules, request.modules),
     visibility: requestVisibility(request.publishAt),
   }));
 }

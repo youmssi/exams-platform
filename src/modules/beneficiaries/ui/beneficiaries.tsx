@@ -87,7 +87,7 @@ export function Beneficiaries() {
         onOpenChange={(open) => !open && setEditing(null)}
         title={
           editing?.beneficiary
-            ? t("editTitle", { name: editing.beneficiary.fullName })
+            ? t("editTitle", { name: editing.beneficiary.name })
             : t("addTitle")
         }
         description={editing?.beneficiary ? undefined : t("addDescription")}
@@ -120,7 +120,7 @@ function BeneficiaryItem({
         await queryClient.invalidateQueries({
           queryKey: trpc.beneficiaries.list.queryKey(),
         });
-        toast.success(t("removed", { name: beneficiary.fullName }));
+        toast.success(t("removed", { name: beneficiary.name }));
       },
       onError: (error) =>
         toast.error(
@@ -136,25 +136,21 @@ function BeneficiaryItem({
       <ItemMedia>
         <Avatar>
           <AvatarFallback>
-            {initials(beneficiary.fullName || beneficiary.email)}
+            {initials(beneficiary.name || beneficiary.email)}
           </AvatarFallback>
         </Avatar>
       </ItemMedia>
       <ItemContent className="min-w-0">
         <ItemTitle className="flex-wrap">
-          <span className="truncate">
-            {beneficiary.fullName || t("noName")}
-          </span>
+          <span className="truncate">{beneficiary.name || t("noName")}</span>
           {beneficiary.isSelf && <Badge variant="secondary">{t("self")}</Badge>}
         </ItemTitle>
         <ItemDescription className="truncate">
           {beneficiary.email}
         </ItemDescription>
         <div>
-          <Badge variant={beneficiary.hasPassword ? "outline" : "destructive"}>
-            {beneficiary.hasPassword
-              ? t("status.ready")
-              : t("status.missingPassword")}
+          <Badge variant={beneficiary.isReady ? "outline" : "destructive"}>
+            {beneficiary.isReady ? t("status.ready") : t("status.incomplete")}
           </Badge>
         </div>
       </ItemContent>
@@ -162,7 +158,7 @@ function BeneficiaryItem({
         <Button
           variant="ghost"
           size="icon-sm"
-          aria-label={t("editTitle", { name: beneficiary.fullName })}
+          aria-label={t("editTitle", { name: beneficiary.name })}
           onClick={onEdit}
         >
           <PencilIcon />
@@ -174,7 +170,7 @@ function BeneficiaryItem({
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  aria-label={t("removeTitle", { name: beneficiary.fullName })}
+                  aria-label={t("removeTitle", { name: beneficiary.name })}
                 />
               }
             >
@@ -183,7 +179,7 @@ function BeneficiaryItem({
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>
-                  {t("removeTitle", { name: beneficiary.fullName })}
+                  {t("removeTitle", { name: beneficiary.name })}
                 </AlertDialogTitle>
                 <AlertDialogDescription>
                   {t("removeBody")}
