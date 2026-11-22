@@ -131,7 +131,13 @@ Les délais viennent de `Offer`. Chaque fonction relit l'état avant d'agir (ide
 | Preview | PR | branche Neon par preview | URL Vercel de preview |
 | Production | `main` | branche `main` | `exams.mrvin100.de` |
 
-## 9. Tests
+## 9. Migrations
+
+- Créées en local avec `npm run db:migrate` (branche Neon `dev`).
+- Appliquées automatiquement par Vercel au déploiement (`vercel-build` : `prisma migrate deploy && next build`) : `dev` pour les previews, `main` pour la production.
+- La CI ne touche à aucune base : elle construit l'app avec des variables factices.
+
+## 10. Tests
 
 - **Vitest** : règles pures (`domain/`), calcul des prix, machine à états, éligibilité d'un assistant.
 - **Playwright** : parcours critiques (publier, prendre, réserver, confirmer, payer, litige) à 360 px et en bureau.
