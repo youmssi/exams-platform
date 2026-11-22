@@ -173,5 +173,10 @@
       }
     ],
     "back": "Retour à l'accueil"
+  },
+  "share": {
+    "title": "Réservez votre place d'examen, simplement.",
+    "subtitle": "Prix standard · suivi en temps réel · paiement confirmé",
+    "points": "Examens de langue · B1 · B2"
   }
 }

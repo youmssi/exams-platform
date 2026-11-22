@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { use } from "react";
+import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { Link } from "@/i18n/navigation";
@@ -12,6 +13,7 @@ export default function HomePage({ params }: PageProps<"/[locale]">) {
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-start justify-center gap-6 px-4 py-16">
+      <Logo />
       <h1 className="font-semibold text-3xl tracking-tight sm:text-4xl">
         {t("title")}
       </h1>

@@ -30,6 +30,7 @@ npm run dev                  # http://localhost:3000 (fr) et /en
 | [`docs/architecture.md`](docs/architecture.md) | Architecture technique, données, minuteurs, temps réel |
 | [`docs/ux/ux-design-requirements.md`](docs/ux/ux-design-requirements.md) | Flux critiques, Définition de Fini UX |
 | [`docs/ui/component-map.md`](docs/ui/component-map.md) | Inventaire shadcn et composants par workflow |
+| [`docs/analytics.md`](docs/analytics.md) | Mesure d'audience (Umami) et événements |
 | [`docs/stories/`](docs/stories/README.md) | Backlog et stories |
 
 ## Workflow

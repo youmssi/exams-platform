@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/field";
 import { routes } from "@/config/routes";
 import { Link, useRouter } from "@/i18n/navigation";
+import { track } from "@/shared/analytics";
 import { useAppForm } from "@/shared/form";
 import { authClient } from "../auth-client";
 import { emailSchema, OTP_LENGTH, otpSchema, passwordSchema } from "../schemas";
@@ -56,6 +57,8 @@ function EmailStep({
         : z.object({ email: emailSchema, password: z.string() }),
     },
     onSubmit: async ({ value }) => {
+      const method = withPassword ? "password" : "code";
+      track({ name: "auth_started", data: { method } });
       const { error } = withPassword
         ? await authClient.signIn.email({
             email: value.email,
@@ -66,12 +69,16 @@ function EmailStep({
             type: "sign-in",
           });
       if (error) return toast.error(errorMessage(error));
-      if (withPassword) return router.replace(next);
+      if (withPassword) {
+        track({ name: "auth_completed", data: { method } });
+        return router.replace(next);
+      }
       onCodeSent(value.email);
     },
   });
 
   const signInWith = async (provider: SocialProvider) => {
+    track({ name: "auth_started", data: { method: provider } });
     const { error } = await authClient.signIn.social({
       provider,
       callbackURL: next,
@@ -187,6 +194,7 @@ function CodeStep({
         otp: value.otp,
       });
       if (error) return toast.error(errorMessage(error));
+      track({ name: "auth_completed", data: { method: "code" } });
       router.replace(next);
     },
   });

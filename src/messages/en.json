@@ -173,5 +173,10 @@
       }
     ],
     "back": "Back to home"
+  },
+  "share": {
+    "title": "Book your exam seat, simply.",
+    "subtitle": "Standard price · real-time tracking · confirmed payment",
+    "points": "Language exams · B1 · B2"
   }
 }

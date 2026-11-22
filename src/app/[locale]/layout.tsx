@@ -3,8 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Analytics } from "@/components/analytics";
 import { AppProviders } from "@/components/providers/app-providers";
 import { routing } from "@/i18n/routing";
+import { env } from "@/server/env";
 import "../globals.css";
 
 const geistSans = Geist({ variable: "--font-sans", subsets: ["latin"] });
@@ -22,7 +24,22 @@ export async function generateMetadata({
 }: LayoutProps<"/[locale]">): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata" });
-  return { title: t("title"), description: t("description") };
+  const title = t("title");
+  const description = t("description");
+  return {
+    metadataBase: new URL(env.APP_URL),
+    applicationName: "Exams",
+    title,
+    description,
+    openGraph: {
+      type: "website",
+      siteName: "Exams",
+      title,
+      description,
+      locale: locale === "fr" ? "fr_FR" : "en_US",
+    },
+    twitter: { card: "summary_large_image", title, description },
+  };
 }
 
 export default async function LocaleLayout({
@@ -43,6 +60,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider>
           <AppProviders>{children}</AppProviders>
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );
