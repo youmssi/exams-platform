@@ -34,6 +34,7 @@ const NEW_OFFER: Omit<OfferFormValues, "centerId"> = {
   confirmOnlineMin: 15,
   confirmOfflineMin: 5,
   paymentDeadlineH: 24,
+  centerFeeDays: 0,
   active: true,
 };
 
@@ -58,6 +59,7 @@ export function OfferForm({ offer, centers, onSaved }: Props) {
       centers.find((center) => center.value === centerId)?.currency ?? "",
     min: t("offer.units.min"),
     h: t("offer.units.h"),
+    days: t("offer.units.days"),
     percent: t("offer.units.percent"),
   };
 
@@ -190,6 +192,15 @@ export function OfferForm({ offer, centers, onSaved }: Props) {
                 <field.NumberField
                   label={t("offer.paymentDeadline")}
                   unit={units.h}
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="centerFeeDays">
+              {(field) => (
+                <field.NumberField
+                  label={t("offer.centerFeeDays")}
+                  description={t("offer.centerFeeDaysHint")}
+                  unit={units.days}
                 />
               )}
             </form.AppField>

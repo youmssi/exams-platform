@@ -9,6 +9,7 @@ async function SessionsData() {
   prefetch(trpc.catalog.sessions.queryOptions());
   prefetch(trpc.catalog.offers.queryOptions());
   prefetch(trpc.beneficiaries.list.queryOptions());
+  prefetch(trpc.requests.mine.queryOptions());
   return (
     <HydrateClient>
       <SessionsBoard />

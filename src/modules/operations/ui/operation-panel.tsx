@@ -5,24 +5,20 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { ExternalLinkIcon, EyeIcon, InfoIcon } from "lucide-react";
+import {
+  ExternalLinkIcon,
+  EyeIcon,
+  InfoIcon,
+  MailCheckIcon,
+} from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useCallback } from "react";
 import { toast } from "sonner";
+import { ConfirmAction } from "@/components/confirm-action";
+import { CopyField } from "@/components/copy-field";
 import { Countdown } from "@/components/countdown";
 import { PresenceBadge } from "@/components/presence-badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,21 +29,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyTitle,
-} from "@/components/ui/empty";
 import { FieldGroup, FieldLegend, FieldSet } from "@/components/ui/field";
 import { InputGroupButton } from "@/components/ui/input-group";
-import { routes } from "@/config/routes";
-import { Link, useRouter } from "@/i18n/navigation";
 import { type LiveState, LiveUpdates } from "@/modules/realtime/client";
+import { ReportDialog } from "@/modules/trust/client";
 import { track } from "@/shared/analytics";
 import { useTRPC } from "@/trpc/client";
-import { CopyField } from "./copy-field";
+import { ReportProblem } from "./report-problem";
 
 const POLL_MS = 15_000;
 
@@ -57,9 +45,15 @@ export function OperationPanel() {
   const queryClient = useQueryClient();
   const refresh = useCallback(
     () =>
-      queryClient.invalidateQueries({
-        queryKey: trpc.operations.current.queryKey(),
-      }),
+      // The queue page decides between the operation and the queue: refresh both.
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: trpc.operations.current.queryKey(),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: trpc.requests.queue.queryKey(),
+        }),
+      ]),
     [queryClient, trpc],
   );
   return (
@@ -73,43 +67,43 @@ function Panel({ state, refresh }: { state: LiveState; refresh: () => void }) {
   const t = useTranslations("operation");
   const tCommon = useTranslations("common");
   const format = useFormatter();
-  const router = useRouter();
   const trpc = useTRPC();
   const { data: operation } = useSuspenseQuery({
     ...trpc.operations.current.queryOptions(),
     refetchInterval: state.live ? false : POLL_MS,
   });
-  const reveal = useMutation(trpc.operations.revealPassword.mutationOptions());
+  const done = (message: string, then?: () => void) => ({
+    onSuccess: () => {
+      toast.success(message);
+      if (then) then();
+      else refresh();
+    },
+    onError: () => toast.error(tCommon("error")),
+  });
   const release = useMutation(
-    trpc.operations.release.mutationOptions({
-      onSuccess: () => {
+    trpc.operations.release.mutationOptions(
+      done(t("released"), () => {
         track({ name: "operation_released" });
-        toast.success(t("released"));
-        router.push(routes.queue);
-      },
-      onError: () => toast.error(tCommon("error")),
-    }),
+        refresh();
+      }),
+    ),
+  );
+  const reserve = useMutation(
+    trpc.operations.reserve.mutationOptions(
+      done(t("reserved"), () => {
+        track({ name: "reservation_declared" });
+        refresh();
+      }),
+    ),
   );
 
-  if (!operation) {
-    return (
-      <Empty className="border">
-        <EmptyHeader>
-          <EmptyTitle>{t("none.title")}</EmptyTitle>
-          <EmptyDescription>{t("none.description")}</EmptyDescription>
-        </EmptyHeader>
-        <EmptyContent>
-          <Button render={<Link href={routes.queue} />}>
-            {t("none.action")}
-          </Button>
-        </EmptyContent>
-      </Empty>
-    );
-  }
+  // Ended (released, expired, answered): the page switches back to the queue.
+  if (!operation) return null;
 
   const { request } = operation;
   const { offer } = request.session;
   const person = request.beneficiary;
+  const booked = operation.status === "RESERVED";
   const officialUrl = request.session.officialUrl ?? offer.center.officialUrl;
   const field = (key: string, value: string | null) =>
     value ? (
@@ -134,37 +128,42 @@ function Panel({ state, refresh }: { state: LiveState; refresh: () => void }) {
         </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
-        <Countdown
-          start={new Date(operation.claimedAt)}
-          end={new Date(operation.deadlineAt)}
-          label={t("timeLeft")}
-          onEnd={refresh}
-        />
-        <Alert>
-          <InfoIcon />
-          <AlertDescription>{t("deadlineRule")}</AlertDescription>
-        </Alert>
+        {booked && operation.reservedAt && operation.releaseAt ? (
+          <>
+            <Alert>
+              <MailCheckIcon />
+              <AlertTitle>{t("waiting.title")}</AlertTitle>
+              <AlertDescription>{t("waiting.description")}</AlertDescription>
+            </Alert>
+            <Countdown
+              start={new Date(operation.reservedAt)}
+              end={new Date(operation.releaseAt)}
+              label={t("waiting.freeIn")}
+              onEnd={refresh}
+            />
+          </>
+        ) : (
+          <>
+            <Countdown
+              start={new Date(operation.claimedAt)}
+              end={new Date(operation.deadlineAt)}
+              label={t("timeLeft")}
+              onEnd={refresh}
+            />
+            <Alert>
+              <InfoIcon />
+              <AlertDescription>{t("deadlineRule")}</AlertDescription>
+            </Alert>
+          </>
+        )}
 
         <FieldSet>
           <FieldLegend>{t("account")}</FieldLegend>
           <FieldGroup className="gap-4">
             {field("email", person.email)}
-            <CopyField
-              id="password"
-              label={t("fields.password")}
-              value={reveal.data?.password ?? ""}
-            >
-              {!reveal.data && (
-                <InputGroupButton
-                  size="xs"
-                  disabled={reveal.isPending}
-                  onClick={() => reveal.mutate({ id: operation.id })}
-                >
-                  <EyeIcon />
-                  {t("show")}
-                </InputGroupButton>
-              )}
-            </CopyField>
+            {!booked && (
+              <RevealedField operationId={operation.id} detail="password" />
+            )}
           </FieldGroup>
         </FieldSet>
 
@@ -182,7 +181,7 @@ function Panel({ state, refresh }: { state: LiveState; refresh: () => void }) {
                 }),
             )}
             {field("birthPlace", person.birthPlace)}
-            {field("phone", person.phone)}
+            <RevealedField operationId={operation.id} detail="phone" />
             {field("city", person.city)}
             {field("district", person.district)}
             {field("participantNumber", person.participantNumber)}
@@ -190,40 +189,87 @@ function Panel({ state, refresh }: { state: LiveState; refresh: () => void }) {
         </FieldSet>
       </CardContent>
       <CardFooter className="flex flex-wrap justify-between gap-2">
-        <AlertDialog>
-          <AlertDialogTrigger render={<Button variant="outline" />}>
-            {t("release")}
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>{t("releaseTitle")}</AlertDialogTitle>
-              <AlertDialogDescription>
-                {t("releaseBody")}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>{t("keep")}</AlertDialogCancel>
-              <AlertDialogAction
-                variant="destructive"
-                onClick={() => release.mutate({ id: operation.id })}
-              >
-                {t("release")}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-        {officialUrl && (
-          <Button
-            render={
-              // biome-ignore lint/a11y/useAnchorContent: the button renders its children inside the anchor.
-              <a href={officialUrl} target="_blank" rel="noopener noreferrer" />
-            }
-          >
-            {t("openSite")}
-            <ExternalLinkIcon />
-          </Button>
+        {!booked && (
+          <div className="flex flex-wrap gap-2">
+            <ConfirmAction
+              trigger={<Button variant="outline" />}
+              title={t("releaseTitle")}
+              description={t("releaseBody")}
+              confirm={t("release")}
+              cancel={t("keep")}
+              destructive
+              onConfirm={() => release.mutate({ id: operation.id })}
+            >
+              {t("release")}
+            </ConfirmAction>
+            <ReportProblem operationId={operation.id} onDone={refresh} />
+          </div>
         )}
+        <div className="flex flex-wrap gap-2">
+          {officialUrl && (
+            <Button
+              variant={booked ? "default" : "outline"}
+              render={
+                // biome-ignore lint/a11y/useAnchorContent: the button renders its children inside the anchor.
+                <a
+                  href={officialUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                />
+              }
+            >
+              {t("openSite")}
+              <ExternalLinkIcon />
+            </Button>
+          )}
+          {!booked && (
+            <ConfirmAction
+              trigger={<Button disabled={reserve.isPending} />}
+              title={t("reserveTitle")}
+              description={t("reserveBody")}
+              confirm={t("reserve")}
+              cancel={t("notYet")}
+              onConfirm={() => reserve.mutate({ id: operation.id })}
+            >
+              {t("reserve")}
+            </ConfirmAction>
+          )}
+          {booked && (
+            <ReportDialog targetType="OPERATION" targetId={operation.id} />
+          )}
+        </div>
       </CardFooter>
     </Card>
+  );
+}
+
+/** A protected detail, hidden until the assistant asks for it (every read is audited). */
+function RevealedField({
+  operationId,
+  detail,
+}: {
+  operationId: string;
+  detail: "password" | "phone";
+}) {
+  const t = useTranslations("operation");
+  const trpc = useTRPC();
+  const reveal = useMutation(trpc.operations.reveal.mutationOptions());
+  return (
+    <CopyField
+      id={detail}
+      label={t(`fields.${detail}`)}
+      value={reveal.data?.value ?? ""}
+    >
+      {!reveal.data && (
+        <InputGroupButton
+          size="xs"
+          disabled={reveal.isPending}
+          onClick={() => reveal.mutate({ id: operationId, detail })}
+        >
+          <EyeIcon />
+          {t("show")}
+        </InputGroupButton>
+      )}
+    </CopyField>
   );
 }

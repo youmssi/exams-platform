@@ -2,7 +2,6 @@
 
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { SoonBadge } from "./soon-badge";
 import { TerminalLines } from "./terminal-lines";
 import { reveal, useInView } from "./use-in-view";
 
@@ -10,7 +9,6 @@ type Step = {
   title: string;
   description: string;
   lines: string[];
-  soon?: boolean;
 };
 const STEP_MS = 5000;
 const NUMERALS = ["I", "II", "III"];
@@ -79,7 +77,6 @@ export function HowItWorksSection() {
                   <div className="flex-1">
                     <h3 className="mb-3 font-display text-2xl transition-transform duration-300 group-hover:translate-x-2 lg:text-3xl">
                       {step.title}
-                      {step.soon && <SoonBadge inverted />}
                     </h3>
                     <p className="text-background/60 leading-relaxed">
                       {step.description}

@@ -17,6 +17,10 @@ export const countryInput = z.object({
     ),
   /** Mobile Money operators assistants are paid with (assistant profile). */
   mobileMoneyOperators: z.array(z.string().trim().min(1)),
+  /** Where candidates send the platform's commission; all three or none. */
+  platformOperator: z.string().trim().max(60, "tooLong").nullable(),
+  platformMomoNumber: z.string().trim().max(30, "tooLong").nullable(),
+  platformMomoName: z.string().trim().max(80, "tooLong").nullable(),
   active: z.boolean(),
 });
 
@@ -28,16 +32,37 @@ const splitList = (text: string) =>
     .filter(Boolean);
 const joinList = (items: string[]) => items.join(", ");
 
-export const countryFormSchema = countryInput.extend({
-  mobileMoneyOperators: z.string(),
-});
+const PLATFORM_ACCOUNT = [
+  "platformOperator",
+  "platformMomoNumber",
+  "platformMomoName",
+] as const;
+
+export const countryFormSchema = countryInput
+  .extend({
+    mobileMoneyOperators: z.string(),
+    platformOperator: z.string().trim().max(60, "tooLong"),
+    platformMomoNumber: z.string().trim().max(30, "tooLong"),
+    platformMomoName: z.string().trim().max(80, "tooLong"),
+  })
+  .refine(
+    (values) =>
+      new Set(PLATFORM_ACCOUNT.map((key) => values[key] === "")).size === 1,
+    { path: ["platformMomoNumber"], message: "allOrNone" },
+  );
 export type CountryFormValues = z.infer<typeof countryFormSchema>;
 export const toCountryInput = ({
   mobileMoneyOperators,
+  platformOperator,
+  platformMomoNumber,
+  platformMomoName,
   ...rest
-}: CountryFormValues) => ({
+}: CountryFormValues): CountryInput => ({
   ...rest,
   mobileMoneyOperators: splitList(mobileMoneyOperators),
+  platformOperator: platformOperator || null,
+  platformMomoNumber: platformMomoNumber || null,
+  platformMomoName: platformMomoName || null,
 });
 
 export const centerInput = z.object({
@@ -45,6 +70,11 @@ export const centerInput = z.object({
   name: z.string().trim().min(1, "required").max(120, "tooLong"),
   city: z.string().trim().min(1, "required").max(80, "tooLong"),
   officialUrl: z.url("url"),
+  /** Page of exam dates, read daily once `autoDates` is on (EXM-023). */
+  datesUrl: z
+    .union([z.url("url"), z.literal("")])
+    .transform((url) => url || null),
+  autoDates: z.boolean(),
   active: z.boolean(),
 });
 
@@ -64,6 +94,8 @@ const offerFields = z.object({
   confirmOnlineMin: positiveInt,
   confirmOfflineMin: positiveInt,
   paymentDeadlineH: positiveInt,
+  /** Days the centre gives to pay exam fees after booking; 0 hides the reminder. */
+  centerFeeDays: nonNegativeInt,
   active: z.boolean(),
 });
 
@@ -111,10 +143,16 @@ export const toOfferForm = ({
 export type CountryInput = z.infer<typeof countryInput>;
 export const toCountryForm = ({
   mobileMoneyOperators,
+  platformOperator,
+  platformMomoNumber,
+  platformMomoName,
   ...rest
 }: CountryInput): CountryFormValues => ({
   ...rest,
   mobileMoneyOperators: joinList(mobileMoneyOperators),
+  platformOperator: platformOperator ?? "",
+  platformMomoNumber: platformMomoNumber ?? "",
+  platformMomoName: platformMomoName ?? "",
 });
 export type CenterInput = z.infer<typeof centerInput>;
 export type OfferInput = z.infer<typeof offerInput>;
@@ -154,3 +192,10 @@ export const catalogRequestInput = z.object({
   officialUrl: z.union([z.url("url"), z.literal("")]),
 });
 export type CatalogRequestInput = z.infer<typeof catalogRequestInput>;
+
+/** The admin creates a session from a detected date: only the opening time is missing. */
+export const proposalSessionInput = z.object({
+  id,
+  registrationOpensAt: localDateTime,
+  officialUrl: z.union([z.url("url"), z.literal("")]),
+});

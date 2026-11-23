@@ -5,7 +5,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { WifiOffIcon } from "lucide-react";
+import { BanIcon, WifiOffIcon } from "lucide-react";
 import { useFormatter, useNow, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -37,11 +37,23 @@ import { track } from "@/shared/analytics";
 import { useTRPC } from "@/trpc/client";
 import type { QueueRequest } from "./types";
 
+const CLAIM_ERRORS = new Set([
+  "notVerified",
+  "alreadyTaken",
+  "busy",
+  "unpaid",
+  "suspended",
+  "disputeOpen",
+]);
 const POLL_LIVE_MS = 60_000;
 const POLL_FALLBACK_MS = 15_000;
 
-/** Published requests, live. A taken or cancelled request disappears at once; new ones wait for a tap. */
-export function QueueBoard() {
+/**
+ * The assistant's single page: the running operation when there is one (passed in by the page,
+ * from the operations module), otherwise the live queue. A taken or cancelled request disappears
+ * at once; new ones wait for a tap.
+ */
+export function QueueBoard({ operation }: { operation: React.ReactNode }) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const refresh = () =>
@@ -49,16 +61,22 @@ export function QueueBoard() {
 
   return (
     <LiveUpdates source="queue" onChange={refresh}>
-      {(state) => <Queue state={state} />}
+      {(state) => <Queue state={state} operation={operation} />}
     </LiveUpdates>
   );
 }
 
-function Queue({ state }: { state: LiveState }) {
+function Queue({
+  state,
+  operation,
+}: {
+  state: LiveState;
+  operation: React.ReactNode;
+}) {
   const t = useTranslations("queue");
   const trpc = useTRPC();
   const {
-    data: { state: queueState, requests },
+    data: { state: queueState, blocker, requests },
   } = useSuspenseQuery({
     ...trpc.requests.queue.queryOptions(),
     refetchInterval: state.live ? POLL_LIVE_MS : POLL_FALLBACK_MS,
@@ -75,7 +93,8 @@ function Queue({ state }: { state: LiveState }) {
 
   const sessions = groupBySession(visible);
 
-  if (queueState !== "open") {
+  if (queueState === "busy") return operation;
+  if (queueState === "profileIncomplete") {
     return (
       <Empty className="border">
         <EmptyHeader>
@@ -83,13 +102,7 @@ function Queue({ state }: { state: LiveState }) {
           <EmptyDescription>{t(`${queueState}.description`)}</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button
-            render={
-              <Link
-                href={queueState === "busy" ? routes.operation : routes.account}
-              />
-            }
-          >
+          <Button render={<Link href={routes.account} />}>
             {t(`${queueState}.action`)}
           </Button>
         </EmptyContent>
@@ -105,6 +118,16 @@ function Queue({ state }: { state: LiveState }) {
           {state.live ? t("live") : t("polling")}
         </p>
       </div>
+
+      {blocker && (
+        <Alert variant="destructive">
+          <BanIcon />
+          <AlertTitle>{t(`blocked.${blocker}.title`)}</AlertTitle>
+          <AlertDescription>
+            {t(`blocked.${blocker}.description`)}
+          </AlertDescription>
+        </Alert>
+      )}
 
       {state.offline && (
         <Alert variant="destructive">
@@ -136,7 +159,11 @@ function Queue({ state }: { state: LiveState }) {
           </EmptyHeader>
         </Empty>
       ) : sessions.length === 1 ? (
-        <RequestList requests={sessions[0].requests} online={state.online} />
+        <RequestList
+          requests={sessions[0].requests}
+          online={state.online}
+          blocked={Boolean(blocker)}
+        />
       ) : (
         <Tabs defaultValue={sessions[0].id}>
           <TabsList className="h-auto w-full flex-wrap justify-start">
@@ -149,7 +176,11 @@ function Queue({ state }: { state: LiveState }) {
           </TabsList>
           {sessions.map((session) => (
             <TabsContent key={session.id} value={session.id}>
-              <RequestList requests={session.requests} online={state.online} />
+              <RequestList
+                requests={session.requests}
+                online={state.online}
+                blocked={Boolean(blocker)}
+              />
             </TabsContent>
           ))}
         </Tabs>
@@ -186,9 +217,11 @@ function SessionLabel({ request }: { request: QueueRequest }) {
 function RequestList({
   requests,
   online,
+  blocked,
 }: {
   requests: QueueRequest[];
   online: ReadonlySet<string>;
+  blocked: boolean;
 }) {
   return (
     <ItemGroup>
@@ -197,6 +230,7 @@ function RequestList({
           key={request.id}
           request={request}
           isOnline={online.has(request.candidateKey)}
+          blocked={blocked}
         />
       ))}
     </ItemGroup>
@@ -206,9 +240,12 @@ function RequestList({
 function RequestRow({
   request,
   isOnline,
+  blocked,
 }: {
   request: QueueRequest;
   isOnline: boolean;
+  /** The assistant cannot take requests right now (reason shown above the list). */
+  blocked: boolean;
 }) {
   const t = useTranslations("queue");
   const tCommon = useTranslations("common");
@@ -221,7 +258,10 @@ function RequestRow({
     trpc.operations.claim.mutationOptions({
       onSuccess: () => {
         track({ name: "request_claimed", data: { bonus: request.bonus } });
-        router.push(routes.operation);
+        // The page switches to the operation.
+        queryClient.invalidateQueries({
+          queryKey: trpc.requests.queue.queryKey(),
+        });
       },
       onError: (error) => {
         if (error.message === "profileIncomplete") {
@@ -229,14 +269,9 @@ function RequestRow({
           router.push(routes.account);
           return;
         }
-        if (error.message === "busy") {
-          toast.error(t("errors.busy"));
-          router.push(routes.operation);
-          return;
-        }
         toast.error(
-          error.message === "alreadyTaken"
-            ? t("errors.alreadyTaken")
+          CLAIM_ERRORS.has(error.message)
+            ? t(`errors.${error.message}`)
             : tCommon("error"),
         );
         queryClient.invalidateQueries({
@@ -259,6 +294,9 @@ function RequestRow({
         <ItemTitle className="flex-wrap">
           {offer.center.name} · {offer.level}
           <PresenceBadge online={isOnline} />
+          {request.blacklisted && (
+            <Badge variant="destructive">{t("blacklisted")}</Badge>
+          )}
         </ItemTitle>
         <ItemDescription className="line-clamp-none">
           {request.isFullExam ? t("fullExam") : request.modules.join(", ")} ·{" "}
@@ -283,7 +321,7 @@ function RequestRow({
         )}
         <Button
           size="sm"
-          disabled={claim.isPending}
+          disabled={claim.isPending || blocked || request.blacklisted}
           onClick={() => claim.mutate({ id: request.id })}
         >
           {claim.isPending && <Spinner />}

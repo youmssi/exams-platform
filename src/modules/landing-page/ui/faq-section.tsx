@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { trustConfig } from "@/config/trust";
 import { Eyebrow } from "./eyebrow";
 import { reveal, useInView } from "./use-in-view";
 
@@ -25,7 +26,9 @@ export function FaqSection({
     q,
     a: a
       .replace("{claim}", String(claimMinutes))
-      .replace("{others}", String(others)),
+      .replace("{others}", String(others))
+      .replace("{proof}", String(trustConfig.proofDeadlineH))
+      .replace("{strikes}", String(trustConfig.strikesToSuspend)),
   }));
   const [ref, inView] = useInView<HTMLElement>();
   return (

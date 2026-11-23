@@ -5,7 +5,7 @@ import {
   useChannel,
   useConnectionStateListener,
   usePresenceListener,
-} from "ably/react";
+} from "@ably/pubsub-device/react";
 import { type ReactNode, useState } from "react";
 import type { RealtimeChannels } from "../channels";
 import { useRealtimeChannels } from "./realtime-provider";
@@ -33,14 +33,16 @@ const OFFLINE_STATES = new Set(["disconnected", "suspended", "failed"]);
 export function LiveUpdates({ source, onChange, children }: Props) {
   const channels = useRealtimeChannels();
   if (!channels) return children(NOT_LIVE);
-  return (
-    <ChannelProvider channelName={channels[source]}>
-      <ChannelProvider channelName={channels.presence}>
-        <Live channels={channels} source={source} onChange={onChange}>
-          {children}
-        </Live>
-      </ChannelProvider>
-    </ChannelProvider>
+  const live = (
+    <Live channels={channels} source={source} onChange={onChange}>
+      {children}
+    </Live>
+  );
+  // Presence and the user's channel come from RealtimeProvider; only the queue is opened here.
+  return source === "queue" ? (
+    <ChannelProvider channelName={channels.queue}>{live}</ChannelProvider>
+  ) : (
+    live
   );
 }
 

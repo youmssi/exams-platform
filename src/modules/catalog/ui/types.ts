@@ -6,3 +6,6 @@ export type AdminCatalog =
 export type AdminCountry = AdminCatalog[number];
 export type AdminCenter = AdminCountry["centers"][number];
 export type AdminOffer = AdminCenter["offers"][number];
+export type SessionReviewData =
+  inferRouterOutputs<AppRouter>["catalog"]["sessionReview"];
+export type DateProposalRow = SessionReviewData["proposals"][number];

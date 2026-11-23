@@ -1,6 +1,12 @@
 "use client";
 
-import { ChevronsUpDownIcon, LogOutIcon, UserIcon } from "lucide-react";
+import {
+  ChevronsUpDownIcon,
+  CircleHelpIcon,
+  LogOutIcon,
+  ShieldIcon,
+  UserIcon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -52,7 +58,13 @@ function UserSummary({
   );
 }
 
-export function NavUser({ user }: { user: NavUserData }) {
+export function NavUser({
+  user,
+  isAdmin,
+}: {
+  user: NavUserData;
+  isAdmin: boolean;
+}) {
   const t = useTranslations("app");
   const { isMobile } = useSidebar();
   const router = useRouter();
@@ -94,6 +106,18 @@ export function NavUser({ user }: { user: NavUserData }) {
                 <UserIcon />
                 {t("nav.account")}
               </DropdownMenuItem>
+              <DropdownMenuItem
+                render={<Link href={`${routes.landing}#faq`} />}
+              >
+                <CircleHelpIcon />
+                {t("nav.help")}
+              </DropdownMenuItem>
+              {isAdmin && (
+                <DropdownMenuItem render={<Link href={routes.admin} />}>
+                  <ShieldIcon />
+                  {t("nav.adminConsole")}
+                </DropdownMenuItem>
+              )}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={signOut}>

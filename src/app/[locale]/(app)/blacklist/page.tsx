@@ -4,28 +4,28 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { routes } from "@/config/routes";
 import { redirect } from "@/i18n/navigation";
 import { requireOnboardedUser } from "@/modules/identity";
-import { OperationPanel } from "@/modules/operations";
+import { Blacklist } from "@/modules/operations";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
 
-async function OperationData({ params }: PageProps<"/[locale]/operation">) {
+async function BlacklistData({ params }: PageProps<"/[locale]/blacklist">) {
   await connection();
   const [{ locale }, user] = await Promise.all([
     params,
     requireOnboardedUser(),
   ]);
   if (user.activeRole !== "assistant") redirect({ href: routes.home, locale });
-  prefetch(trpc.operations.current.queryOptions());
+  prefetch(trpc.operations.blacklist.queryOptions());
   return (
     <HydrateClient>
-      <OperationPanel />
+      <Blacklist />
     </HydrateClient>
   );
 }
 
-export default function OperationPage(props: PageProps<"/[locale]/operation">) {
+export default function BlacklistPage(props: PageProps<"/[locale]/blacklist">) {
   return (
-    <Suspense fallback={<Skeleton className="h-96 w-full" />}>
-      <OperationData {...props} />
+    <Suspense fallback={<Skeleton className="h-64 w-full" />}>
+      <BlacklistData {...props} />
     </Suspense>
   );
 }

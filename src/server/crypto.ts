@@ -1,5 +1,10 @@
 import "server-only";
-import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
+import {
+  createCipheriv,
+  createDecipheriv,
+  createHmac,
+  randomBytes,
+} from "node:crypto";
 import { env } from "./env";
 
 /**
@@ -35,3 +40,12 @@ export function decryptSecret(payload: string): string {
     decipher.final(),
   ]).toString("utf8");
 }
+
+/** A stable public identifier for a user (e.g. `U-4F9K2Q`): shown instead of any name. */
+export const publicId = (userId: string) =>
+  `U-${createHmac("sha256", env.BETTER_AUTH_SECRET)
+    .update(`public:${userId}`)
+    .digest("base64url")
+    .replace(/[-_]/g, "")
+    .slice(0, 6)
+    .toUpperCase()}`;

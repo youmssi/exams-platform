@@ -1,13 +1,21 @@
 "use client";
 
 import {
-  BriefcaseIcon,
+  ActivityIcon,
+  BanIcon,
+  CalendarCheckIcon,
   CalendarDaysIcon,
-  HomeIcon,
+  IdCardIcon,
+  InboxIcon,
+  LayoutDashboardIcon,
   LibraryIcon,
   ListChecksIcon,
   RadioTowerIcon,
+  ScaleIcon,
+  ScrollTextIcon,
   UsersIcon,
+  UsersRoundIcon,
+  WalletIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LogoMark } from "@/components/brand/logo";
@@ -30,19 +38,26 @@ import { NavUser, type NavUserData } from "@/modules/identity/client";
 /** Each role sees only its own work. */
 const NAV = {
   candidate: [
-    { href: routes.home, key: "home", Icon: HomeIcon },
     { href: routes.sessions, key: "sessions", Icon: CalendarDaysIcon },
     { href: routes.requests, key: "requests", Icon: ListChecksIcon },
     { href: routes.beneficiaries, key: "beneficiaries", Icon: UsersIcon },
   ],
   assistant: [
-    { href: routes.home, key: "home", Icon: HomeIcon },
     { href: routes.queue, key: "queue", Icon: RadioTowerIcon },
-    { href: routes.operation, key: "operation", Icon: BriefcaseIcon },
+    { href: routes.blacklist, key: "blacklist", Icon: BanIcon },
   ],
 } as const;
 const ADMIN_NAV = [
+  { href: routes.admin, key: "overview", Icon: LayoutDashboardIcon },
+  { href: routes.adminOperations, key: "operations", Icon: ActivityIcon },
+  { href: routes.adminDisputes, key: "disputes", Icon: ScaleIcon },
+  { href: routes.adminPayments, key: "payments", Icon: WalletIcon },
+  { href: routes.adminUsers, key: "users", Icon: UsersRoundIcon },
+  { href: routes.adminAssistants, key: "assistants", Icon: IdCardIcon },
+  { href: routes.adminSessions, key: "adminSessions", Icon: CalendarCheckIcon },
   { href: routes.adminCatalog, key: "catalog", Icon: LibraryIcon },
+  { href: routes.adminReports, key: "reports", Icon: InboxIcon },
+  { href: routes.adminAudit, key: "audit", Icon: ScrollTextIcon },
 ] as const;
 
 type NavEntry =
@@ -88,7 +103,7 @@ export function AppSidebar({
         )}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser user={user} isAdmin={isAdmin} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

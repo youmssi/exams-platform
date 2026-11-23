@@ -1,0 +1,36 @@
+name: e2e
+
+# Runs the Playwright smoke tests on every successful Vercel preview deployment.
+# Protected previews need the repository secret VERCEL_AUTOMATION_BYPASS_SECRET
+# (Vercel › Project › Deployment Protection › Protection Bypass for Automation).
+on:
+  deployment_status:
+
+jobs:
+  smoke:
+    if: github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Preview'
+    runs-on: ubuntu-latest
+    env:
+      E2E_BASE_URL: ${{ github.event.deployment_status.environment_url }}
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+    steps:
+      - id: gate
+        name: Skip without the protection bypass secret
+        run: |
+          if [ -z "$VERCEL_AUTOMATION_BYPASS_SECRET" ]; then
+            echo "::notice::VERCEL_AUTOMATION_BYPASS_SECRET is not set: smoke tests skipped."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.gate.outputs.skip != 'true'
+        uses: actions/checkout@v5
+      - if: steps.gate.outputs.skip != 'true'
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - if: steps.gate.outputs.skip != 'true'
+        run: npm ci
+      - if: steps.gate.outputs.skip != 'true'
+        run: npx playwright install --with-deps chromium
+      - if: steps.gate.outputs.skip != 'true'
+        run: npx playwright test

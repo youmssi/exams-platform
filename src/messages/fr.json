@@ -4,7 +4,9 @@
     "description": "Une plateforme simple, transparente et au prix standard pour réserver vos examens de langue."
   },
   "common": {
-    "error": "Une erreur est survenue."
+    "error": "Une erreur est survenue.",
+    "copy": "Copier : {label}",
+    "copied": "Copié."
   },
   "validation": {
     "email": "Saisissez une adresse email valide, par exemple nom@exemple.com.",
@@ -33,7 +35,8 @@
     "pickBeneficiary": "Choisissez au moins une personne.",
     "pastDate": "Choisissez une date passée.",
     "phone": "Saisissez un numéro valide, par exemple 6 97 47 14 30.",
-    "pickModule": "Choisissez au moins un module."
+    "pickModule": "Choisissez au moins un module.",
+    "allOrNone": "Remplissez les trois champs, ou aucun."
   },
   "auth": {
     "title": "Connexion à Exams",
@@ -118,7 +121,6 @@
   },
   "app": {
     "nav": {
-      "home": "Accueil",
       "account": "Mon compte",
       "main": "Navigation",
       "admin": "Administration",
@@ -127,7 +129,18 @@
       "sessions": "Sessions",
       "requests": "Mes demandes",
       "queue": "File",
-      "operation": "Opération"
+      "payments": "Commissions",
+      "blacklist": "Liste noire",
+      "disputes": "Litiges",
+      "adminSessions": "Sessions",
+      "assistants": "Assistants",
+      "adminConsole": "Console admin",
+      "overview": "Vue d'ensemble",
+      "operations": "Opérations",
+      "users": "Utilisateurs",
+      "reports": "Signalements",
+      "audit": "Journal",
+      "help": "Aide"
     },
     "signOut": "Se déconnecter",
     "roleLabel": {
@@ -138,33 +151,6 @@
       "label": "Rôle actif",
       "candidate": "Candidat",
       "assistant": "Assistant"
-    }
-  },
-  "homePage": {
-    "title": "Bonjour {name}",
-    "candidate": {
-      "setup": {
-        "title": "Complétez votre profil candidat",
-        "description": "Nom, naissance, téléphone et compte du centre.",
-        "action": "Compléter mon profil"
-      },
-      "ready": {
-        "title": "Publiez votre demande",
-        "description": "Elle partira à l'ouverture des inscriptions.",
-        "action": "Voir les sessions"
-      }
-    },
-    "assistant": {
-      "setup": {
-        "title": "Complétez votre profil assistant",
-        "description": "Téléphone et compte Mobile Money.",
-        "action": "Compléter mon profil"
-      },
-      "ready": {
-        "title": "Des demandes vous attendent",
-        "description": "Elles arrivent en direct.",
-        "action": "Voir la file"
-      }
     }
   },
   "account": {
@@ -218,6 +204,16 @@
       "intro": "Saisissez ce code sur Exams :",
       "expiry": "Il expire dans {minutes} minutes.",
       "ignore": "Si vous n'êtes pas à l'origine de cette demande, ignorez cet email."
+    },
+    "consent": {
+      "subject": "{holder} veut réserver un examen pour vous",
+      "preview": "Confirmez en un clic que {holder} peut réserver pour vous.",
+      "title": "Confirmez-vous ?",
+      "intro": "{holder} a ajouté {name} sur Exams pour réserver une place d'examen.",
+      "data": "Vos informations ne servent qu'à la réservation et sont effacées ensuite. Sans votre accord, rien n'est publié.",
+      "confirm": "Répondre",
+      "refuse": "Ce n'est pas moi, ou je refuse",
+      "expiry": "Ce lien expire dans {days} jours."
     }
   },
   "legal": {
@@ -267,7 +263,9 @@
           "title": "Données que nous collectons",
           "body": [
             "Compte : nom, adresse email, photo de profil si vous vous connectez avec Google ou Microsoft, langue et rôle choisis, date d'acceptation des conditions.",
-            "Bénéficiaires : nom, email et mot de passe du compte du centre d'examen des personnes pour qui vous réservez, avec leur accord.",
+            "Bénéficiaires : nom, date et lieu de naissance, téléphone, email et mot de passe du compte du centre d'examen des personnes pour qui vous réservez. Chaque camarade confirme son accord par email.",
+            "Assistants : téléphone, compte Mobile Money et photo de la pièce d'identité, vue uniquement par l'équipe et utilisée seulement en cas de litige.",
+            "Litiges : capture de réservation envoyée par l'assistant, vue uniquement par l'équipe et les deux parties.",
             "Demandes : session, niveau, montants, statuts et dates.",
             "Sécurité : appareils connectés (navigateur, système, adresse IP) et journaux de connexion.",
             "Mesure d'audience : pages vues et événements anonymes via Umami, sans cookie ni identification personnelle."
@@ -293,7 +291,7 @@
           "title": "Partage",
           "body": [
             "Le mot de passe du centre d'un bénéficiaire n'est visible que par l'assistant qui prend la demande, le temps de la réservation. Le candidat et l'assistant ne voient jamais l'identité l'un de l'autre, sauf le compte de dépôt nécessaire au règlement.",
-            "Nos sous-traitants techniques : Vercel (hébergement), Neon (base de données, Union européenne), Resend (envoi d'emails), Umami (mesure d'audience). Nous ne vendons aucune donnée."
+            "Nos sous-traitants techniques : Vercel (hébergement et fichiers privés), Neon (base de données, Union européenne), Resend (envoi d'emails), Ably (temps réel), Umami (mesure d'audience), Sentry (suivi des erreurs, sans donnée personnelle, si activé). Nous ne vendons aucune donnée."
           ]
         },
         {
@@ -387,7 +385,12 @@
         "timeZoneHint": "Par exemple Africa/Douala. Les heures sont affichées dans ce fuseau.",
         "active": "Visible par les utilisateurs",
         "operators": "Opérateurs Mobile Money",
-        "operatorsHint": "Séparés par des virgules, ex. MTN Mobile Money, Orange Money."
+        "operatorsHint": "Séparés par des virgules, ex. MTN Mobile Money, Orange Money.",
+        "platformAccount": "Compte de la plateforme",
+        "platformAccountHint": "Reçoit les commissions. Les trois champs ou aucun.",
+        "platformOperator": "Opérateur",
+        "platformMomoNumber": "Numéro",
+        "platformMomoName": "Nom du titulaire"
       },
       "center": {
         "title": "Centre",
@@ -395,7 +398,11 @@
         "name": "Nom du centre",
         "city": "Ville",
         "officialUrl": "Page officielle des inscriptions",
-        "active": "Visible par les utilisateurs"
+        "active": "Visible par les utilisateurs",
+        "datesUrl": "Page des dates d'examen",
+        "datesUrlHint": "Facultatif. Lue chaque jour si l'option ci-dessous est active.",
+        "autoDates": "Proposer les dates automatiquement",
+        "autoDatesHint": "N'activez qu'après avoir vérifié que les conditions du site le permettent."
       },
       "offer": {
         "title": "Niveau",
@@ -419,7 +426,8 @@
         "units": {
           "min": "min",
           "h": "h",
-          "percent": "%"
+          "percent": "%",
+          "days": "jours"
         },
         "preview": "Aperçu de la répartition",
         "previewBase": "Sans bonus",
@@ -427,10 +435,236 @@
         "total": "Total payé",
         "assistant": "Assistant",
         "platform": "Plateforme",
-        "newRequestsOnly": "Les changements de prix et de délais ne s'appliquent qu'aux nouvelles demandes. Les demandes déjà publiées gardent leurs conditions."
+        "newRequestsOnly": "Les changements de prix et de délais ne s'appliquent qu'aux nouvelles demandes. Les demandes déjà publiées gardent leurs conditions.",
+        "centerFeeDays": "Délai pour payer le centre",
+        "centerFeeDaysHint": "Jours après la réservation. 0 = aucun rappel."
       },
       "save": "Enregistrer",
       "cancel": "Annuler"
+    },
+    "sessions": {
+      "title": "Sessions",
+      "subtitle": "Dates détectées et sessions à valider.",
+      "empty": {
+        "title": "Rien à valider",
+        "description": "Les dates détectées et les sessions ajoutées apparaîtront ici."
+      },
+      "failing": "Lecture des dates impossible : {center}",
+      "noDates": "Aucune date trouvée : la page a sans doute changé. La saisie manuelle reste possible.",
+      "readError": "Erreur : {error}. La saisie manuelle reste possible.",
+      "proposals": "Dates détectées",
+      "source": "Source",
+      "dismiss": "Ignorer",
+      "dismissed": "Date ignorée.",
+      "create": "Créer la session",
+      "createTitle": "Créer la session",
+      "created": "Session créée et confirmée.",
+      "unverified": "Sessions à valider",
+      "confirmations": "{count, plural, =0 {Aucune confirmation} one {# confirmation} other {# confirmations}}",
+      "verify": "Valider",
+      "verified": "Session validée."
+    },
+    "assistants": {
+      "title": "Assistants à vérifier",
+      "subtitle": "Comparez la pièce, le nom et le titulaire Mobile Money.",
+      "empty": {
+        "title": "Aucun assistant en attente",
+        "description": "Les pièces envoyées apparaîtront ici."
+      },
+      "documentAlt": "Pièce d'identité de {name}",
+      "momo": "{operator} · {number} · {name}",
+      "verify": "Valider",
+      "reject": "Refuser",
+      "rejectTitle": "Refuser la pièce de {name} ?",
+      "reason": "Motif",
+      "reasonHint": "Ce qu'il faut corriger, ex. photo floue, nom différent.",
+      "verified": "Assistant validé.",
+      "rejected": "Refus envoyé avec le motif."
+    },
+    "overview": {
+      "title": "Vue d'ensemble",
+      "updatedAt": "Mis à jour à {time}",
+      "week": "{count} demandes cette semaine ({previous} la précédente)",
+      "cards": {
+        "published": "Demandes en file",
+        "active": "Prises en cours",
+        "toConfirm": "À confirmer",
+        "toPay": "À payer",
+        "disputes": "Litiges",
+        "unpaid": "Impayés",
+        "assistants": "Assistants à vérifier",
+        "reports": "Signalements"
+      },
+      "hints": {
+        "published": "Publiées, sans assistant",
+        "active": "Un assistant réserve",
+        "toConfirm": "Le candidat vérifie le mail",
+        "toPay": "Dépôts attendus",
+        "disputes": "À décider",
+        "unpaid": "Liste noire",
+        "assistants": "Pièces à contrôler",
+        "reports": "À traiter"
+      }
+    },
+    "operations": {
+      "title": "Opérations",
+      "reference": "Réf.",
+      "offer": "Centre et niveau",
+      "status": "Statut",
+      "claimed": "Prise",
+      "details": "Détails",
+      "empty": "Aucune opération.",
+      "candidate": "Candidat",
+      "assistant": "Assistant",
+      "reserved": "Réservation déclarée",
+      "confirmed": "Confirmée",
+      "paymentDue": "Échéance du règlement",
+      "closed": "Clôturée",
+      "ended": "Terminée",
+      "filters": {
+        "active": "En cours",
+        "toConfirm": "À confirmer",
+        "toPay": "À payer",
+        "disputed": "En litige",
+        "unpaid": "Impayées",
+        "closed": "Clôturées",
+        "all": "Toutes"
+      },
+      "statuses": {
+        "CLAIMED": "Prise",
+        "RELEASED": "Libérée",
+        "WITHDRAWN": "Retirée",
+        "EXPIRED": "Délai dépassé",
+        "REPORTED": "Signalée",
+        "RESERVED": "À confirmer",
+        "CONFIRMED": "À payer",
+        "DISPUTED": "En litige",
+        "CLOSED": "Clôturée",
+        "UNPAID": "Impayée",
+        "CANCELLED": "Annulée"
+      },
+      "payments": {
+        "ASSISTANT": "Part assistant",
+        "PLATFORM": "Commission"
+      },
+      "paymentStatus": {
+        "DUE": "À envoyer",
+        "DECLARED": "Déclaré",
+        "RECEIVED": "Reçu"
+      }
+    },
+    "users": {
+      "title": "Utilisateurs",
+      "search": "Rechercher par nom ou email",
+      "user": "Utilisateur",
+      "role": "Rôle et statut",
+      "manage": "Gérer",
+      "empty": "Aucun utilisateur.",
+      "roles": {
+        "admin": "Admin",
+        "user": "Utilisateur"
+      },
+      "verification": {
+        "NONE": "Pièce à envoyer",
+        "PENDING": "Pièce en vérification",
+        "VERIFIED": "Assistant vérifié",
+        "REJECTED": "Pièce refusée"
+      },
+      "strikes": "{count, plural, one {# avertissement} other {# avertissements}}",
+      "suspended": "Suspendu",
+      "banned": "Banni",
+      "since": "Inscrit le",
+      "activeSpace": "Espace actif",
+      "spaces": {
+        "candidate": "Candidat",
+        "assistant": "Assistant"
+      },
+      "permissions": "Permissions",
+      "adminWith2fa": "Console admin (2FA active)",
+      "adminWithout2fa": "Console admin bloquée tant que la 2FA n'est pas activée",
+      "userPermissions": "Publier, prendre selon le rôle actif",
+      "activity": "Activité",
+      "counts": "{requests} demandes · {operations} opérations",
+      "export": "Exporter ses données (JSON)",
+      "cancel": "Annuler",
+      "actions": {
+        "suspend": "Suspendre",
+        "unsuspend": "Lever la suspension",
+        "revokeSessions": "Déconnecter partout",
+        "ban": "Bannir",
+        "unban": "Lever le bannissement",
+        "delete": "Supprimer le compte"
+      },
+      "confirm": {
+        "suspend": {
+          "title": "Suspendre {name} ?",
+          "body": "Plus de publication ni de prise jusqu'à la levée. La personne peut se connecter et régler."
+        },
+        "unsuspend": {
+          "title": "Lever la suspension de {name} ?",
+          "body": "Ses avertissements en cours cessent de compter."
+        },
+        "revokeSessions": {
+          "title": "Déconnecter {name} partout ?",
+          "body": "Toutes ses sessions sont fermées ; la personne devra se reconnecter."
+        },
+        "ban": {
+          "title": "Bannir {name} ?",
+          "body": "La personne ne peut plus se connecter. Ses sessions sont fermées."
+        },
+        "unban": {
+          "title": "Lever le bannissement de {name} ?",
+          "body": "La personne pourra de nouveau se connecter."
+        },
+        "delete": {
+          "title": "Supprimer le compte de {name} ?",
+          "body": "Définitif. Si des opérations passées y font référence, le compte est anonymisé et banni."
+        }
+      },
+      "done": {
+        "suspend": "Compte suspendu.",
+        "unsuspend": "Suspension levée.",
+        "revokeSessions": "Sessions fermées.",
+        "ban": "Compte banni.",
+        "unban": "Bannissement levé.",
+        "delete": "Compte supprimé."
+      }
+    },
+    "inbox": {
+      "title": "Signalements",
+      "reports": "Signalements",
+      "catalogRequests": "Demandes d'ajout",
+      "markHandled": "Traité",
+      "handled": "Marqué comme traité.",
+      "empty": {
+        "title": "Rien à traiter",
+        "description": "Les nouveaux éléments apparaîtront ici."
+      },
+      "categories": {
+        "WRONG_SESSION": "Session erronée",
+        "ABUSE": "Comportement abusif",
+        "FRAUD": "Fraude",
+        "OTHER": "Autre"
+      },
+      "targets": {
+        "SESSION": "Session",
+        "OPERATION": "Opération"
+      },
+      "kinds": {
+        "COUNTRY": "Pays",
+        "CENTER": "Centre",
+        "LEVEL": "Niveau",
+        "OTHER": "Autre"
+      }
+    },
+    "audit": {
+      "title": "Journal",
+      "subtitle": "Actions des admins et lectures sensibles, les plus récentes en premier.",
+      "when": "Quand",
+      "actor": "Par",
+      "action": "Action",
+      "target": "Cible",
+      "empty": "Aucune entrée."
     }
   },
   "share": {
@@ -455,7 +689,8 @@
     "noName": "Nom à compléter",
     "status": {
       "ready": "Prêt",
-      "incomplete": "Profil à compléter"
+      "incomplete": "Profil à compléter",
+      "consentPending": "En attente d'accord"
     },
     "limitReached": "Limite de 5 personnes atteinte. Supprimez-en une pour en ajouter une autre.",
     "removeTitle": "Supprimer {name} ?",
@@ -483,7 +718,9 @@
       "identity": "Identité (comme sur la pièce)",
       "contact": "Contact",
       "centre": "Compte du centre"
-    }
+    },
+    "resendConsent": "Renvoyer l'email",
+    "consentSent": "Email de confirmation envoyé à {email}."
   },
   "sessions": {
     "title": "Sessions d'examen",
@@ -516,7 +753,8 @@
       "officialUrlHint": "Facultatif.",
       "submit": "Ajouter la session",
       "created": "Session ajoutée.",
-      "existing": "Cette session existe déjà : vous pouvez publier directement."
+      "existing": "Cette session existe déjà : vous pouvez publier directement.",
+      "opensAfterExam": "Les inscriptions ouvrent avant la date de l'examen."
     },
     "catalogRequest": {
       "kind": "Que manque-t-il ?",
@@ -531,6 +769,12 @@
       "officialUrl": "Lien officiel (facultatif)",
       "submit": "Envoyer la demande",
       "sent": "Demande envoyée. L'équipe l'ajoutera au catalogue."
+    },
+    "published": "Publiée",
+    "profile": {
+      "title": "Complétez votre profil candidat",
+      "description": "Nom, naissance, téléphone et compte du centre : nécessaires pour publier.",
+      "action": "Compléter mon profil"
     }
   },
   "publish": {
@@ -553,12 +797,18 @@
       "sessionPast": "Cette session est passée.",
       "invalidBonus": "Ce bonus n'est pas autorisé.",
       "incompleteProfile": "Complétez le profil de chaque personne avant de publier.",
-      "invalidModules": "Choisissez des modules de ce niveau."
+      "invalidModules": "Choisissez des modules de ce niveau.",
+      "unpaid": "Réglez votre impayé avant de publier.",
+      "suspended": "Compte suspendu : impossible de publier.",
+      "consentPending": "Une personne n'a pas encore confirmé son accord par email."
     },
     "completeProfile": "Compléter le profil",
     "modules": "Modules",
     "fullExam": "Examen complet.",
-    "pickModules": "Seulement les modules sélectionnés."
+    "pickModules": "Seulement les modules sélectionnés.",
+    "alreadyRequested": "Demande déjà publiée pour cette session.",
+    "carryOver": "Si elle n'est pas réservée, la reporter à la prochaine session confirmée",
+    "consentPending": "En attente de son accord par email."
   },
   "myRequests": {
     "title": "Mes demandes",
@@ -566,8 +816,17 @@
     "status": {
       "scheduled": "Programmée",
       "published": "Publiée",
+      "inProgress": "En cours",
+      "toConfirm": "À confirmer",
+      "disputed": "Contestée",
+      "elsewhere": "Inscrit autrement",
       "cancelled": "Annulée",
-      "inProgress": "En cours"
+      "toFix": "À corriger",
+      "toPay": "À payer",
+      "paymentSent": "Paiement envoyé",
+      "closed": "Réglée",
+      "unpaid": "Impayée",
+      "unbooked": "Non réservée"
     },
     "publishesAt": "publiée le {date}",
     "cancel": "Annuler la demande",
@@ -584,7 +843,61 @@
     "withdraw": "Me retirer",
     "withdrawTitle": "Retirer la demande à cet assistant ?",
     "withdrawBody": "Elle revient dans la file pour un autre assistant.",
-    "withdrawn": "Demande remise dans la file."
+    "withdrawn": "Demande remise dans la file.",
+    "elsewhere": "Inscrit autrement",
+    "elsewhereTitle": "{name} a obtenu une place autrement ?",
+    "elsewhereBody": "La demande est close et quitte la file.",
+    "closedElsewhere": "Demande close.",
+    "disputedHint": "L'équipe examine la réservation et vous préviendra.",
+    "centerFee": {
+      "title": "Paie les frais d'examen au centre",
+      "description": "Avant le {date}, sinon le centre peut annuler l'inscription."
+    },
+    "answer": {
+      "title": "Réservation déclarée",
+      "check": "Vérifie le mail du centre à",
+      "received": "J'ai reçu le mail",
+      "notReceived": "Je n'ai pas reçu le mail",
+      "confirmed": "Merci ! Réservation confirmée.",
+      "disputed": "Signalement envoyé à l'équipe.",
+      "checklistTitle": "Avant de signaler",
+      "checklistHint": "Le mail arrive parfois ailleurs. Vérifie chaque point.",
+      "checks": {
+        "inbox": "J'ai vérifié la boîte de réception de {email}.",
+        "spam": "J'ai vérifié les spams et courriers indésirables.",
+        "tabs": "J'ai vérifié les onglets Promotions, Notifications et Autres.",
+        "account": "Je me suis connecté à mon compte du centre : la réservation n'y apparaît pas.",
+        "warning": "Je comprends qu'un signalement abusif entraîne un avertissement."
+      },
+      "checkAll": "Coche chaque point pour signaler.",
+      "dispute": "Signaler l'absence de mail"
+    },
+    "fixProfile": "Corriger le profil",
+    "resolved": "C'est réglé",
+    "backInQueue": "Demande remise dans la file.",
+    "issue": {
+      "CREDENTIALS": "Identifiants refusés par le site du centre",
+      "WRONG_DETAILS": "Informations incorrectes",
+      "ACCOUNT_BLOCKED": "Compte du centre bloqué ou à vérifier",
+      "OTHER": "Problème signalé par l'assistant",
+      "hint": "Corrige le profil ou règle-le sur le site du centre, puis remets la demande dans la file."
+    },
+    "edit": {
+      "action": "Modifier",
+      "title": "Modifier la demande",
+      "save": "Enregistrer",
+      "saved": "Demande modifiée."
+    },
+    "totalDue": "À payer : {total}",
+    "totalDueHint": "Chaque dépôt se confirme séparément.",
+    "carried": "Reportée",
+    "carry": {
+      "action": "Reporter",
+      "to": "Reporter au {date}",
+      "title": "Reporter à quelle session ?",
+      "done": "Demande reportée.",
+      "alreadyRequested": "Une demande existe déjà pour cette session."
+    }
   },
   "queue": {
     "title": "File des demandes",
@@ -603,19 +916,37 @@
     "publishedAgo": "Publiée {ago}",
     "bonus": "Bonus {bonus}",
     "claim": "Prendre",
-    "busy": {
-      "title": "Terminez votre opération en cours",
-      "description": "Un client à la fois.",
-      "action": "Voir l'opération"
-    },
     "errors": {
       "alreadyTaken": "Déjà prise par un autre assistant.",
-      "busy": "Vous avez déjà une opération en cours."
+      "busy": "Vous avez déjà une opération en cours.",
+      "unpaid": "Réglez votre impayé avant de prendre une demande.",
+      "suspended": "Compte suspendu : impossible de prendre une demande.",
+      "disputeOpen": "Un litige est en cours : attendez la décision.",
+      "notVerified": "Votre pièce d'identité doit être validée avant de prendre une demande."
     },
     "profileIncomplete": {
       "title": "Complétez votre profil assistant",
       "description": "Téléphone et compte Mobile Money, avant de prendre une demande.",
       "action": "Compléter mon profil"
+    },
+    "blacklisted": "Liste noire",
+    "blocked": {
+      "unpaid": {
+        "title": "Règlement en retard",
+        "description": "Réglez votre réservation impayée pour reprendre des demandes."
+      },
+      "suspended": {
+        "title": "Compte suspendu",
+        "description": "3 avertissements. Voyez « Mon compte » pour la suite."
+      },
+      "disputeOpen": {
+        "title": "Litige en cours",
+        "description": "Vous reprendrez des demandes après la décision."
+      },
+      "notVerified": {
+        "title": "Pièce d'identité à valider",
+        "description": "Envoyez-la depuis « Mon compte » ; vous pourrez prendre des demandes une fois validée."
+      }
     }
   },
   "countdown": {
@@ -627,11 +958,6 @@
     "offline": "Hors ligne"
   },
   "operation": {
-    "none": {
-      "title": "Aucune opération en cours",
-      "description": "Prenez une demande dans la file.",
-      "action": "Voir la file"
-    },
     "fullExam": "Complet",
     "timeLeft": "Temps pour réserver",
     "deadlineRule": "Sans réservation à la fin du temps, la demande revient dans la file.",
@@ -650,14 +976,38 @@
       "participantNumber": "N° de participant"
     },
     "show": "Afficher",
-    "copy": "Copier : {label}",
-    "copied": "Copié.",
     "release": "Libérer",
     "releaseTitle": "Libérer cette demande ?",
     "releaseBody": "Elle revient dans la file pour un autre assistant.",
     "keep": "Continuer",
     "released": "Demande libérée.",
-    "openSite": "Site du centre"
+    "openSite": "Site du centre",
+    "reserve": "Réservation effectuée",
+    "reserveTitle": "Réservation effectuée ?",
+    "reserveBody": "Le candidat va vérifier le mail du centre. Vous serez libéré dès sa réponse, ou automatiquement.",
+    "notYet": "Pas encore",
+    "reserved": "Réservation déclarée.",
+    "waiting": {
+      "title": "En attente du candidat",
+      "description": "Il vérifie le mail du centre.",
+      "freeIn": "Libéré automatiquement dans"
+    },
+    "report": {
+      "action": "Signaler un problème",
+      "title": "Signaler un problème",
+      "description": "La demande est rendue au candidat pour correction. Aucune pénalité.",
+      "reason": "Raison",
+      "reasons": {
+        "CREDENTIALS": "Identifiants refusés",
+        "WRONG_DETAILS": "Informations incorrectes",
+        "ACCOUNT_BLOCKED": "Compte bloqué ou à vérifier",
+        "OTHER": "Autre"
+      },
+      "note": "Précisez",
+      "noteHint": "Quelques mots, sans données personnelles.",
+      "submit": "Rendre au candidat",
+      "sent": "Demande rendue au candidat."
+    }
   },
   "candidateProfile": {
     "title": "Profil candidat",
@@ -683,10 +1033,26 @@
     "momoName": "Nom du titulaire",
     "momoNameHint": "Tel qu'il s'affiche dans l'application Mobile Money.",
     "save": "Enregistrer",
-    "saved": "Profil assistant enregistré."
+    "saved": "Profil assistant enregistré.",
+    "identity": {
+      "title": "Pièce d'identité",
+      "status": {
+        "NONE": "À envoyer",
+        "PENDING": "En vérification",
+        "VERIFIED": "Vérifiée",
+        "REJECTED": "À renvoyer"
+      },
+      "hint": {
+        "NONE": "Photo lisible de votre CNI ou passeport. Elle sert uniquement en cas de litige ; le candidat ne la voit jamais.",
+        "PENDING": "Vérification par l'équipe, en général sous 24 h.",
+        "VERIFIED": "Vous pouvez prendre des demandes.",
+        "REJECTED": "Envoyez une nouvelle photo."
+      },
+      "rejected": "À corriger : {reason}. Envoyez une nouvelle photo.",
+      "sent": "Pièce envoyée. Vérification en général sous 24 h."
+    }
   },
   "landing": {
-    "soon": "Bientôt",
     "nav": {
       "howItWorks": "Comment ça marche",
       "assistants": "Assistants",
@@ -793,8 +1159,7 @@
             "Assistant  Mobile Money",
             "Plateforme Mobile Money",
             "→ opération clôturée"
-          ],
-          "soon": true
+          ]
         }
       ]
     },
@@ -944,8 +1309,7 @@
             "Mail confirmé par le candidat",
             "Paiement   Mobile Money",
             "→ libéré pour la prochaine demande"
-          ],
-          "soon": true
+          ]
         }
       ],
       "join": "Devenir assistant",
@@ -974,11 +1338,19 @@
         },
         {
           "q": "Puis-je inscrire des camarades ?",
-          "a": "Oui, jusqu'à {others} personnes en plus de toi, avec leur accord. Chaque demande est traitée séparément."
+          "a": "Oui, jusqu'à {others} personnes en plus de toi. Chacune confirme son accord par email avant toute publication, et chaque demande est traitée séparément."
         },
         {
           "q": "Comment devenir assistant ?",
-          "a": "Crée ton compte, passe en mode Assistant en haut de l'écran et complète ton profil : téléphone et Mobile Money."
+          "a": "Crée ton compte, passe en mode Assistant en haut de l'écran, complète ton profil (téléphone et Mobile Money) et envoie ta pièce d'identité. L'équipe la valide, en général sous 24 h."
+        },
+        {
+          "q": "Et si le mail du centre n'arrive pas ?",
+          "a": "Vérifie ta boîte, les spams et ton compte du centre, puis signale-le. L'assistant a {proof} h pour envoyer une preuve et l'équipe décide. Un signalement abusif vaut un avertissement."
+        },
+        {
+          "q": "Que se passe-t-il si quelqu'un ne joue pas le jeu ?",
+          "a": "Délai de réservation dépassé, litige abusif ou réservation déclarée sans être faite : un avertissement. Au {strikes}e, le compte est suspendu. Un règlement en retard place le compte sur la liste noire jusqu'au paiement."
         }
       ]
     },
@@ -1014,6 +1386,278 @@
       "privacy": "Confidentialité",
       "contact": "Contact",
       "independent": "Service indépendant, sans lien avec les centres d'examen."
+    }
+  },
+  "payment": {
+    "recipient": {
+      "ASSISTANT": "Part de l'assistant",
+      "PLATFORM": "Commission Exams"
+    },
+    "status": {
+      "DUE": "À envoyer",
+      "DECLARED": "Envoyé, en attente de confirmation",
+      "RECEIVED": "Reçu"
+    },
+    "assistantStatus": {
+      "DUE": "En attente du candidat",
+      "DECLARED": "À confirmer",
+      "RECEIVED": "Reçu"
+    },
+    "holder": "Au nom de {name}",
+    "noAccount": "Compte bientôt affiché. Revenez dans quelques minutes.",
+    "reference": "Référence à indiquer",
+    "declare": "J'ai envoyé",
+    "declared": "Merci. Le destinataire va confirmer.",
+    "deadline": "À régler avant le {date}. Après, le compte est suspendu jusqu'au règlement.",
+    "rejected": {
+      "title": "Pas reçu",
+      "description": "Vérifiez le numéro et la référence, puis renvoyez."
+    },
+    "unpaid": {
+      "title": "Délai dépassé",
+      "description": "Compte suspendu jusqu'au règlement. Envoyez les dépôts restants."
+    },
+    "closed": {
+      "title": "Réglée le {date}",
+      "description": "Pensez à changer le mot de passe de votre compte du centre."
+    },
+    "answer": {
+      "received": "Reçu",
+      "notReceived": "Pas reçu",
+      "notReceivedTitle": "Dépôt non reçu ?",
+      "notReceivedBody": "Le candidat sera invité à vérifier et à renvoyer.",
+      "keep": "Annuler",
+      "thanks": "Confirmé.",
+      "sentBack": "Le candidat va renvoyer."
+    },
+    "assistantTitle": "Paiements à recevoir",
+    "adminTitle": "Commissions",
+    "adminSubtitle": "Confirmez chaque dépôt déclaré.",
+    "adminEmpty": "Aucune commission en attente.",
+    "amount": "Montant",
+    "offer": "Centre et niveau",
+    "dueAt": "Échéance",
+    "statusLabel": "État",
+    "actions": "Actions"
+  },
+  "dispute": {
+    "step": "Étape {step} sur {total} : {name}",
+    "steps": {
+      "OPENED": "ouvert",
+      "PROOF_REQUESTED": "Preuve demandée",
+      "REVIEW": "En examen",
+      "DECIDED": "Décidé"
+    },
+    "proofSent": "Preuve envoyée. L'équipe va décider.",
+    "assistant": {
+      "title": "Réservation contestée",
+      "proof": "Le candidat n'a pas reçu le mail du centre. Envoyez une capture de la réservation avant le {date}. Vous ne pouvez pas prendre de demande d'ici la décision.",
+      "review": "Merci. L'équipe examine le litige ; vous serez prévenu de la décision."
+    },
+    "admin": {
+      "title": "Litiges",
+      "subtitle": "Chronologie, preuve et parties sur une seule fiche.",
+      "empty": "Aucun litige en attente.",
+      "offer": "Centre et niveau",
+      "opened": "Ouvert le",
+      "status": "Étape",
+      "open": "Examiner",
+      "timeline": "Chronologie",
+      "events": {
+        "claimed": "Prise",
+        "reserved": "Réservation déclarée",
+        "disputed": "Litige ouvert",
+        "proof": "Preuve envoyée"
+      },
+      "checklist": "Le candidat a coché les 5 vérifications pour {email}.",
+      "proof": "Preuve de l'assistant",
+      "proofAlt": "Capture de la réservation envoyée par l'assistant",
+      "noProof": "Aucune preuve envoyée.",
+      "parties": {
+        "candidate": "Candidat",
+        "assistant": "Assistant"
+      },
+      "strikes": "{count, plural, =0 {Aucun avertissement} one {# avertissement} other {# avertissements}}",
+      "note": "Note (facultative, journalisée)",
+      "booked": {
+        "action": "Réservation faite",
+        "title": "La réservation a été faite ?",
+        "body": "Le candidat doit payer et reçoit un avertissement pour litige abusif."
+      },
+      "notBooked": {
+        "action": "Pas de réservation",
+        "title": "La réservation n'a pas été faite ?",
+        "body": "La demande revient dans la file et l'assistant reçoit un avertissement."
+      },
+      "cancel": "Annuler",
+      "decided": "Décision enregistrée."
+    }
+  },
+  "blacklist": {
+    "title": "Liste noire",
+    "subtitle": "Comptes avec un règlement en retard. Leurs demandes ne peuvent pas être prises.",
+    "since": "depuis le {date}",
+    "empty": {
+      "title": "Liste vide",
+      "description": "Aucun compte en retard de paiement."
+    }
+  },
+  "standing": {
+    "title": "Avertissements",
+    "description": "Au 3e, le compte est suspendu.",
+    "count": "{count} sur {threshold}",
+    "reasons": {
+      "CLAIM_TIMEOUT": "Délai de réservation dépassé",
+      "ABUSIVE_DISPUTE": "Litige abusif",
+      "AT_FAULT": "Réservation déclarée mais non faite"
+    },
+    "suspended": {
+      "title": "Compte suspendu",
+      "description": "Vous ne pouvez plus publier ni prendre de demande. Écrivez à {email} pour lever la suspension."
+    },
+    "contest": "Une erreur ? Écrivez à {email}."
+  },
+  "report": {
+    "action": "Signaler",
+    "title": "Signaler un problème",
+    "description": "L'équipe le lit et revient vers vous si besoin.",
+    "category": "Quel problème ?",
+    "categories": {
+      "WRONG_SESSION": "Session erronée",
+      "ABUSE": "Comportement abusif",
+      "FRAUD": "Fraude",
+      "OTHER": "Autre"
+    },
+    "message": "Message (facultatif)",
+    "messageHint": "Ce qui s'est passé, en quelques mots.",
+    "submit": "Envoyer",
+    "sent": "Signalement reçu. L'équipe va l'examiner."
+  },
+  "upload": {
+    "choose": "Choisir une image",
+    "hint": "JPG, PNG, WEBP ou HEIC · {max} max",
+    "progress": "Envoi… {percent} %",
+    "done": "Image envoyée.",
+    "retry": "Réessayer",
+    "errors": {
+      "type": "Format non accepté : choisissez une image.",
+      "size": "Image trop lourde ({max} max).",
+      "failed": "Échec de l'envoi. Réessayez."
+    }
+  },
+  "consent": {
+    "title": "{holder} veut réserver un examen pour vous",
+    "description": "Sur Exams, au nom de {name}.",
+    "data": "Vos informations (identité, compte du centre) ne servent qu'à la réservation et sont effacées ensuite.",
+    "privacy": "Confidentialité",
+    "accept": "J'accepte",
+    "refuse": "Je refuse",
+    "refuseTitle": "Refuser ?",
+    "refuseBody": "Vos informations saisies par {holder} seront supprimées.",
+    "back": "Retour",
+    "accepted": {
+      "title": "Merci, c'est confirmé",
+      "description": "Vous pouvez fermer cette page."
+    },
+    "refused": {
+      "title": "C'est noté",
+      "description": "Vos informations ont été supprimées."
+    },
+    "invalid": {
+      "title": "Lien invalide ou expiré",
+      "description": "Demandez à la personne qui vous l'a envoyé de le renvoyer."
+    }
+  },
+  "notifications": {
+    "label": "{count, plural, =0 {Notifications} one {Notifications, # non lue} other {Notifications, # non lues}}",
+    "title": "Notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "unread": "Non lue : ",
+    "empty": {
+      "title": "Rien de nouveau",
+      "description": "Vous serez prévenu ici à chaque étape."
+    },
+    "actions": {
+      "requests": "Voir mes demandes",
+      "queue": "Ouvrir la file",
+      "account": "Voir mon compte"
+    },
+    "preferences": {
+      "title": "Emails",
+      "description": "Tout s'affiche aussi dans l'application.",
+      "updates": "Emails de suivi",
+      "updatesHint": "Réservation déclarée, problème à corriger, dépôt à confirmer.",
+      "critical": "Paiements, litiges et avertissements sont toujours envoyés.",
+      "saved": "Préférence enregistrée."
+    },
+    "types": {
+      "REQUEST_CLAIMED": {
+        "title": "Un assistant s'occupe de votre demande",
+        "body": "Il a quelques minutes pour réserver. Vous pouvez suivre l'avancement."
+      },
+      "REQUEST_RETURNED": {
+        "title": "Votre demande est de retour dans la file",
+        "body": "Rien à faire : un autre assistant peut la prendre."
+      },
+      "BOOKING_DECLARED": {
+        "title": "Réservation déclarée : vérifiez le mail du centre",
+        "body": "Confirmez dès que possible si vous avez reçu le mail du centre."
+      },
+      "PROBLEM_REPORTED": {
+        "title": "Votre demande est à corriger",
+        "body": "L'assistant n'a pas pu réserver. Voyez la raison et corrigez."
+      },
+      "BOOKING_CONFIRMED": {
+        "title": "Réservation confirmée par le candidat",
+        "body": "Vous êtes libre de prendre une autre demande."
+      },
+      "DISPUTE_OPENED": {
+        "title": "Réservation contestée : envoyez une preuve",
+        "body": "Le candidat n'a pas reçu le mail du centre. Envoyez une capture de la réservation."
+      },
+      "PAYMENT_DECLARED": {
+        "title": "Dépôt déclaré ({reference})",
+        "body": "Vérifiez votre compte Mobile Money puis confirmez la réception."
+      },
+      "PAYMENT_REJECTED": {
+        "title": "Dépôt non reçu ({reference})",
+        "body": "Vérifiez le numéro et la référence, puis renvoyez avant l'échéance."
+      },
+      "OPERATION_CLOSED": {
+        "title": "Opération réglée ({reference})",
+        "body": "Les deux dépôts sont confirmés. Merci !"
+      },
+      "DISPUTE_DECIDED": {
+        "title": "Litige décidé",
+        "body": "{outcome, select, BOOKED {La réservation a été faite : le règlement s'ouvre.} other {La réservation n'a pas été faite : la demande revient dans la file.}}"
+      },
+      "STRIKE": {
+        "title": "Avertissement ({count} sur {threshold})",
+        "body": "{reason, select, CLAIM_TIMEOUT {Délai de réservation dépassé.} ABUSIVE_DISPUTE {Litige jugé abusif.} other {Réservation déclarée mais non faite.}} Au {threshold}e, le compte est suspendu."
+      },
+      "ASSISTANT_VERIFIED": {
+        "title": "Compte assistant validé",
+        "body": "Vous pouvez prendre des demandes dans la file."
+      },
+      "ASSISTANT_REJECTED": {
+        "title": "Pièce d'identité à renvoyer",
+        "body": "Motif : {reason}. Envoyez une nouvelle photo depuis votre compte."
+      }
+    }
+  },
+  "system": {
+    "notFound": {
+      "title": "Page introuvable",
+      "description": "Le lien est peut-être ancien ou mal copié.",
+      "requests": "Mes demandes",
+      "home": "Accueil"
+    },
+    "error": {
+      "title": "Un problème est survenu",
+      "description": "Rien n'est perdu. Réessayez dans un instant.",
+      "code": "Code : {code}",
+      "retry": "Réessayer",
+      "home": "Retour à l'accueil"
     }
   }
 }

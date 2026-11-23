@@ -3,14 +3,13 @@
 import { BadgeCheckIcon, EyeOffIcon, LockIcon, Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Eyebrow } from "./eyebrow";
-import { SoonBadge } from "./soon-badge";
 import { reveal, useInView } from "./use-in-view";
 
 const ITEMS = [
   { id: "encrypted", Icon: LockIcon },
   { id: "anonymous", Icon: EyeOffIcon },
-  { id: "erased", Icon: Trash2Icon, soon: true },
-  { id: "verified", Icon: BadgeCheckIcon, soon: true },
+  { id: "erased", Icon: Trash2Icon },
+  { id: "verified", Icon: BadgeCheckIcon },
 ] as const;
 
 /** What protects candidates and their credentials. */
@@ -61,7 +60,6 @@ export function SecuritySection() {
                 <div>
                   <h3 className="mb-1 font-medium text-lg transition-transform duration-300 group-hover:translate-x-1">
                     {t(`items.${id}.title`)}
-                    {"soon" in item && <SoonBadge />}
                   </h3>
                   <p className="text-muted-foreground">
                     {t(`items.${id}.description`)}

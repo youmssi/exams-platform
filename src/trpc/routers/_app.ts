@@ -1,10 +1,13 @@
+import { adminRouter } from "@/modules/admin";
 import { assistantsRouter } from "@/modules/assistants";
 import { beneficiariesRouter } from "@/modules/beneficiaries";
 import { catalogRouter } from "@/modules/catalog";
 import { identityRouter } from "@/modules/identity";
+import { notificationsRouter } from "@/modules/notifications";
 import { operationsRouter } from "@/modules/operations";
 import { requestsRouter } from "@/modules/requests";
 import { systemRouter } from "@/modules/system";
+import { trustRouter } from "@/modules/trust";
 import { createTRPCRouter } from "../init";
 
 /**
@@ -12,13 +15,16 @@ import { createTRPCRouter } from "../init";
  * and is mounted here under its own namespace.
  */
 export const appRouter = createTRPCRouter({
+  admin: adminRouter,
   assistants: assistantsRouter,
   beneficiaries: beneficiariesRouter,
   catalog: catalogRouter,
   identity: identityRouter,
+  notifications: notificationsRouter,
   operations: operationsRouter,
   requests: requestsRouter,
   system: systemRouter,
+  trust: trustRouter,
 });
 
 export type AppRouter = typeof appRouter;

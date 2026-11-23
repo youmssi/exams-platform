@@ -5,7 +5,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { CheckIcon, ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -33,16 +33,19 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { routes } from "@/config/routes";
 import { Link, useRouter } from "@/i18n/navigation";
-import { bonusOptions, priceBreakdown } from "@/modules/catalog/client";
+import { priceBreakdown } from "@/modules/catalog/client";
 import { track } from "@/shared/analytics";
 import { useTRPC } from "@/trpc/client";
+import { requestedFor } from "../domain/live";
+import { BonusPicker, ModulesPicker } from "./pickers";
 import type { UpcomingSession } from "./types";
 
 const ERRORS = new Set([
   "alreadyRequested",
+  "consentPending",
+  "unpaid",
   "incompleteProfile",
   "invalidModules",
   "sessionPast",
@@ -69,12 +72,19 @@ export function PublishForm({
   const { offer } = session;
   const { currency, timeZone } = offer.center.country;
 
-  const ready = beneficiaries.filter((beneficiary) => beneficiary.isReady);
+  const { data: requests } = useSuspenseQuery(
+    trpc.requests.mine.queryOptions(),
+  );
+  const requested = requestedFor(requests, session.id);
+  const available = (beneficiary: { id: string; isReady: boolean }) =>
+    beneficiary.isReady && !requested.has(beneficiary.id);
+  const ready = beneficiaries.filter(available);
   const [selected, setSelected] = useState<string[]>(
     ready.length === 1 ? [ready[0].id] : [],
   );
   const [modules, setModules] = useState(offer.modules);
   const [bonus, setBonus] = useState(0);
+  const [carryOver, setCarryOver] = useState(true);
 
   const money = (amount: number) =>
     format.number(amount, {
@@ -118,12 +128,7 @@ export function PublishForm({
   const submitLabel = scheduled
     ? t("schedule", {
         count: selected.length,
-        date: format.dateTime(opensAt, {
-          dateStyle: "medium",
-          timeStyle: "short",
-          timeZone,
-          timeZoneName: "short",
-        }),
+        date: format.dateTime(opensAt, "zoned", { timeZone }),
       })
     : t("submit", {
         count: selected.length,
@@ -141,6 +146,7 @@ export function PublishForm({
             beneficiaryIds: selected,
             modules,
             bonus,
+            carryOver,
           });
       }}
     >
@@ -160,54 +166,44 @@ export function PublishForm({
               <Field
                 key={beneficiary.id}
                 orientation="horizontal"
-                data-disabled={!beneficiary.isReady}
+                data-disabled={!available(beneficiary)}
               >
                 <Checkbox
                   id={`beneficiary-${beneficiary.id}`}
                   checked={selected.includes(beneficiary.id)}
-                  disabled={!beneficiary.isReady}
+                  disabled={!available(beneficiary)}
                   onCheckedChange={(checked) => toggle(beneficiary.id, checked)}
                 />
                 <FieldContent>
                   <FieldLabel htmlFor={`beneficiary-${beneficiary.id}`}>
                     {beneficiary.name || beneficiary.email}
                   </FieldLabel>
-                  {!beneficiary.isReady && (
-                    <FieldDescription>
-                      <Link href={routes.beneficiaries}>
-                        {t("completeProfile")}
-                      </Link>
-                    </FieldDescription>
+                  {requested.has(beneficiary.id) && (
+                    <FieldDescription>{t("alreadyRequested")}</FieldDescription>
                   )}
+                  {beneficiary.consentPending && (
+                    <FieldDescription>{t("consentPending")}</FieldDescription>
+                  )}
+                  {!beneficiary.isReady &&
+                    !beneficiary.consentPending &&
+                    !requested.has(beneficiary.id) && (
+                      <FieldDescription>
+                        <Link href={routes.beneficiaries}>
+                          {t("completeProfile")}
+                        </Link>
+                      </FieldDescription>
+                    )}
                 </FieldContent>
               </Field>
             ))}
           </FieldGroup>
         </FieldSet>
 
-        <FieldSet>
-          <FieldLegend variant="label">{t("modules")}</FieldLegend>
-          <ToggleGroup
-            multiple
-            variant="outline"
-            size="sm"
-            className="flex-wrap"
-            value={modules}
-            onValueChange={setModules}
-          >
-            {offer.modules.map((module) => (
-              <ToggleGroupItem key={module} value={module}>
-                <CheckIcon className="hidden group-aria-pressed/toggle:block" />
-                {module}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-          <FieldDescription>
-            {modules.length === offer.modules.length
-              ? t("fullExam")
-              : t("pickModules")}
-          </FieldDescription>
-        </FieldSet>
+        <ModulesPicker
+          available={offer.modules}
+          value={modules}
+          onChange={setModules}
+        />
 
         {offer.bonusCap > 0 && (
           <Collapsible>
@@ -223,21 +219,13 @@ export function PublishForm({
               {bonus ? t("bonusSet", { bonus: money(bonus) }) : t("addBonus")}
               <ChevronDownIcon />
             </CollapsibleTrigger>
-            <CollapsibleContent className="flex flex-col gap-2 pt-2">
-              <FieldDescription>{t("bonusHint")}</FieldDescription>
-              <ToggleGroup
-                variant="outline"
-                size="sm"
-                className="flex-wrap"
-                value={[String(bonus)]}
-                onValueChange={(value) => setBonus(Number(value[0] ?? 0))}
-              >
-                {bonusOptions(offer).map((option) => (
-                  <ToggleGroupItem key={option} value={String(option)}>
-                    {option ? `+${money(option)}` : t("noBonus")}
-                  </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
+            <CollapsibleContent className="pt-2">
+              <BonusPicker
+                offer={offer}
+                value={bonus}
+                onChange={setBonus}
+                money={money}
+              />
             </CollapsibleContent>
           </Collapsible>
         )}
@@ -261,6 +249,17 @@ export function PublishForm({
             </CardContent>
           )}
         </Card>
+
+        <Field orientation="horizontal">
+          <Checkbox
+            id="carry-over"
+            checked={carryOver}
+            onCheckedChange={(checked) => setCarryOver(checked)}
+          />
+          <FieldLabel htmlFor="carry-over" className="font-normal">
+            {t("carryOver")}
+          </FieldLabel>
+        </Field>
 
         <FieldDescription>{t("payLater")}</FieldDescription>
 

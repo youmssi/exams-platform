@@ -8,7 +8,14 @@ export type AnalyticsEvent =
   | { name: "request_published"; data: { count: number; bonus: number } }
   | { name: "request_claimed"; data: { bonus: number } }
   | { name: "operation_released"; data?: never }
-  | { name: "candidate_withdrew"; data?: never };
+  | { name: "candidate_withdrew"; data?: never }
+  | { name: "reservation_declared"; data?: never }
+  | { name: "mail_confirmed"; data?: never }
+  | { name: "booking_disputed"; data?: never }
+  | { name: "payment_declared"; data?: never }
+  | { name: "payment_confirmed"; data?: never }
+  | { name: "payment_rejected"; data?: never }
+  | { name: "report_sent"; data?: never };
 
 type AuthMethod = "code" | "password" | "google" | "microsoft";
 

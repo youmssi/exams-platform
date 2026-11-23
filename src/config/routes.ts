@@ -10,10 +10,21 @@ export const routes = {
   sessions: "/sessions",
   requests: "/requests",
   queue: "/queue",
-  operation: "/operation",
+  blacklist: "/blacklist",
   terms: "/terms",
   privacy: "/privacy",
+  /** Public page a friend opens from the consent email (EXM-024). */
+  consent: "/consent",
+  admin: "/admin",
+  adminOperations: "/admin/operations",
+  adminUsers: "/admin/users",
+  adminReports: "/admin/reports",
+  adminAudit: "/admin/audit",
   adminCatalog: "/admin/catalog",
+  adminPayments: "/admin/payments",
+  adminDisputes: "/admin/disputes",
+  adminSessions: "/admin/sessions",
+  adminAssistants: "/admin/assistants",
 } as const;
 
 /** Routes reachable without a session. */
@@ -23,6 +34,7 @@ export const publicRoutes: readonly string[] = [
   routes.resetPassword,
   routes.terms,
   routes.privacy,
+  routes.consent,
 ];
 
 /** Keeps a post-sign-in redirect inside the app. */

@@ -9,8 +9,15 @@ import {
   centerInput,
   countryInput,
   offerInput,
+  proposalSessionInput,
   sessionInput,
 } from "../schemas";
+import {
+  createFromProposal,
+  dismissProposal,
+  listSessionReview,
+  verifySession,
+} from "./dates";
 import { listCatalog, saveCenter, saveCountry, saveOffer } from "./service";
 import {
   confirmSession,
@@ -56,4 +63,17 @@ export const catalogRouter = createTRPCRouter({
     .mutation(({ ctx, input }) =>
       saveOffer(ctx.session.user.id, input.data, input.id),
     ),
+  /** Detected dates, sessions to validate and centres whose dates page failed. */
+  sessionReview: adminProcedure.query(() => listSessionReview()),
+  createFromProposal: adminProcedure
+    .input(proposalSessionInput)
+    .mutation(({ ctx, input }) =>
+      createFromProposal(ctx.session.user.id, input.id, input),
+    ),
+  dismissProposal: adminProcedure
+    .input(z.object({ id: z.string().min(1) }))
+    .mutation(({ input }) => dismissProposal(input.id)),
+  verifySession: adminProcedure
+    .input(z.object({ id: z.string().min(1) }))
+    .mutation(({ ctx, input }) => verifySession(ctx.session.user.id, input.id)),
 });

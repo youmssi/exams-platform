@@ -2,7 +2,12 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { FieldGroup } from "@/components/ui/field";
+import {
+  FieldDescription,
+  FieldGroup,
+  FieldLegend,
+  FieldSet,
+} from "@/components/ui/field";
 import { useAppForm } from "@/shared/form";
 import { useTRPC } from "@/trpc/client";
 import { countryFormSchema, toCountryForm, toCountryInput } from "../schemas";
@@ -29,6 +34,9 @@ export function CountryForm({
           currency: country.currency,
           timeZone: country.timeZone,
           mobileMoneyOperators: country.mobileMoneyOperators,
+          platformOperator: country.platformOperator,
+          platformMomoNumber: country.platformMomoNumber,
+          platformMomoName: country.platformMomoName,
           active: country.active,
         })
       : {
@@ -36,6 +44,9 @@ export function CountryForm({
           currency: "",
           timeZone: "",
           mobileMoneyOperators: "",
+          platformOperator: "",
+          platformMomoNumber: "",
+          platformMomoName: "",
           active: true,
         },
     validators: { onSubmit: countryFormSchema },
@@ -86,6 +97,30 @@ export function CountryForm({
             />
           )}
         </form.AppField>
+        <FieldSet>
+          <FieldLegend>{t("country.platformAccount")}</FieldLegend>
+          <FieldDescription>
+            {t("country.platformAccountHint")}
+          </FieldDescription>
+          <form.AppField name="platformOperator">
+            {(field) => (
+              <field.TextField label={t("country.platformOperator")} />
+            )}
+          </form.AppField>
+          <form.AppField name="platformMomoNumber">
+            {(field) => (
+              <field.TextField
+                label={t("country.platformMomoNumber")}
+                type="tel"
+              />
+            )}
+          </form.AppField>
+          <form.AppField name="platformMomoName">
+            {(field) => (
+              <field.TextField label={t("country.platformMomoName")} />
+            )}
+          </form.AppField>
+        </FieldSet>
         <form.AppField name="active">
           {(field) => <field.SwitchField label={t("country.active")} />}
         </form.AppField>

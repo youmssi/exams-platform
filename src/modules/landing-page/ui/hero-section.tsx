@@ -3,13 +3,13 @@
 import { ArrowRightIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { palette } from "@/components/brand/palette";
 import { BlurText } from "@/components/react-bits/blur-text";
 import { ShinyText } from "@/components/react-bits/shiny-text";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { Link } from "@/i18n/navigation";
 import { AnimatedSphere } from "./animations";
-import { palette } from "./palette";
 import { reveal, useInView } from "./use-in-view";
 
 type Fact = { value: string; label: string; tag: string };

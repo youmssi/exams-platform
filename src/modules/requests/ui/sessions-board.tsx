@@ -10,11 +10,13 @@ import {
   CheckIcon,
   MessageSquarePlusIcon,
   SendIcon,
+  UserIcon,
 } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,8 +34,12 @@ import {
   ItemGroup,
   ItemTitle,
 } from "@/components/ui/item";
+import { routes } from "@/config/routes";
+import { Link } from "@/i18n/navigation";
 import { CatalogRequestForm, SessionForm } from "@/modules/catalog/client";
+import { ReportDialog } from "@/modules/trust/client";
 import { useTRPC } from "@/trpc/client";
+import { requestedFor } from "../domain/live";
 import { PublishForm } from "./publish-form";
 import type { UpcomingSession } from "./types";
 
@@ -50,6 +56,23 @@ export function SessionsBoard() {
   const { data: sessions } = useSuspenseQuery(
     trpc.catalog.sessions.queryOptions(),
   );
+  const { data: beneficiaries } = useSuspenseQuery(
+    trpc.beneficiaries.list.queryOptions(),
+  );
+  const { data: requests } = useSuspenseQuery(
+    trpc.requests.mine.queryOptions(),
+  );
+  const selfReady = beneficiaries.some(
+    (beneficiary) => beneficiary.isSelf && beneficiary.isReady,
+  );
+  const readyIds = beneficiaries
+    .filter((beneficiary) => beneficiary.isReady)
+    .map((beneficiary) => beneficiary.id);
+  /** Every person ready to book already has a live request for this session. */
+  const allRequested = (sessionId: string) => {
+    const requested = requestedFor(requests, sessionId);
+    return readyIds.length > 0 && readyIds.every((id) => requested.has(id));
+  };
   const [dialog, setDialog] = useState<Dialog>(null);
   const [created, setCreated] = useState<string | null>(null);
   const close = () => setDialog(null);
@@ -75,6 +98,19 @@ export function SessionsBoard() {
         </Button>
       </div>
 
+      {!selfReady && (
+        <Alert>
+          <UserIcon />
+          <AlertTitle>{t("profile.title")}</AlertTitle>
+          <AlertDescription className="flex flex-col items-start gap-3">
+            {t("profile.description")}
+            <Button size="sm" render={<Link href={routes.beneficiaries} />}>
+              {t("profile.action")}
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {sessions.length === 0 ? (
         <Empty className="border">
           <EmptyHeader>
@@ -99,6 +135,7 @@ export function SessionsBoard() {
             <SessionItem
               key={session.id}
               session={session}
+              published={allRequested(session.id)}
               onPublish={() => setDialog({ kind: "publish", session })}
             />
           ))}
@@ -135,9 +172,12 @@ export function SessionsBoard() {
 
 function SessionItem({
   session,
+  published,
   onPublish,
 }: {
   session: UpcomingSession;
+  /** Nothing left to publish for this session: the button says so and is disabled. */
+  published: boolean;
   onPublish: () => void;
 }) {
   const t = useTranslations("sessions");
@@ -182,16 +222,18 @@ function SessionItem({
           })}
           <br />
           {t("opensAt", {
-            date: format.dateTime(new Date(session.registrationOpensAt), {
-              dateStyle: "medium",
-              timeStyle: "short",
-              timeZone,
-              timeZoneName: "short",
-            }),
+            date: format.dateTime(
+              new Date(session.registrationOpensAt),
+              "zoned",
+              {
+                timeZone,
+              },
+            ),
           })}
         </ItemDescription>
       </ItemContent>
       <ItemActions className="w-full justify-end sm:w-auto">
+        <ReportDialog targetType="SESSION" targetId={session.id} />
         {session.canConfirm && (
           <Button
             variant="ghost"
@@ -203,9 +245,9 @@ function SessionItem({
             {t("confirm")}
           </Button>
         )}
-        <Button size="sm" onClick={onPublish}>
-          <SendIcon />
-          {t("publish")}
+        <Button size="sm" disabled={published} onClick={onPublish}>
+          {published ? <CheckIcon /> : <SendIcon />}
+          {published ? t("published") : t("publish")}
         </Button>
       </ItemActions>
     </Item>

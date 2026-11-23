@@ -27,6 +27,12 @@ model User {
   banExpires       DateTime?
   activeRole       String?               @default("candidate")
   termsAcceptedAt  DateTime?
+  /// Set at the third strike; only an admin lifts it (EXM-010).
+  suspendedAt      DateTime?
+  /// Language of the emails sent to this user, from their last visit.
+  locale           String                @default("fr")
+  /// Follow-up emails (booking declared, problem to fix, deposit declared). Critical ones are always sent.
+  emailUpdates     Boolean               @default(true)
   sessions         Session[]
   accounts         Account[]
   twofactors       TwoFactor[]
@@ -37,6 +43,9 @@ model User {
   operations       Operation[]
   assistantProfile AssistantProfile?
   catalogRequests  CatalogRequest[]
+  strikes          Strike[]
+  reports          Report[]
+  notifications    Notification[]
 
   @@unique([email])
   @@map("user")
@@ -125,6 +134,10 @@ model Country {
   timeZone             String
   /// Mobile Money operators assistants can be paid with in this country.
   mobileMoneyOperators String[]
+  /// Mobile Money account candidates send the platform's commission to (EXM-009).
+  platformOperator     String?
+  platformMomoNumber   String?
+  platformMomoName     String?
   active               Boolean            @default(true)
   centers              Center[]
   assistants           AssistantProfile[]
@@ -135,16 +148,23 @@ model Country {
 }
 
 model Center {
-  id          String   @id @default(cuid())
-  countryId   String
-  country     Country  @relation(fields: [countryId], references: [id], onDelete: Restrict)
-  name        String
-  city        String
-  officialUrl String
-  active      Boolean  @default(true)
-  offers      Offer[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String    @id @default(cuid())
+  countryId      String
+  country        Country   @relation(fields: [countryId], references: [id], onDelete: Restrict)
+  name           String
+  city           String
+  officialUrl    String
+  /// Page listing the centre's exam dates, read daily when `autoDates` is on (EXM-023).
+  datesUrl       String?
+  /// Turned on by an admin once the site's terms allow automated reading.
+  autoDates      Boolean   @default(false)
+  datesCheckedAt DateTime?
+  /// Why the last reading failed; the admin sees it, manual entry keeps working.
+  datesError     String?
+  active         Boolean   @default(true)
+  offers         Offer[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@unique([countryId, name])
   @@map("center")
@@ -153,9 +173,9 @@ model Center {
 /// A level offered by a center (e.g. Goethe Yaoundé B1) with its economic settings.
 /// Amounts are integers in the country's currency unit; the commission rate is in basis points.
 model Offer {
-  id                String        @id @default(cuid())
+  id                String         @id @default(cuid())
   centerId          String
-  center            Center        @relation(fields: [centerId], references: [id], onDelete: Restrict)
+  center            Center         @relation(fields: [centerId], references: [id], onDelete: Restrict)
   level             String
   modules           String[]
   standardPrice     Int
@@ -167,10 +187,13 @@ model Offer {
   confirmOnlineMin  Int
   confirmOfflineMin Int
   paymentDeadlineH  Int
-  active            Boolean       @default(true)
+  /// Days the centre gives to pay exam fees after booking; 0 hides the reminder.
+  centerFeeDays     Int            @default(0)
+  active            Boolean        @default(true)
   sessions          ExamSession[]
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  dateProposals     DateProposal[]
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
 
   @@unique([centerId, level])
   @@map("offer")
@@ -194,26 +217,31 @@ model AuditLog {
 /// A person the account holder books for: themself ("self") or a friend who agreed.
 /// The exam-centre password is encrypted (AES-256-GCM) and never sent back to the owner.
 model Beneficiary {
-  id                String    @id @default(cuid())
-  ownerId           String
-  owner             User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  isSelf            Boolean   @default(false)
+  id                 String    @id @default(cuid())
+  ownerId            String
+  owner              User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  isSelf             Boolean   @default(false)
   /// Official names, as on the identity document.
-  firstName         String    @default("")
-  lastName          String    @default("")
-  birthDate         DateTime? @db.Date
-  birthPlace        String?
-  phone             String?
-  city              String?
-  district          String?
+  firstName          String    @default("")
+  lastName           String    @default("")
+  birthDate          DateTime? @db.Date
+  birthPlace         String?
+  phone              String?
+  city               String?
+  district           String?
   /// Exam-centre participant number, when the candidate already has one.
-  participantNumber String?
-  email             String
-  passwordCipher    String?
-  consentAt         DateTime?
-  requests          Request[]
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  participantNumber  String?
+  email              String
+  passwordCipher     String?
+  consentAt          DateTime?
+  /// The friend confirmed by email that the holder may book for them (EXM-024). Not needed for "self".
+  consentConfirmedAt DateTime?
+  /// SHA-256 of the one-time link sent to the friend; cleared once they answer.
+  consentTokenHash   String?   @unique
+  consentRequestedAt DateTime?
+  requests           Request[]
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   @@index([ownerId])
   @@map("beneficiary")
@@ -251,7 +279,13 @@ model SessionConfirmation {
 
 enum RequestStatus {
   OPEN
+  /// Booked by an assistant; follows its operation.
+  BOOKED
+  /// The candidate got a seat another way.
+  ELSEWHERE
   CANCELLED
+  /// The session passed before anyone booked it ("non réservée").
+  UNBOOKED
 }
 
 /// A booking request for one beneficiary and one session.
@@ -265,6 +299,11 @@ model Request {
   ownerId        String
   owner          User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   status         RequestStatus @default(OPEN)
+  /// Problem reported by an assistant; the request waits for the candidate to fix it.
+  issue          RequestIssue?
+  /// Short note for `OTHER`, shown to the candidate only.
+  issueNote      String?
+  issueAt        DateTime?
   operations     Operation[]
   /// Modules booked, in the offer's order; all of them means the full exam.
   modules        String[]
@@ -276,6 +315,12 @@ model Request {
   commission     Int
   assistantShare Int
   version        Int           @default(0)
+  /// Carry the request to the next session of the same centre and level if it is not booked.
+  carryOver      Boolean       @default(true)
+  /// The unbooked request this one continues (EXM-022).
+  carriedFromId  String?       @unique
+  carriedFrom    Request?      @relation("CarryOver", fields: [carriedFromId], references: [id], onDelete: SetNull)
+  carriedTo      Request?      @relation("CarryOver")
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
@@ -308,17 +353,26 @@ model CatalogRequest {
 /// One assistant working on one request, from the claim to its end.
 /// At most one active operation per assistant and per request (partial unique indexes in SQL).
 model Operation {
-  id          String          @id @default(cuid())
-  requestId   String
-  request     Request         @relation(fields: [requestId], references: [id], onDelete: Cascade)
-  assistantId String
-  assistant   User            @relation(fields: [assistantId], references: [id], onDelete: Restrict)
-  status      OperationStatus @default(CLAIMED)
-  claimedAt   DateTime        @default(now())
+  id           String               @id @default(cuid())
+  requestId    String
+  request      Request              @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  assistantId  String
+  assistant    User                 @relation(fields: [assistantId], references: [id], onDelete: Restrict)
+  status       OperationStatus      @default(CLAIMED)
+  claimedAt    DateTime             @default(now())
   /// Book before this time, or the request goes back to the queue.
-  deadlineAt  DateTime
-  endedAt     DateTime?
-  version     Int             @default(0)
+  deadlineAt   DateTime
+  reservedAt   DateTime?
+  /// Once booked, the assistant is free after this time even if the candidate has not confirmed.
+  releaseAt    DateTime?
+  confirmedAt  DateTime?
+  /// Both deposits must be confirmed before this time, or the operation becomes unpaid.
+  paymentDueAt DateTime?
+  closedAt     DateTime?
+  endedAt      DateTime?
+  version      Int                  @default(0)
+  payments     PaymentDeclaration[]
+  dispute      Dispute?
 
   @@index([requestId])
   @@index([assistantId, status])
@@ -330,22 +384,226 @@ enum OperationStatus {
   RELEASED
   WITHDRAWN
   EXPIRED
+  REPORTED
+  RESERVED
+  CONFIRMED
+  DISPUTED
+  /// Both deposits received: the operation is over.
+  CLOSED
+  /// The payment deadline passed before both deposits were received.
+  UNPAID
+  /// A dispute found the booking was not made: the request is back in the queue.
+  CANCELLED
+}
+
+enum PaymentRecipient {
+  ASSISTANT
+  PLATFORM
+}
+
+enum PaymentStatus {
+  /// To send, or sent again after a "not received".
+  DUE
+  /// The candidate says it is sent; the recipient confirms.
+  DECLARED
+  RECEIVED
+}
+
+/// One of the two deposits of a confirmed booking: the assistant's share and the platform's commission.
+/// Amounts come from the request's frozen price, never recomputed.
+model PaymentDeclaration {
+  id          String           @id @default(cuid())
+  operationId String
+  operation   Operation        @relation(fields: [operationId], references: [id], onDelete: Cascade)
+  recipient   PaymentRecipient
+  amount      Int
+  currency    String
+  status      PaymentStatus    @default(DUE)
+  declaredAt  DateTime?
+  receivedAt  DateTime?
+  /// Times the recipient answered "not received".
+  rejections  Int              @default(0)
+  version     Int              @default(0)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@unique([operationId, recipient])
+  @@index([recipient, status])
+  @@map("payment_declaration")
 }
 
 /// What an assistant needs before taking a request: how to reach them and how they are paid.
 model AssistantProfile {
-  userId     String   @id
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  countryId  String
-  country    Country  @relation(fields: [countryId], references: [id], onDelete: Restrict)
-  phone      String
+  userId          String                @id
+  user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  countryId       String
+  country         Country               @relation(fields: [countryId], references: [id], onDelete: Restrict)
+  phone           String
   /// One of the country's `mobileMoneyOperators`.
-  operator   String
-  momoNumber String
+  operator        String
+  momoNumber      String
   /// Account holder name, as the Mobile Money app shows it.
-  momoName   String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  momoName        String
+  /// Identity check by an admin before the first request (EXM-014).
+  verification    AssistantVerification @default(NONE)
+  /// Private file path of the identity document photo, readable by admins only.
+  identityPath    String?
+  submittedAt     DateTime?
+  verifiedAt      DateTime?
+  /// Why the document was refused, shown to the assistant.
+  rejectionReason String?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
 
   @@map("assistant_profile")
+}
+
+enum AssistantVerification {
+  /// No identity document sent yet.
+  NONE
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+/// Why an assistant handed a request back to the candidate (EXM-025).
+enum RequestIssue {
+  CREDENTIALS
+  WRONG_DETAILS
+  ACCOUNT_BLOCKED
+  OTHER
+}
+
+enum DisputeStatus {
+  /// The assistant must send a capture of the booking before `proofDueAt`.
+  PROOF_REQUESTED
+  /// Proof sent, or its deadline passed: an admin decides.
+  REVIEW
+  DECIDED
+}
+
+enum DisputeOutcome {
+  /// The booking was made: the candidate pays, and is warned for an abusive dispute.
+  BOOKED
+  /// It was not: the request goes back to the queue, and the assistant is warned.
+  NOT_BOOKED
+}
+
+/// A candidate says the centre's email never came. Blocks the assistant's claims until decided.
+model Dispute {
+  id           String          @id @default(cuid())
+  operationId  String          @unique
+  operation    Operation       @relation(fields: [operationId], references: [id], onDelete: Cascade)
+  status       DisputeStatus   @default(PROOF_REQUESTED)
+  proofDueAt   DateTime
+  /// Private file path (image), readable by the admin and both parties.
+  proofPath    String?
+  proofAt      DateTime?
+  outcome      DisputeOutcome?
+  decisionNote String?
+  decidedById  String?
+  decidedAt    DateTime?
+  createdAt    DateTime        @default(now())
+
+  @@index([status])
+  @@map("dispute")
+}
+
+enum StrikeReason {
+  /// The assistant let the claim time run out.
+  CLAIM_TIMEOUT
+  /// The candidate disputed a booking that was made.
+  ABUSIVE_DISPUTE
+  /// The assistant declared a booking that was not made.
+  AT_FAULT
+}
+
+/// A warning. Three active strikes suspend the account until an admin lifts it.
+model Strike {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reason      StrikeReason
+  operationId String?
+  /// Set when an admin lifts the suspension: the strike no longer counts.
+  liftedAt    DateTime?
+  createdAt   DateTime     @default(now())
+
+  @@index([userId])
+  @@map("strike")
+}
+
+enum ReportTarget {
+  SESSION
+  /// The other person of an operation, reported from the request or the operation.
+  OPERATION
+}
+
+enum ReportCategory {
+  WRONG_SESSION
+  ABUSE
+  FRAUD
+  OTHER
+}
+
+/// Something a user flags for the admins.
+model Report {
+  id         String         @id @default(cuid())
+  reporterId String
+  reporter   User           @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  targetType ReportTarget
+  targetId   String
+  category   ReportCategory
+  message    String?
+  handledAt  DateTime?
+  createdAt  DateTime       @default(now())
+
+  @@index([handledAt])
+  @@map("report")
+}
+
+/// An exam date found on the centre's official page, waiting for an admin to create the session.
+model DateProposal {
+  id        String    @id @default(cuid())
+  offerId   String
+  offer     Offer     @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  examDate  DateTime  @db.Date
+  sourceUrl String
+  /// Created as a session, or dismissed: never proposed again.
+  handledAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@unique([offerId, examDate])
+  @@map("date_proposal")
+}
+
+enum NotificationType {
+  REQUEST_CLAIMED
+  REQUEST_RETURNED
+  BOOKING_DECLARED
+  PROBLEM_REPORTED
+  BOOKING_CONFIRMED
+  DISPUTE_OPENED
+  PAYMENT_DECLARED
+  PAYMENT_REJECTED
+  OPERATION_CLOSED
+  DISPUTE_DECIDED
+  STRIKE
+  ASSISTANT_VERIFIED
+  ASSISTANT_REJECTED
+}
+
+/// Something that happened to the user, with where to act on it (EXM-011).
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  /// Values for the message (reference, outcome, reason…), never personal data.
+  data      Json?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  @@index([userId, readAt])
+  @@map("notification")
 }

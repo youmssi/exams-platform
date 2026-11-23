@@ -25,7 +25,7 @@ export function CopyField({
   /** Extra buttons, e.g. show the password. */
   children?: React.ReactNode;
 }) {
-  const t = useTranslations("operation");
+  const t = useTranslations("common");
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     await navigator.clipboard.writeText(value);

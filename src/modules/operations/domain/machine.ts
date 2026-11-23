@@ -1,18 +1,56 @@
 /**
- * Operation lifecycle. An assistant claims a request, then books it before the deadline (EXM-008),
- * releases it, or loses it when the deadline passes; the candidate can withdraw it meanwhile.
+ * Operation lifecycle. An assistant claims a request and books it before the deadline,
+ * releases it, reports refused credentials, or loses it when the deadline passes; the
+ * candidate can withdraw it meanwhile. Once booked, the candidate confirms the centre's
+ * email or disputes the booking; an admin then upholds it (to pay) or cancels it. A confirmed booking is paid in two
+ * deposits: received in time, it closes; otherwise it becomes unpaid until it is settled.
  */
-export type OperationStatus = "CLAIMED" | "RELEASED" | "WITHDRAWN" | "EXPIRED";
-export type OperationEvent = "release" | "withdraw" | "expire";
+export type OperationStatus =
+  | "CLAIMED"
+  | "RELEASED"
+  | "WITHDRAWN"
+  | "EXPIRED"
+  | "REPORTED"
+  | "RESERVED"
+  | "CONFIRMED"
+  | "DISPUTED"
+  | "CLOSED"
+  | "UNPAID"
+  | "CANCELLED";
+export type OperationEvent =
+  | "release"
+  | "withdraw"
+  | "expire"
+  | "report"
+  | "reserve"
+  | "confirm"
+  | "dispute"
+  | "close"
+  | "lapse"
+  | "uphold"
+  | "cancel";
 
 const TRANSITIONS: Record<
   OperationStatus,
   Partial<Record<OperationEvent, OperationStatus>>
 > = {
-  CLAIMED: { release: "RELEASED", withdraw: "WITHDRAWN", expire: "EXPIRED" },
+  CLAIMED: {
+    release: "RELEASED",
+    withdraw: "WITHDRAWN",
+    expire: "EXPIRED",
+    report: "REPORTED",
+    reserve: "RESERVED",
+  },
+  RESERVED: { confirm: "CONFIRMED", dispute: "DISPUTED" },
   RELEASED: {},
   WITHDRAWN: {},
   EXPIRED: {},
+  REPORTED: {},
+  CONFIRMED: { close: "CLOSED", lapse: "UNPAID" },
+  UNPAID: { close: "CLOSED" },
+  DISPUTED: { uphold: "CONFIRMED", cancel: "CANCELLED" },
+  CLOSED: {},
+  CANCELLED: {},
 };
 
 /** The next status, or null when the event is not allowed. */
@@ -21,6 +59,29 @@ export const transition = (
   event: OperationEvent,
 ): OperationStatus | null => TRANSITIONS[status][event] ?? null;
 
+const addMinutes = (date: Date, minutes: number) =>
+  new Date(date.getTime() + minutes * 60_000);
+
 /** Deadline to book after a claim, from the offer's setting. */
 export const claimDeadline = (claimTimeoutMin: number, now = new Date()) =>
-  new Date(now.getTime() + claimTimeoutMin * 60_000);
+  addMinutes(now, claimTimeoutMin);
+
+/**
+ * When a booked operation frees the assistant: sooner when the candidate is offline,
+ * so an absent candidate never blocks the assistant.
+ */
+export const releaseTime = (
+  offer: { confirmOnlineMin: number; confirmOfflineMin: number },
+  candidateOnline: boolean,
+  now = new Date(),
+) =>
+  addMinutes(
+    now,
+    candidateOnline ? offer.confirmOnlineMin : offer.confirmOfflineMin,
+  );
+
+/** Last day to pay the exam fees to the centre, or null when the offer does not say. */
+export const centerFeeDeadline = (centerFeeDays: number, confirmedAt: Date) =>
+  centerFeeDays > 0
+    ? new Date(confirmedAt.getTime() + centerFeeDays * 86_400_000)
+    : null;

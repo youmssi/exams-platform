@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  countryFormSchema,
   countryInput,
   offerInput,
   toCountryForm,
@@ -21,6 +22,7 @@ const offer = {
   confirmOnlineMin: 15,
   confirmOfflineMin: 5,
   paymentDeadlineH: 24,
+  centerFeeDays: 3,
   active: true,
 };
 
@@ -66,6 +68,9 @@ describe("countryInput", () => {
         currency: "XAF",
         timeZone: "Africa/Douala",
         mobileMoneyOperators: ["MTN Mobile Money", "Orange Money"],
+        platformOperator: null,
+        platformMomoNumber: null,
+        platformMomoName: null,
         active: true,
       }).success,
     ).toBe(true);
@@ -96,6 +101,9 @@ describe("country form", () => {
       currency: "XAF",
       timeZone: "Africa/Douala",
       mobileMoneyOperators: ["MTN Mobile Money", "Orange Money"],
+      platformOperator: null,
+      platformMomoNumber: null,
+      platformMomoName: null,
       active: true,
     };
     expect(toCountryForm(country).mobileMoneyOperators).toBe(
@@ -107,5 +115,32 @@ describe("country form", () => {
         mobileMoneyOperators: " A ,, B ",
       }).mobileMoneyOperators,
     ).toEqual(["A", "B"]);
+  });
+
+  it("keeps the platform account empty or complete", () => {
+    const empty = {
+      code: "CM",
+      currency: "XAF",
+      timeZone: "Africa/Douala",
+      mobileMoneyOperators: "MTN Mobile Money",
+      platformOperator: "",
+      platformMomoNumber: "",
+      platformMomoName: "",
+      active: true,
+    };
+    expect(countryFormSchema.safeParse(empty).success).toBe(true);
+    expect(toCountryInput(empty).platformOperator).toBeNull();
+    expect(
+      countryFormSchema.safeParse({ ...empty, platformOperator: "MTN" })
+        .success,
+    ).toBe(false);
+    expect(
+      countryFormSchema.safeParse({
+        ...empty,
+        platformOperator: "MTN Mobile Money",
+        platformMomoNumber: "6 70 00 00 00",
+        platformMomoName: "Exams",
+      }).success,
+    ).toBe(true);
   });
 });

@@ -1,10 +1,11 @@
 import "server-only";
 import { createHmac } from "node:crypto";
-import * as Ably from "ably";
+import { createHttpClient } from "@ably/pubsub-server";
 import { env } from "@/server/env";
 import { realtimeChannels } from "../channels";
 
-const ably = env.ABLY_API_KEY ? new Ably.Rest(env.ABLY_API_KEY) : null;
+/** Server client: authenticated with the API key, so Ably counts it as a server, not a user (MAU pricing). */
+const ably = env.ABLY_API_KEY ? createHttpClient(env.ABLY_API_KEY) : null;
 
 export const isRealtimeEnabled = ably !== null;
 
@@ -62,4 +63,19 @@ export function createRealtimeToken(
     clientId: presenceKey(userId),
     capability: JSON.stringify(capability),
   });
+}
+
+/** Whether the user has the app open right now; false when realtime is not configured or unreachable. */
+export async function isUserOnline(userId: string) {
+  const channels = channelsFor(userId);
+  if (!ably || !channels) return false;
+  try {
+    const members = await ably.channels.get(channels.presence).presence.get({
+      clientId: presenceKey(userId),
+    });
+    return members.items.length > 0;
+  } catch (error) {
+    console.error("Presence not read", error);
+    return false;
+  }
 }
