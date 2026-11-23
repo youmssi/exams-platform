@@ -10,7 +10,6 @@ export const routes = {
   sessions: "/sessions",
   requests: "/requests",
   queue: "/queue",
-  operation: "/operation",
   terms: "/terms",
   privacy: "/privacy",
   adminCatalog: "/admin/catalog",

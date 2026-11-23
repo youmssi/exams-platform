@@ -5,7 +5,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { CheckIcon, ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -33,13 +33,13 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { routes } from "@/config/routes";
 import { Link, useRouter } from "@/i18n/navigation";
-import { bonusOptions, priceBreakdown } from "@/modules/catalog/client";
+import { priceBreakdown } from "@/modules/catalog/client";
 import { track } from "@/shared/analytics";
 import { useTRPC } from "@/trpc/client";
 import { requestedFor } from "../domain/live";
+import { BonusPicker, ModulesPicker } from "./pickers";
 import type { UpcomingSession } from "./types";
 
 const ERRORS = new Set([
@@ -195,29 +195,11 @@ export function PublishForm({
           </FieldGroup>
         </FieldSet>
 
-        <FieldSet>
-          <FieldLegend variant="label">{t("modules")}</FieldLegend>
-          <ToggleGroup
-            multiple
-            variant="outline"
-            size="sm"
-            className="flex-wrap"
-            value={modules}
-            onValueChange={setModules}
-          >
-            {offer.modules.map((module) => (
-              <ToggleGroupItem key={module} value={module}>
-                <CheckIcon className="hidden group-aria-pressed/toggle:block" />
-                {module}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-          <FieldDescription>
-            {modules.length === offer.modules.length
-              ? t("fullExam")
-              : t("pickModules")}
-          </FieldDescription>
-        </FieldSet>
+        <ModulesPicker
+          available={offer.modules}
+          value={modules}
+          onChange={setModules}
+        />
 
         {offer.bonusCap > 0 && (
           <Collapsible>
@@ -233,21 +215,13 @@ export function PublishForm({
               {bonus ? t("bonusSet", { bonus: money(bonus) }) : t("addBonus")}
               <ChevronDownIcon />
             </CollapsibleTrigger>
-            <CollapsibleContent className="flex flex-col gap-2 pt-2">
-              <FieldDescription>{t("bonusHint")}</FieldDescription>
-              <ToggleGroup
-                variant="outline"
-                size="sm"
-                className="flex-wrap"
-                value={[String(bonus)]}
-                onValueChange={(value) => setBonus(Number(value[0] ?? 0))}
-              >
-                {bonusOptions(offer).map((option) => (
-                  <ToggleGroupItem key={option} value={String(option)}>
-                    {option ? `+${money(option)}` : t("noBonus")}
-                  </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
+            <CollapsibleContent className="pt-2">
+              <BonusPicker
+                offer={offer}
+                value={bonus}
+                onChange={setBonus}
+                money={money}
+              />
             </CollapsibleContent>
           </Collapsible>
         )}

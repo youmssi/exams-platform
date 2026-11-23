@@ -14,6 +14,7 @@ import {
   releaseTime,
   transition,
 } from "../domain/machine";
+import type { ReportInput } from "../schemas";
 
 type Client = Prisma.TransactionClient | typeof db;
 
@@ -71,7 +72,7 @@ export async function claimRequest(assistantId: string, requestId: string) {
       throw new TRPCError({ code: "CONFLICT", message: "busy" });
     const request = await tx.request.findFirst({
       where: {
-        credentialsRejectedAt: null,
+        issue: null,
         id: requestId,
         status: "OPEN",
         publishAt: { lte: now },
@@ -303,15 +304,22 @@ export async function reserveOperation(assistantId: string, id: string) {
   return { ownerId: operation.request.ownerId };
 }
 
-/** The assistant could not sign in: no penalty, the request waits for the candidate to fix it. */
-export async function rejectCredentials(assistantId: string, id: string) {
+/**
+ * The assistant cannot book as is (credentials refused, wrong details, blocked account…): no
+ * penalty, the request waits for the candidate to fix it. Every report is audited so the admin
+ * can spot an assistant who drops requests this way.
+ */
+export async function reportProblem(
+  assistantId: string,
+  { id, reason, note }: ReportInput,
+) {
   const operation = await runningClaim(assistantId, id);
   const now = new Date();
   await db.$transaction(async (tx) => {
     const { count } = await tx.operation.updateMany({
       where: { id, version: operation.version, status: "CLAIMED" },
       data: {
-        status: next("CLAIMED", "rejectCredentials"),
+        status: next("CLAIMED", "report"),
         endedAt: now,
         version: { increment: 1 },
       },
@@ -320,7 +328,19 @@ export async function rejectCredentials(assistantId: string, id: string) {
       throw new TRPCError({ code: "CONFLICT", message: "invalidTransition" });
     await tx.request.update({
       where: { id: operation.requestId },
-      data: { credentialsRejectedAt: now, version: { increment: 1 } },
+      data: {
+        issue: reason,
+        issueNote: reason === "OTHER" ? note : null,
+        issueAt: now,
+        version: { increment: 1 },
+      },
+    });
+    await recordAudit(tx, {
+      actorId: assistantId,
+      action: "operation.report",
+      targetType: "operation",
+      targetId: id,
+      after: { reason },
     });
   });
   return { ownerId: operation.request.ownerId };

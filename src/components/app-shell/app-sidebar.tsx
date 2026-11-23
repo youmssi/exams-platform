@@ -1,9 +1,7 @@
 "use client";
 
 import {
-  BriefcaseIcon,
   CalendarDaysIcon,
-  HomeIcon,
   LibraryIcon,
   ListChecksIcon,
   RadioTowerIcon,
@@ -30,16 +28,11 @@ import { NavUser, type NavUserData } from "@/modules/identity/client";
 /** Each role sees only its own work. */
 const NAV = {
   candidate: [
-    { href: routes.home, key: "home", Icon: HomeIcon },
     { href: routes.sessions, key: "sessions", Icon: CalendarDaysIcon },
     { href: routes.requests, key: "requests", Icon: ListChecksIcon },
     { href: routes.beneficiaries, key: "beneficiaries", Icon: UsersIcon },
   ],
-  assistant: [
-    { href: routes.home, key: "home", Icon: HomeIcon },
-    { href: routes.queue, key: "queue", Icon: RadioTowerIcon },
-    { href: routes.operation, key: "operation", Icon: BriefcaseIcon },
-  ],
+  assistant: [{ href: routes.queue, key: "queue", Icon: RadioTowerIcon }],
 } as const;
 const ADMIN_NAV = [
   { href: routes.adminCatalog, key: "catalog", Icon: LibraryIcon },

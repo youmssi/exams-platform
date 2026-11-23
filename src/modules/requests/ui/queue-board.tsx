@@ -40,8 +40,12 @@ import type { QueueRequest } from "./types";
 const POLL_LIVE_MS = 60_000;
 const POLL_FALLBACK_MS = 15_000;
 
-/** Published requests, live. A taken or cancelled request disappears at once; new ones wait for a tap. */
-export function QueueBoard() {
+/**
+ * The assistant's single page: the running operation when there is one (passed in by the page,
+ * from the operations module), otherwise the live queue. A taken or cancelled request disappears
+ * at once; new ones wait for a tap.
+ */
+export function QueueBoard({ operation }: { operation: React.ReactNode }) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const refresh = () =>
@@ -49,12 +53,18 @@ export function QueueBoard() {
 
   return (
     <LiveUpdates source="queue" onChange={refresh}>
-      {(state) => <Queue state={state} />}
+      {(state) => <Queue state={state} operation={operation} />}
     </LiveUpdates>
   );
 }
 
-function Queue({ state }: { state: LiveState }) {
+function Queue({
+  state,
+  operation,
+}: {
+  state: LiveState;
+  operation: React.ReactNode;
+}) {
   const t = useTranslations("queue");
   const trpc = useTRPC();
   const {
@@ -75,7 +85,8 @@ function Queue({ state }: { state: LiveState }) {
 
   const sessions = groupBySession(visible);
 
-  if (queueState !== "open") {
+  if (queueState === "busy") return operation;
+  if (queueState === "profileIncomplete") {
     return (
       <Empty className="border">
         <EmptyHeader>
@@ -83,13 +94,7 @@ function Queue({ state }: { state: LiveState }) {
           <EmptyDescription>{t(`${queueState}.description`)}</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button
-            render={
-              <Link
-                href={queueState === "busy" ? routes.operation : routes.account}
-              />
-            }
-          >
+          <Button render={<Link href={routes.account} />}>
             {t(`${queueState}.action`)}
           </Button>
         </EmptyContent>
@@ -221,7 +226,10 @@ function RequestRow({
     trpc.operations.claim.mutationOptions({
       onSuccess: () => {
         track({ name: "request_claimed", data: { bonus: request.bonus } });
-        router.push(routes.operation);
+        // The page switches to the operation.
+        queryClient.invalidateQueries({
+          queryKey: trpc.requests.queue.queryKey(),
+        });
       },
       onError: (error) => {
         if (error.message === "profileIncomplete") {
@@ -229,11 +237,7 @@ function RequestRow({
           router.push(routes.account);
           return;
         }
-        if (error.message === "busy") {
-          toast.error(t("errors.busy"));
-          router.push(routes.operation);
-          return;
-        }
+        if (error.message === "busy") toast.error(t("errors.busy"));
         toast.error(
           error.message === "alreadyTaken"
             ? t("errors.alreadyTaken")

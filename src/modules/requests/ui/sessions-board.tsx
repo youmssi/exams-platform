@@ -10,11 +10,13 @@ import {
   CheckIcon,
   MessageSquarePlusIcon,
   SendIcon,
+  UserIcon,
 } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ResponsiveDialog } from "@/components/responsive-dialog";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +34,8 @@ import {
   ItemGroup,
   ItemTitle,
 } from "@/components/ui/item";
+import { routes } from "@/config/routes";
+import { Link } from "@/i18n/navigation";
 import { CatalogRequestForm, SessionForm } from "@/modules/catalog/client";
 import { useTRPC } from "@/trpc/client";
 import { requestedFor } from "../domain/live";
@@ -56,6 +60,9 @@ export function SessionsBoard() {
   );
   const { data: requests } = useSuspenseQuery(
     trpc.requests.mine.queryOptions(),
+  );
+  const selfReady = beneficiaries.some(
+    (beneficiary) => beneficiary.isSelf && beneficiary.isReady,
   );
   const readyIds = beneficiaries
     .filter((beneficiary) => beneficiary.isReady)
@@ -89,6 +96,19 @@ export function SessionsBoard() {
           {t("create")}
         </Button>
       </div>
+
+      {!selfReady && (
+        <Alert>
+          <UserIcon />
+          <AlertTitle>{t("profile.title")}</AlertTitle>
+          <AlertDescription className="flex flex-col items-start gap-3">
+            {t("profile.description")}
+            <Button size="sm" render={<Link href={routes.beneficiaries} />}>
+              {t("profile.action")}
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
 
       {sessions.length === 0 ? (
         <Empty className="border">

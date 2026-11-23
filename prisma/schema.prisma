@@ -263,29 +263,32 @@ enum RequestStatus {
 /// A booking request for one beneficiary and one session.
 /// Visible in the queue once `publishAt` has passed; the price is frozen at creation.
 model Request {
-  id                    String        @id @default(cuid())
-  sessionId             String
-  session               ExamSession   @relation(fields: [sessionId], references: [id], onDelete: Restrict)
-  beneficiaryId         String
-  beneficiary           Beneficiary   @relation(fields: [beneficiaryId], references: [id], onDelete: Restrict)
-  ownerId               String
-  owner                 User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  status                RequestStatus @default(OPEN)
-  /// Set when an assistant could not sign in; cleared when the beneficiary's password changes.
-  credentialsRejectedAt DateTime?
-  operations            Operation[]
+  id             String        @id @default(cuid())
+  sessionId      String
+  session        ExamSession   @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  beneficiaryId  String
+  beneficiary    Beneficiary   @relation(fields: [beneficiaryId], references: [id], onDelete: Restrict)
+  ownerId        String
+  owner          User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  status         RequestStatus @default(OPEN)
+  /// Problem reported by an assistant; the request waits for the candidate to fix it.
+  issue          RequestIssue?
+  /// Short note for `OTHER`, shown to the candidate only.
+  issueNote      String?
+  issueAt        DateTime?
+  operations     Operation[]
   /// Modules booked, in the offer's order; all of them means the full exam.
-  modules               String[]
-  publishAt             DateTime
-  currency              String
-  standardPrice         Int
-  bonus                 Int
-  total                 Int
-  commission            Int
-  assistantShare        Int
-  version               Int           @default(0)
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt
+  modules        String[]
+  publishAt      DateTime
+  currency       String
+  standardPrice  Int
+  bonus          Int
+  total          Int
+  commission     Int
+  assistantShare Int
+  version        Int           @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   @@index([sessionId, status, publishAt])
   @@index([ownerId])
@@ -342,7 +345,7 @@ enum OperationStatus {
   RELEASED
   WITHDRAWN
   EXPIRED
-  INVALID_CREDENTIALS
+  REPORTED
   RESERVED
   CONFIRMED
   DISPUTED
@@ -364,4 +367,12 @@ model AssistantProfile {
   updatedAt  DateTime @updatedAt
 
   @@map("assistant_profile")
+}
+
+/// Why an assistant handed a request back to the candidate (EXM-025).
+enum RequestIssue {
+  CREDENTIALS
+  WRONG_DETAILS
+  ACCOUNT_BLOCKED
+  OTHER
 }

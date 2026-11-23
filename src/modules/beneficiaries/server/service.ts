@@ -113,16 +113,16 @@ export async function updateBeneficiary(
     data: profileData(input),
   });
   if (!count) throw new TRPCError({ code: "NOT_FOUND" });
-  // New centre password: requests held for refused credentials go back to the queue (EXM-008).
-  if (input.password)
-    await db.request.updateMany({
-      where: {
-        beneficiaryId: id,
-        status: "OPEN",
-        credentialsRejectedAt: { not: null },
-      },
-      data: { credentialsRejectedAt: null, version: { increment: 1 } },
-    });
+  // A corrected profile answers what an assistant reported: those requests go back to the queue (EXM-025).
+  await db.request.updateMany({
+    where: { beneficiaryId: id, status: "OPEN", issue: { not: null } },
+    data: {
+      issue: null,
+      issueNote: null,
+      issueAt: null,
+      version: { increment: 1 },
+    },
+  });
 }
 
 /**
