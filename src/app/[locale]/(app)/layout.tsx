@@ -9,13 +9,12 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { RoleSwitch, requireOnboardedUser } from "@/modules/identity";
 import { channelsFor } from "@/modules/realtime";
-import { PresenceBeacon, RealtimeProvider } from "@/modules/realtime/client";
+import { RealtimeProvider } from "@/modules/realtime/client";
 
 async function Shell({ children }: { children: React.ReactNode }) {
   const user = await requireOnboardedUser();
   return (
     <RealtimeProvider channels={channelsFor(user.id)}>
-      <PresenceBeacon />
       <SidebarProvider>
         <AppSidebar
           isAdmin={user.role === "admin"}

@@ -34,12 +34,11 @@ export function LiveUpdates({ source, onChange, children }: Props) {
   const channels = useRealtimeChannels();
   if (!channels) return children(NOT_LIVE);
   return (
+    // The presence channel comes from RealtimeProvider; only the source channel is opened here.
     <ChannelProvider channelName={channels[source]}>
-      <ChannelProvider channelName={channels.presence}>
-        <Live channels={channels} source={source} onChange={onChange}>
-          {children}
-        </Live>
-      </ChannelProvider>
+      <Live channels={channels} source={source} onChange={onChange}>
+        {children}
+      </Live>
     </ChannelProvider>
   );
 }
