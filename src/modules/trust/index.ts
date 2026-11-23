@@ -4,5 +4,6 @@ export {
   isSuspended,
   issueStrike,
   liftSuspension,
+  suspendUser,
 } from "./server/service";
 export { StandingCard } from "./ui/standing-card";

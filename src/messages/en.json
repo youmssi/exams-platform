@@ -133,7 +133,13 @@
       "blacklist": "Blacklist",
       "disputes": "Disputes",
       "adminSessions": "Sessions",
-      "assistants": "Assistants"
+      "assistants": "Assistants",
+      "adminConsole": "Admin console",
+      "overview": "Overview",
+      "operations": "Operations",
+      "users": "Users",
+      "reports": "Reports",
+      "audit": "Audit log"
     },
     "signOut": "Sign out",
     "roleLabel": {
@@ -471,6 +477,191 @@
       "reasonHint": "What to fix, e.g. blurry photo, different name.",
       "verified": "Assistant validated.",
       "rejected": "Refusal sent with the reason."
+    },
+    "overview": {
+      "title": "Overview",
+      "updatedAt": "Updated at {time}",
+      "week": "{count} requests this week ({previous} the week before)",
+      "cards": {
+        "published": "Requests in the queue",
+        "active": "Being booked",
+        "toConfirm": "To confirm",
+        "toPay": "To pay",
+        "disputes": "Disputes",
+        "unpaid": "Unpaid",
+        "assistants": "Assistants to verify",
+        "reports": "Reports"
+      },
+      "hints": {
+        "published": "Published, no assistant",
+        "active": "An assistant is booking",
+        "toConfirm": "Candidate checks the email",
+        "toPay": "Deposits expected",
+        "disputes": "To decide",
+        "unpaid": "Blacklist",
+        "assistants": "Documents to check",
+        "reports": "To handle"
+      }
+    },
+    "operations": {
+      "title": "Operations",
+      "reference": "Ref.",
+      "offer": "Centre and level",
+      "status": "Status",
+      "claimed": "Taken",
+      "details": "Details",
+      "empty": "No operation.",
+      "candidate": "Candidate",
+      "assistant": "Assistant",
+      "reserved": "Booking declared",
+      "confirmed": "Confirmed",
+      "paymentDue": "Payment due",
+      "closed": "Closed",
+      "ended": "Ended",
+      "filters": {
+        "active": "In progress",
+        "toConfirm": "To confirm",
+        "toPay": "To pay",
+        "disputed": "Disputed",
+        "unpaid": "Unpaid",
+        "closed": "Closed",
+        "all": "All"
+      },
+      "statuses": {
+        "CLAIMED": "Taken",
+        "RELEASED": "Released",
+        "WITHDRAWN": "Withdrawn",
+        "EXPIRED": "Time ran out",
+        "REPORTED": "Reported",
+        "RESERVED": "To confirm",
+        "CONFIRMED": "To pay",
+        "DISPUTED": "Disputed",
+        "CLOSED": "Closed",
+        "UNPAID": "Unpaid",
+        "CANCELLED": "Cancelled"
+      },
+      "payments": {
+        "ASSISTANT": "Assistant's share",
+        "PLATFORM": "Commission"
+      },
+      "paymentStatus": {
+        "DUE": "To send",
+        "DECLARED": "Declared",
+        "RECEIVED": "Received"
+      }
+    },
+    "users": {
+      "title": "Users",
+      "search": "Search by name or email",
+      "user": "User",
+      "role": "Role and status",
+      "manage": "Manage",
+      "empty": "No user.",
+      "roles": {
+        "admin": "Admin",
+        "user": "User"
+      },
+      "verification": {
+        "NONE": "Document to send",
+        "PENDING": "Document being checked",
+        "VERIFIED": "Verified assistant",
+        "REJECTED": "Document refused"
+      },
+      "strikes": "{count, plural, one {# strike} other {# strikes}}",
+      "suspended": "Suspended",
+      "banned": "Banned",
+      "since": "Joined",
+      "activeSpace": "Active space",
+      "spaces": {
+        "candidate": "Candidate",
+        "assistant": "Assistant"
+      },
+      "permissions": "Permissions",
+      "adminWith2fa": "Admin console (2FA on)",
+      "adminWithout2fa": "Admin console blocked until 2FA is on",
+      "userPermissions": "Publish or take, by active role",
+      "activity": "Activity",
+      "counts": "{requests} requests · {operations} operations",
+      "export": "Export their data (JSON)",
+      "cancel": "Cancel",
+      "actions": {
+        "suspend": "Suspend",
+        "unsuspend": "Lift suspension",
+        "revokeSessions": "Sign out everywhere",
+        "ban": "Ban",
+        "unban": "Lift ban",
+        "delete": "Delete account"
+      },
+      "confirm": {
+        "suspend": {
+          "title": "Suspend {name}?",
+          "body": "No publishing or taking until lifted. They can still sign in and pay."
+        },
+        "unsuspend": {
+          "title": "Lift {name}'s suspension?",
+          "body": "Their current strikes stop counting."
+        },
+        "revokeSessions": {
+          "title": "Sign {name} out everywhere?",
+          "body": "All their sessions are closed; they will have to sign in again."
+        },
+        "ban": {
+          "title": "Ban {name}?",
+          "body": "They can no longer sign in. Their sessions are closed."
+        },
+        "unban": {
+          "title": "Lift {name}'s ban?",
+          "body": "They will be able to sign in again."
+        },
+        "delete": {
+          "title": "Delete {name}'s account?",
+          "body": "Permanent. If past operations refer to it, the account is anonymised and banned."
+        }
+      },
+      "done": {
+        "suspend": "Account suspended.",
+        "unsuspend": "Suspension lifted.",
+        "revokeSessions": "Sessions closed.",
+        "ban": "Account banned.",
+        "unban": "Ban lifted.",
+        "delete": "Account deleted."
+      }
+    },
+    "inbox": {
+      "title": "Reports",
+      "reports": "Reports",
+      "catalogRequests": "Catalogue requests",
+      "markHandled": "Handled",
+      "handled": "Marked as handled.",
+      "empty": {
+        "title": "Nothing to handle",
+        "description": "New items show up here."
+      },
+      "categories": {
+        "WRONG_SESSION": "Wrong session",
+        "ABUSE": "Abusive behaviour",
+        "FRAUD": "Fraud",
+        "OTHER": "Other"
+      },
+      "targets": {
+        "SESSION": "Session",
+        "OPERATION": "Operation"
+      },
+      "kinds": {
+        "COUNTRY": "Country",
+        "CENTER": "Centre",
+        "LEVEL": "Level",
+        "OTHER": "Other"
+      }
+    },
+    "audit": {
+      "title": "Audit log",
+      "subtitle": "Admin actions and sensitive reads, newest first.",
+      "when": "When",
+      "actor": "By",
+      "action": "Action",
+      "target": "Target",
+      "empty": "No entry."
     }
   },
   "share": {

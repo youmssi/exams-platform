@@ -1,15 +1,20 @@
 "use client";
 
 import {
+  ActivityIcon,
   BanIcon,
   CalendarCheckIcon,
   CalendarDaysIcon,
   IdCardIcon,
+  InboxIcon,
+  LayoutDashboardIcon,
   LibraryIcon,
   ListChecksIcon,
   RadioTowerIcon,
   ScaleIcon,
+  ScrollTextIcon,
   UsersIcon,
+  UsersRoundIcon,
   WalletIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -43,11 +48,16 @@ const NAV = {
   ],
 } as const;
 const ADMIN_NAV = [
-  { href: routes.adminCatalog, key: "catalog", Icon: LibraryIcon },
-  { href: routes.adminSessions, key: "adminSessions", Icon: CalendarCheckIcon },
-  { href: routes.adminPayments, key: "payments", Icon: WalletIcon },
+  { href: routes.admin, key: "overview", Icon: LayoutDashboardIcon },
+  { href: routes.adminOperations, key: "operations", Icon: ActivityIcon },
   { href: routes.adminDisputes, key: "disputes", Icon: ScaleIcon },
+  { href: routes.adminPayments, key: "payments", Icon: WalletIcon },
+  { href: routes.adminUsers, key: "users", Icon: UsersRoundIcon },
   { href: routes.adminAssistants, key: "assistants", Icon: IdCardIcon },
+  { href: routes.adminSessions, key: "adminSessions", Icon: CalendarCheckIcon },
+  { href: routes.adminCatalog, key: "catalog", Icon: LibraryIcon },
+  { href: routes.adminReports, key: "reports", Icon: InboxIcon },
+  { href: routes.adminAudit, key: "audit", Icon: ScrollTextIcon },
 ] as const;
 
 type NavEntry =
@@ -93,7 +103,7 @@ export function AppSidebar({
         )}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser user={user} isAdmin={isAdmin} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
