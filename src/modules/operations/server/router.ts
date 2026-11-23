@@ -8,11 +8,23 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "@/trpc/init";
-import { paymentAnswerInput, reportInput } from "../schemas";
+import {
+  decisionInput,
+  paymentAnswerInput,
+  proofInput,
+  reportInput,
+} from "../schemas";
+import {
+  assistantDispute,
+  decideDispute,
+  listDisputes,
+  submitProof,
+} from "./disputes";
 import {
   answerPayment,
   assistantPayments,
   declarePayment,
+  listBlacklist,
   platformPayments,
 } from "./payments";
 import {
@@ -125,6 +137,34 @@ export const operationsRouter = createTRPCRouter({
         input.id,
         input.received,
         "PLATFORM",
+      );
+      notify([ownerId, assistantId]);
+    }),
+  /** The assistant's undecided dispute, if any. */
+  dispute: assistantProcedure.query(({ ctx }) =>
+    assistantDispute(ctx.session.user.id),
+  ),
+  submitProof: assistantProcedure
+    .input(proofInput)
+    .mutation(async ({ ctx, input }) => {
+      const { ownerId } = await submitProof(
+        ctx.session.user.id,
+        input.id,
+        input.path,
+      );
+      notify([ownerId]);
+    }),
+  /** Accounts with an unpaid booking, without personal data. */
+  blacklist: assistantProcedure.query(() => listBlacklist()),
+  disputes: adminProcedure.query(() => listDisputes()),
+  decideDispute: adminProcedure
+    .input(decisionInput)
+    .mutation(async ({ ctx, input }) => {
+      const { ownerId, assistantId } = await decideDispute(
+        ctx.session.user.id,
+        input.id,
+        input.outcome,
+        input.note,
       );
       notify([ownerId, assistantId]);
     }),

@@ -5,6 +5,7 @@ import { identityRouter } from "@/modules/identity";
 import { operationsRouter } from "@/modules/operations";
 import { requestsRouter } from "@/modules/requests";
 import { systemRouter } from "@/modules/system";
+import { trustRouter } from "@/modules/trust";
 import { createTRPCRouter } from "../init";
 
 /**
@@ -19,6 +20,7 @@ export const appRouter = createTRPCRouter({
   operations: operationsRouter,
   requests: requestsRouter,
   system: systemRouter,
+  trust: trustRouter,
 });
 
 export type AppRouter = typeof appRouter;

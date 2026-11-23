@@ -129,7 +129,9 @@
       "sessions": "Sessions",
       "requests": "My requests",
       "queue": "Queue",
-      "payments": "Commissions"
+      "payments": "Commissions",
+      "blacklist": "Blacklist",
+      "disputes": "Disputes"
     },
     "signOut": "Sign out",
     "roleLabel": {
@@ -543,7 +545,8 @@
       "invalidBonus": "This bonus is not allowed.",
       "incompleteProfile": "Complete each person's profile before publishing.",
       "invalidModules": "Choose modules from this level.",
-      "unpaid": "Settle your unpaid booking before publishing."
+      "unpaid": "Settle your unpaid booking before publishing.",
+      "suspended": "Account suspended: you cannot publish."
     },
     "completeProfile": "Complete the profile",
     "modules": "Modules",
@@ -588,7 +591,7 @@
     "elsewhereTitle": "Did {name} get a seat another way?",
     "elsewhereBody": "The request is closed and leaves the queue.",
     "closedElsewhere": "Request closed.",
-    "disputedHint": "The team is reviewing the booking.",
+    "disputedHint": "The team is reviewing the booking and will let you know.",
     "centerFee": {
       "title": "Pay the exam fees to the centre",
       "description": "Before {date}, or the centre may cancel the registration."
@@ -651,12 +654,29 @@
     "errors": {
       "alreadyTaken": "Already taken by another assistant.",
       "busy": "You already have an operation in progress.",
-      "unpaid": "Settle your unpaid booking before taking a request."
+      "unpaid": "Settle your unpaid booking before taking a request.",
+      "suspended": "Account suspended: you cannot take a request.",
+      "disputeOpen": "A dispute is in progress: wait for the decision."
     },
     "profileIncomplete": {
       "title": "Complete your assistant profile",
       "description": "Phone and Mobile Money account, before taking a request.",
       "action": "Complete my profile"
+    },
+    "blacklisted": "Blacklist",
+    "blocked": {
+      "unpaid": {
+        "title": "Overdue payment",
+        "description": "Settle your unpaid booking to take requests again."
+      },
+      "suspended": {
+        "title": "Account suspended",
+        "description": "3 strikes. See \"My account\" for what comes next."
+      },
+      "disputeOpen": {
+        "title": "Dispute in progress",
+        "description": "You will take requests again after the decision."
+      }
     }
   },
   "countdown": {
@@ -1127,5 +1147,110 @@
     "dueAt": "Due",
     "statusLabel": "Status",
     "actions": "Actions"
+  },
+  "dispute": {
+    "step": "Step {step} of {total}: {name}",
+    "steps": {
+      "OPENED": "opened",
+      "PROOF_REQUESTED": "Proof requested",
+      "REVIEW": "Under review",
+      "DECIDED": "Decided"
+    },
+    "proofSent": "Proof sent. The team will decide.",
+    "assistant": {
+      "title": "Booking disputed",
+      "proof": "The candidate did not receive the centre's email. Send a capture of the booking before {date}. You cannot take requests until the decision.",
+      "review": "Thanks. The team is reviewing the dispute; you will be told the decision."
+    },
+    "admin": {
+      "title": "Disputes",
+      "subtitle": "Timeline, proof and parties on one sheet.",
+      "empty": "No dispute pending.",
+      "offer": "Centre and level",
+      "opened": "Opened",
+      "status": "Step",
+      "open": "Review",
+      "timeline": "Timeline",
+      "events": {
+        "claimed": "Taken",
+        "reserved": "Booking declared",
+        "disputed": "Dispute opened",
+        "proof": "Proof sent"
+      },
+      "checklist": "The candidate ticked the 5 checks for {email}.",
+      "proof": "Assistant's proof",
+      "proofAlt": "Capture of the booking sent by the assistant",
+      "noProof": "No proof sent.",
+      "parties": {
+        "candidate": "Candidate",
+        "assistant": "Assistant"
+      },
+      "strikes": "{count, plural, =0 {No strike} one {# strike} other {# strikes}}",
+      "note": "Note (optional, logged)",
+      "booked": {
+        "action": "Booking made",
+        "title": "Was the booking made?",
+        "body": "The candidate must pay and gets a strike for an abusive dispute."
+      },
+      "notBooked": {
+        "action": "No booking",
+        "title": "Was the booking not made?",
+        "body": "The request goes back to the queue and the assistant gets a strike."
+      },
+      "cancel": "Cancel",
+      "decided": "Decision saved."
+    }
+  },
+  "blacklist": {
+    "title": "Blacklist",
+    "subtitle": "Accounts with an overdue payment. Their requests cannot be taken.",
+    "since": "since {date}",
+    "empty": {
+      "title": "Empty list",
+      "description": "No account is late with a payment."
+    }
+  },
+  "standing": {
+    "title": "Strikes",
+    "description": "At the 3rd, the account is suspended.",
+    "count": "{count} of {threshold}",
+    "reasons": {
+      "CLAIM_TIMEOUT": "Booking time ran out",
+      "ABUSIVE_DISPUTE": "Abusive dispute",
+      "AT_FAULT": "Booking declared but not made"
+    },
+    "suspended": {
+      "title": "Account suspended",
+      "description": "You can no longer publish or take requests. Write to {email} to lift the suspension."
+    },
+    "contest": "A mistake? Write to {email}."
+  },
+  "report": {
+    "action": "Report",
+    "title": "Report a problem",
+    "description": "The team reads it and gets back to you if needed.",
+    "category": "What is the problem?",
+    "categories": {
+      "WRONG_SESSION": "Wrong session",
+      "ABUSE": "Abusive behaviour",
+      "FRAUD": "Fraud",
+      "OTHER": "Other"
+    },
+    "message": "Message (optional)",
+    "messageHint": "What happened, in a few words.",
+    "submit": "Send",
+    "sent": "Report received. The team will review it."
+  },
+  "upload": {
+    "choose": "Choose an image",
+    "hint": "JPG, PNG, WEBP or HEIC · {max} max",
+    "progress": "Uploading… {percent}%",
+    "done": "Image sent.",
+    "retry": "Try again",
+    "errors": {
+      "type": "Format not accepted: choose an image.",
+      "size": "Image too large ({max} max).",
+      "failed": "Upload failed. Try again."
+    }
   }
 }

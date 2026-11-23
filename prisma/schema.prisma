@@ -27,6 +27,8 @@ model User {
   banExpires       DateTime?
   activeRole       String?               @default("candidate")
   termsAcceptedAt  DateTime?
+  /// Set at the third strike; only an admin lifts it (EXM-010).
+  suspendedAt      DateTime?
   sessions         Session[]
   accounts         Account[]
   twofactors       TwoFactor[]
@@ -37,6 +39,8 @@ model User {
   operations       Operation[]
   assistantProfile AssistantProfile?
   catalogRequests  CatalogRequest[]
+  strikes          Strike[]
+  reports          Report[]
 
   @@unique([email])
   @@map("user")
@@ -342,6 +346,7 @@ model Operation {
   endedAt      DateTime?
   version      Int                  @default(0)
   payments     PaymentDeclaration[]
+  dispute      Dispute?
 
   @@index([requestId])
   @@index([assistantId, status])
@@ -361,6 +366,8 @@ enum OperationStatus {
   CLOSED
   /// The payment deadline passed before both deposits were received.
   UNPAID
+  /// A dispute found the booking was not made: the request is back in the queue.
+  CANCELLED
 }
 
 enum PaymentRecipient {
@@ -423,4 +430,92 @@ enum RequestIssue {
   WRONG_DETAILS
   ACCOUNT_BLOCKED
   OTHER
+}
+
+enum DisputeStatus {
+  /// The assistant must send a capture of the booking before `proofDueAt`.
+  PROOF_REQUESTED
+  /// Proof sent, or its deadline passed: an admin decides.
+  REVIEW
+  DECIDED
+}
+
+enum DisputeOutcome {
+  /// The booking was made: the candidate pays, and is warned for an abusive dispute.
+  BOOKED
+  /// It was not: the request goes back to the queue, and the assistant is warned.
+  NOT_BOOKED
+}
+
+/// A candidate says the centre's email never came. Blocks the assistant's claims until decided.
+model Dispute {
+  id           String          @id @default(cuid())
+  operationId  String          @unique
+  operation    Operation       @relation(fields: [operationId], references: [id], onDelete: Cascade)
+  status       DisputeStatus   @default(PROOF_REQUESTED)
+  proofDueAt   DateTime
+  /// Private file path (image), readable by the admin and both parties.
+  proofPath    String?
+  proofAt      DateTime?
+  outcome      DisputeOutcome?
+  decisionNote String?
+  decidedById  String?
+  decidedAt    DateTime?
+  createdAt    DateTime        @default(now())
+
+  @@index([status])
+  @@map("dispute")
+}
+
+enum StrikeReason {
+  /// The assistant let the claim time run out.
+  CLAIM_TIMEOUT
+  /// The candidate disputed a booking that was made.
+  ABUSIVE_DISPUTE
+  /// The assistant declared a booking that was not made.
+  AT_FAULT
+}
+
+/// A warning. Three active strikes suspend the account until an admin lifts it.
+model Strike {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reason      StrikeReason
+  operationId String?
+  /// Set when an admin lifts the suspension: the strike no longer counts.
+  liftedAt    DateTime?
+  createdAt   DateTime     @default(now())
+
+  @@index([userId])
+  @@map("strike")
+}
+
+enum ReportTarget {
+  SESSION
+  /// The other person of an operation, reported from the request or the operation.
+  OPERATION
+}
+
+enum ReportCategory {
+  WRONG_SESSION
+  ABUSE
+  FRAUD
+  OTHER
+}
+
+/// Something a user flags for the admins.
+model Report {
+  id         String         @id @default(cuid())
+  reporterId String
+  reporter   User           @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  targetType ReportTarget
+  targetId   String
+  category   ReportCategory
+  message    String?
+  handledAt  DateTime?
+  createdAt  DateTime       @default(now())
+
+  @@index([handledAt])
+  @@map("report")
 }

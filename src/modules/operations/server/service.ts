@@ -5,6 +5,7 @@ import { isAssistantReady } from "@/modules/assistants";
 import { displayName } from "@/modules/beneficiaries";
 import { isFullExam } from "@/modules/catalog";
 import { isUserOnline, presenceKey } from "@/modules/realtime";
+import { isSuspended, issueStrike } from "@/modules/trust";
 import { recordAudit } from "@/server/audit";
 import { decryptSecret } from "@/server/crypto";
 import { db } from "@/server/db";
@@ -15,9 +16,19 @@ import {
   transition,
 } from "../domain/machine";
 import type { ReportInput } from "../schemas";
-import { hasUnpaid, openPayments } from "./payments";
+import { hasOpenDispute, openDispute } from "./disputes";
+import { blacklisted, hasUnpaid, openPayments } from "./payments";
 
-type Client = Prisma.TransactionClient | typeof db;
+/**
+ * Why an assistant cannot take requests right now, or null: an unpaid booking of their own,
+ * a suspension, or a dispute waiting for a decision.
+ */
+export async function claimBlocker(assistantId: string) {
+  if (await hasUnpaid(assistantId)) return "unpaid" as const;
+  if (await isSuspended(assistantId)) return "suspended" as const;
+  if (await hasOpenDispute(assistantId)) return "disputeOpen" as const;
+  return null;
+}
 
 /** An operation still running: claimed and before its deadline. */
 export const activeOperation = (now = new Date()) =>
@@ -34,21 +45,38 @@ export const assistantBusy = (now = new Date()) =>
 
 /**
  * Deadlines are checked when data is read: overdue claims end here, so the request is back
- * in the queue and the assistant is free (product decision, EXM-007).
+ * in the queue and the assistant is free (EXM-007), with a strike for letting the time run out.
  */
 async function expireOverdue(
-  client: Client,
+  client: Prisma.TransactionClient,
   where: Prisma.OperationWhereInput,
 ) {
   const now = new Date();
-  await client.operation.updateMany({
+  const overdue = await client.operation.findMany({
     where: { ...where, status: "CLAIMED", deadlineAt: { lte: now } },
-    data: {
-      status: next("CLAIMED", "expire"),
-      endedAt: now,
-      version: { increment: 1 },
-    },
+    select: { id: true, version: true, assistantId: true },
   });
+  for (const operation of overdue) {
+    const { count } = await client.operation.updateMany({
+      where: {
+        id: operation.id,
+        version: operation.version,
+        status: "CLAIMED",
+      },
+      data: {
+        status: next("CLAIMED", "expire"),
+        endedAt: now,
+        version: { increment: 1 },
+      },
+    });
+    if (count)
+      await issueStrike(
+        client,
+        operation.assistantId,
+        "CLAIM_TIMEOUT",
+        operation.id,
+      );
+  }
 }
 
 function next(status: OperationStatus, event: OperationEvent) {
@@ -62,8 +90,8 @@ function next(status: OperationStatus, event: OperationEvent) {
 export async function claimRequest(assistantId: string, requestId: string) {
   if (!(await isAssistantReady(assistantId)))
     throw new TRPCError({ code: "FORBIDDEN", message: "profileIncomplete" });
-  if (await hasUnpaid(assistantId))
-    throw new TRPCError({ code: "FORBIDDEN", message: "unpaid" });
+  const blocker = await claimBlocker(assistantId);
+  if (blocker) throw new TRPCError({ code: "FORBIDDEN", message: blocker });
   return db.$transaction(async (tx) => {
     await expireOverdue(tx, { OR: [{ requestId }, { assistantId }] });
     const now = new Date();
@@ -76,6 +104,7 @@ export async function claimRequest(assistantId: string, requestId: string) {
     const request = await tx.request.findFirst({
       where: {
         issue: null,
+        owner: { NOT: blacklisted },
         id: requestId,
         status: "OPEN",
         publishAt: { lte: now },
@@ -120,7 +149,7 @@ export async function claimRequest(assistantId: string, requestId: string) {
 
 /** The assistant's running operation, with what they need to book. Never the password or the phone. */
 export async function currentOperation(assistantId: string) {
-  await expireOverdue(db, { assistantId });
+  await db.$transaction((tx) => expireOverdue(tx, { assistantId }));
   const operation = await db.operation.findFirst({
     where: { assistantId, ...assistantBusy() },
     select: {
@@ -351,7 +380,7 @@ export async function reportProblem(
 
 /**
  * The candidate answers a booking: email received (both deposits become due), or disputed
- * (the dispute itself is EXM-010). Either way the assistant is free.
+ * (the assistant is asked for a proof). Either way the assistant is free.
  */
 export async function answerBooking(
   ownerId: string,
@@ -389,7 +418,8 @@ export async function answerBooking(
     });
     if (!count)
       throw new TRPCError({ code: "CONFLICT", message: "invalidTransition" });
-    if (answer === "confirm") {
+    if (answer === "dispute") await openDispute(tx, id, now);
+    else {
       const { session, ...amounts } = operation.request;
       await openPayments(
         tx,

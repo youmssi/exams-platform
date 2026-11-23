@@ -18,6 +18,8 @@ const EVENTS: OperationEvent[] = [
   "dispute",
   "close",
   "lapse",
+  "uphold",
+  "cancel",
 ];
 const ALLOWED: Partial<
   Record<OperationStatus, Partial<Record<OperationEvent, OperationStatus>>>
@@ -32,6 +34,7 @@ const ALLOWED: Partial<
   RESERVED: { confirm: "CONFIRMED", dispute: "DISPUTED" },
   CONFIRMED: { close: "CLOSED", lapse: "UNPAID" },
   UNPAID: { close: "CLOSED" },
+  DISPUTED: { uphold: "CONFIRMED", cancel: "CANCELLED" },
 };
 const STATUSES: OperationStatus[] = [
   "CLAIMED",
@@ -44,6 +47,7 @@ const STATUSES: OperationStatus[] = [
   "DISPUTED",
   "CLOSED",
   "UNPAID",
+  "CANCELLED",
 ];
 
 describe("transition", () => {

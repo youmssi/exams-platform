@@ -24,5 +24,6 @@ Outil : **Umami** (instance auto-hébergée), sans cookie. Le script n'est charg
 | `payment_declared` | — | EXM-009 |
 | `payment_confirmed` | — (assistant ou admin) | EXM-009 |
 | `payment_rejected` | — (assistant ou admin) | EXM-009 |
+| `report_sent` | — | EXM-010 |
 
 Les connexions Google et Microsoft se terminent après une redirection : elles sont comptées par les visites de `/home` qui suivent un `auth_started`.

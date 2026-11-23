@@ -22,6 +22,8 @@ const schema = z.object({
   /** Set by Vercel; keeps preview and production realtime channels apart. */
   VERCEL_ENV: z.enum(["production", "preview", "development"]).optional(),
   EMAIL_FROM: z.string().min(1),
+  /** Vercel Blob (private store): dispute proofs and identity documents. */
+  BLOB_READ_WRITE_TOKEN: z.string().optional(),
   /** 32 random bytes, base64. Encrypts exam-centre passwords. */
   CREDENTIALS_ENCRYPTION_KEY: z
     .string()

@@ -32,6 +32,7 @@ import {
 import { FieldGroup, FieldLegend, FieldSet } from "@/components/ui/field";
 import { InputGroupButton } from "@/components/ui/input-group";
 import { type LiveState, LiveUpdates } from "@/modules/realtime/client";
+import { ReportDialog } from "@/modules/trust/client";
 import { track } from "@/shared/analytics";
 import { useTRPC } from "@/trpc/client";
 import { ReportProblem } from "./report-problem";
@@ -232,6 +233,9 @@ function Panel({ state, refresh }: { state: LiveState; refresh: () => void }) {
             >
               {t("reserve")}
             </ConfirmAction>
+          )}
+          {booked && (
+            <ReportDialog targetType="OPERATION" targetId={operation.id} />
           )}
         </div>
       </CardFooter>

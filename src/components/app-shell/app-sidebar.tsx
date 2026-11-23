@@ -1,10 +1,12 @@
 "use client";
 
 import {
+  BanIcon,
   CalendarDaysIcon,
   LibraryIcon,
   ListChecksIcon,
   RadioTowerIcon,
+  ScaleIcon,
   UsersIcon,
   WalletIcon,
 } from "lucide-react";
@@ -33,11 +35,15 @@ const NAV = {
     { href: routes.requests, key: "requests", Icon: ListChecksIcon },
     { href: routes.beneficiaries, key: "beneficiaries", Icon: UsersIcon },
   ],
-  assistant: [{ href: routes.queue, key: "queue", Icon: RadioTowerIcon }],
+  assistant: [
+    { href: routes.queue, key: "queue", Icon: RadioTowerIcon },
+    { href: routes.blacklist, key: "blacklist", Icon: BanIcon },
+  ],
 } as const;
 const ADMIN_NAV = [
   { href: routes.adminCatalog, key: "catalog", Icon: LibraryIcon },
   { href: routes.adminPayments, key: "payments", Icon: WalletIcon },
+  { href: routes.adminDisputes, key: "disputes", Icon: ScaleIcon },
 ] as const;
 
 type NavEntry =

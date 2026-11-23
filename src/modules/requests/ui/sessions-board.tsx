@@ -37,6 +37,7 @@ import {
 import { routes } from "@/config/routes";
 import { Link } from "@/i18n/navigation";
 import { CatalogRequestForm, SessionForm } from "@/modules/catalog/client";
+import { ReportDialog } from "@/modules/trust/client";
 import { useTRPC } from "@/trpc/client";
 import { requestedFor } from "../domain/live";
 import { PublishForm } from "./publish-form";
@@ -232,6 +233,7 @@ function SessionItem({
         </ItemDescription>
       </ItemContent>
       <ItemActions className="w-full justify-end sm:w-auto">
+        <ReportDialog targetType="SESSION" targetId={session.id} />
         {session.canConfirm && (
           <Button
             variant="ghost"

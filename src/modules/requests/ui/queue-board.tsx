@@ -5,7 +5,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { WifiOffIcon } from "lucide-react";
+import { BanIcon, WifiOffIcon } from "lucide-react";
 import { useFormatter, useNow, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -37,7 +37,13 @@ import { track } from "@/shared/analytics";
 import { useTRPC } from "@/trpc/client";
 import type { QueueRequest } from "./types";
 
-const CLAIM_ERRORS = new Set(["alreadyTaken", "busy", "unpaid"]);
+const CLAIM_ERRORS = new Set([
+  "alreadyTaken",
+  "busy",
+  "unpaid",
+  "suspended",
+  "disputeOpen",
+]);
 const POLL_LIVE_MS = 60_000;
 const POLL_FALLBACK_MS = 15_000;
 
@@ -69,7 +75,7 @@ function Queue({
   const t = useTranslations("queue");
   const trpc = useTRPC();
   const {
-    data: { state: queueState, requests },
+    data: { state: queueState, blocker, requests },
   } = useSuspenseQuery({
     ...trpc.requests.queue.queryOptions(),
     refetchInterval: state.live ? POLL_LIVE_MS : POLL_FALLBACK_MS,
@@ -112,6 +118,16 @@ function Queue({
         </p>
       </div>
 
+      {blocker && (
+        <Alert variant="destructive">
+          <BanIcon />
+          <AlertTitle>{t(`blocked.${blocker}.title`)}</AlertTitle>
+          <AlertDescription>
+            {t(`blocked.${blocker}.description`)}
+          </AlertDescription>
+        </Alert>
+      )}
+
       {state.offline && (
         <Alert variant="destructive">
           <WifiOffIcon />
@@ -142,7 +158,11 @@ function Queue({
           </EmptyHeader>
         </Empty>
       ) : sessions.length === 1 ? (
-        <RequestList requests={sessions[0].requests} online={state.online} />
+        <RequestList
+          requests={sessions[0].requests}
+          online={state.online}
+          blocked={Boolean(blocker)}
+        />
       ) : (
         <Tabs defaultValue={sessions[0].id}>
           <TabsList className="h-auto w-full flex-wrap justify-start">
@@ -155,7 +175,11 @@ function Queue({
           </TabsList>
           {sessions.map((session) => (
             <TabsContent key={session.id} value={session.id}>
-              <RequestList requests={session.requests} online={state.online} />
+              <RequestList
+                requests={session.requests}
+                online={state.online}
+                blocked={Boolean(blocker)}
+              />
             </TabsContent>
           ))}
         </Tabs>
@@ -192,9 +216,11 @@ function SessionLabel({ request }: { request: QueueRequest }) {
 function RequestList({
   requests,
   online,
+  blocked,
 }: {
   requests: QueueRequest[];
   online: ReadonlySet<string>;
+  blocked: boolean;
 }) {
   return (
     <ItemGroup>
@@ -203,6 +229,7 @@ function RequestList({
           key={request.id}
           request={request}
           isOnline={online.has(request.candidateKey)}
+          blocked={blocked}
         />
       ))}
     </ItemGroup>
@@ -212,9 +239,12 @@ function RequestList({
 function RequestRow({
   request,
   isOnline,
+  blocked,
 }: {
   request: QueueRequest;
   isOnline: boolean;
+  /** The assistant cannot take requests right now (reason shown above the list). */
+  blocked: boolean;
 }) {
   const t = useTranslations("queue");
   const tCommon = useTranslations("common");
@@ -263,6 +293,9 @@ function RequestRow({
         <ItemTitle className="flex-wrap">
           {offer.center.name} · {offer.level}
           <PresenceBadge online={isOnline} />
+          {request.blacklisted && (
+            <Badge variant="destructive">{t("blacklisted")}</Badge>
+          )}
         </ItemTitle>
         <ItemDescription className="line-clamp-none">
           {request.isFullExam ? t("fullExam") : request.modules.join(", ")} ·{" "}
@@ -287,7 +320,7 @@ function RequestRow({
         )}
         <Button
           size="sm"
-          disabled={claim.isPending}
+          disabled={claim.isPending || blocked || request.blacklisted}
           onClick={() => claim.mutate({ id: request.id })}
         >
           {claim.isPending && <Spinner />}
