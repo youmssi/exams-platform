@@ -234,12 +234,11 @@ function RequestItem({
             <AlertTitle>{t("centerFee.title")}</AlertTitle>
             <AlertDescription>
               {t("centerFee.description", {
-                date: format.dateTime(new Date(operation.centerFeeDeadline), {
-                  dateStyle: "full",
-                  timeStyle: "short",
-                  timeZone,
-                  timeZoneName: "short",
-                }),
+                date: format.dateTime(
+                  new Date(operation.centerFeeDeadline),
+                  "zoned",
+                  { timeZone, weekday: "long" },
+                ),
               })}
             </AlertDescription>
           </Alert>
