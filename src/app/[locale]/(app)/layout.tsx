@@ -1,4 +1,3 @@
-import { getLocale } from "next-intl/server";
 import { Suspense } from "react";
 import { AppSidebar } from "@/components/app-shell/app-sidebar";
 import { Separator } from "@/components/ui/separator";
@@ -14,10 +13,16 @@ import { channelsFor } from "@/modules/realtime";
 import { RealtimeProvider } from "@/modules/realtime/client";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
 
-async function Shell({ children }: { children: React.ReactNode }) {
-  const [user, locale] = await Promise.all([
+async function Shell({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: LayoutProps<"/[locale]">["params"];
+}) {
+  const [user, { locale }] = await Promise.all([
     requireOnboardedUser(),
-    getLocale(),
+    params,
   ]);
   if (user.locale !== locale) await rememberLocale(user.id, locale);
   prefetch(trpc.notifications.list.queryOptions());
@@ -56,10 +61,13 @@ async function Shell({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function AppLayout({ children }: LayoutProps<"/[locale]">) {
+export default function AppLayout({
+  children,
+  params,
+}: LayoutProps<"/[locale]">) {
   return (
     <Suspense fallback={<Skeleton className="m-4 h-[calc(100svh-2rem)]" />}>
-      <Shell>{children}</Shell>
+      <Shell params={params}>{children}</Shell>
     </Suspense>
   );
 }
