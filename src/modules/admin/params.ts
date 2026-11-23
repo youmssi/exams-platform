@@ -1,4 +1,4 @@
-import { parseAsString, parseAsStringLiteral } from "nuqs";
+import { parseAsString, parseAsStringLiteral } from "nuqs/server";
 import { OPERATION_FILTERS } from "./schemas";
 
 /** Filters kept in the URL, so a link from the overview opens the right list. */
