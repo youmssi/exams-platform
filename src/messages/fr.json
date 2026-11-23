@@ -129,7 +129,9 @@
       "sessions": "Sessions",
       "requests": "Mes demandes",
       "queue": "File",
-      "payments": "Commissions"
+      "payments": "Commissions",
+      "blacklist": "Liste noire",
+      "disputes": "Litiges"
     },
     "signOut": "Se déconnecter",
     "roleLabel": {
@@ -543,7 +545,8 @@
       "invalidBonus": "Ce bonus n'est pas autorisé.",
       "incompleteProfile": "Complétez le profil de chaque personne avant de publier.",
       "invalidModules": "Choisissez des modules de ce niveau.",
-      "unpaid": "Réglez votre impayé avant de publier."
+      "unpaid": "Réglez votre impayé avant de publier.",
+      "suspended": "Compte suspendu : impossible de publier."
     },
     "completeProfile": "Compléter le profil",
     "modules": "Modules",
@@ -588,7 +591,7 @@
     "elsewhereTitle": "{name} a obtenu une place autrement ?",
     "elsewhereBody": "La demande est close et quitte la file.",
     "closedElsewhere": "Demande close.",
-    "disputedHint": "L'équipe examine la réservation.",
+    "disputedHint": "L'équipe examine la réservation et vous préviendra.",
     "centerFee": {
       "title": "Paie les frais d'examen au centre",
       "description": "Avant le {date}, sinon le centre peut annuler l'inscription."
@@ -651,12 +654,29 @@
     "errors": {
       "alreadyTaken": "Déjà prise par un autre assistant.",
       "busy": "Vous avez déjà une opération en cours.",
-      "unpaid": "Réglez votre impayé avant de prendre une demande."
+      "unpaid": "Réglez votre impayé avant de prendre une demande.",
+      "suspended": "Compte suspendu : impossible de prendre une demande.",
+      "disputeOpen": "Un litige est en cours : attendez la décision."
     },
     "profileIncomplete": {
       "title": "Complétez votre profil assistant",
       "description": "Téléphone et compte Mobile Money, avant de prendre une demande.",
       "action": "Compléter mon profil"
+    },
+    "blacklisted": "Liste noire",
+    "blocked": {
+      "unpaid": {
+        "title": "Règlement en retard",
+        "description": "Réglez votre réservation impayée pour reprendre des demandes."
+      },
+      "suspended": {
+        "title": "Compte suspendu",
+        "description": "3 avertissements. Voyez « Mon compte » pour la suite."
+      },
+      "disputeOpen": {
+        "title": "Litige en cours",
+        "description": "Vous reprendrez des demandes après la décision."
+      }
     }
   },
   "countdown": {
@@ -1127,5 +1147,110 @@
     "dueAt": "Échéance",
     "statusLabel": "État",
     "actions": "Actions"
+  },
+  "dispute": {
+    "step": "Étape {step} sur {total} : {name}",
+    "steps": {
+      "OPENED": "ouvert",
+      "PROOF_REQUESTED": "Preuve demandée",
+      "REVIEW": "En examen",
+      "DECIDED": "Décidé"
+    },
+    "proofSent": "Preuve envoyée. L'équipe va décider.",
+    "assistant": {
+      "title": "Réservation contestée",
+      "proof": "Le candidat n'a pas reçu le mail du centre. Envoyez une capture de la réservation avant le {date}. Vous ne pouvez pas prendre de demande d'ici la décision.",
+      "review": "Merci. L'équipe examine le litige ; vous serez prévenu de la décision."
+    },
+    "admin": {
+      "title": "Litiges",
+      "subtitle": "Chronologie, preuve et parties sur une seule fiche.",
+      "empty": "Aucun litige en attente.",
+      "offer": "Centre et niveau",
+      "opened": "Ouvert le",
+      "status": "Étape",
+      "open": "Examiner",
+      "timeline": "Chronologie",
+      "events": {
+        "claimed": "Prise",
+        "reserved": "Réservation déclarée",
+        "disputed": "Litige ouvert",
+        "proof": "Preuve envoyée"
+      },
+      "checklist": "Le candidat a coché les 5 vérifications pour {email}.",
+      "proof": "Preuve de l'assistant",
+      "proofAlt": "Capture de la réservation envoyée par l'assistant",
+      "noProof": "Aucune preuve envoyée.",
+      "parties": {
+        "candidate": "Candidat",
+        "assistant": "Assistant"
+      },
+      "strikes": "{count, plural, =0 {Aucun avertissement} one {# avertissement} other {# avertissements}}",
+      "note": "Note (facultative, journalisée)",
+      "booked": {
+        "action": "Réservation faite",
+        "title": "La réservation a été faite ?",
+        "body": "Le candidat doit payer et reçoit un avertissement pour litige abusif."
+      },
+      "notBooked": {
+        "action": "Pas de réservation",
+        "title": "La réservation n'a pas été faite ?",
+        "body": "La demande revient dans la file et l'assistant reçoit un avertissement."
+      },
+      "cancel": "Annuler",
+      "decided": "Décision enregistrée."
+    }
+  },
+  "blacklist": {
+    "title": "Liste noire",
+    "subtitle": "Comptes avec un règlement en retard. Leurs demandes ne peuvent pas être prises.",
+    "since": "depuis le {date}",
+    "empty": {
+      "title": "Liste vide",
+      "description": "Aucun compte en retard de paiement."
+    }
+  },
+  "standing": {
+    "title": "Avertissements",
+    "description": "Au 3e, le compte est suspendu.",
+    "count": "{count} sur {threshold}",
+    "reasons": {
+      "CLAIM_TIMEOUT": "Délai de réservation dépassé",
+      "ABUSIVE_DISPUTE": "Litige abusif",
+      "AT_FAULT": "Réservation déclarée mais non faite"
+    },
+    "suspended": {
+      "title": "Compte suspendu",
+      "description": "Vous ne pouvez plus publier ni prendre de demande. Écrivez à {email} pour lever la suspension."
+    },
+    "contest": "Une erreur ? Écrivez à {email}."
+  },
+  "report": {
+    "action": "Signaler",
+    "title": "Signaler un problème",
+    "description": "L'équipe le lit et revient vers vous si besoin.",
+    "category": "Quel problème ?",
+    "categories": {
+      "WRONG_SESSION": "Session erronée",
+      "ABUSE": "Comportement abusif",
+      "FRAUD": "Fraude",
+      "OTHER": "Autre"
+    },
+    "message": "Message (facultatif)",
+    "messageHint": "Ce qui s'est passé, en quelques mots.",
+    "submit": "Envoyer",
+    "sent": "Signalement reçu. L'équipe va l'examiner."
+  },
+  "upload": {
+    "choose": "Choisir une image",
+    "hint": "JPG, PNG, WEBP ou HEIC · {max} max",
+    "progress": "Envoi… {percent} %",
+    "done": "Image envoyée.",
+    "retry": "Réessayer",
+    "errors": {
+      "type": "Format non accepté : choisissez une image.",
+      "size": "Image trop lourde ({max} max).",
+      "failed": "Échec de l'envoi. Réessayez."
+    }
   }
 }

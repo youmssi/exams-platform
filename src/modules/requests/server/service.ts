@@ -17,6 +17,7 @@ import {
   paymentReference,
 } from "@/modules/operations";
 import { presenceKey } from "@/modules/realtime";
+import { isSuspended } from "@/modules/trust";
 import { db } from "@/server/db";
 import { publishAtFor, requestVisibility } from "../domain/visibility";
 import type { PublishInput, UpdateRequestInput } from "../schemas";
@@ -28,6 +29,8 @@ import type { PublishInput, UpdateRequestInput } from "../schemas";
 export async function publishRequests(ownerId: string, input: PublishInput) {
   if (await hasUnpaid(ownerId))
     throw new TRPCError({ code: "FORBIDDEN", message: "unpaid" });
+  if (await isSuspended(ownerId))
+    throw new TRPCError({ code: "FORBIDDEN", message: "suspended" });
   const session = await db.examSession.findUnique({
     where: { id: input.sessionId },
     select: {
@@ -157,6 +160,7 @@ export async function listMyRequests(ownerId: string) {
           paymentDueAt: true,
           closedAt: true,
           assistantId: true,
+          dispute: { select: { status: true } },
           assistant: {
             select: {
               assistantProfile: {
@@ -217,6 +221,7 @@ export async function listMyRequests(ownerId: string) {
         deadlineAt: operation.deadlineAt,
         paymentDueAt: operation.paymentDueAt,
         closedAt: operation.closedAt,
+        disputeStatus: operation.dispute?.status ?? null,
         reference: paymentReference(operation.id),
         payments: operation.payments.map((payment) => ({
           ...payment,

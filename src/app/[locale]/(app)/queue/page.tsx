@@ -4,7 +4,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { routes } from "@/config/routes";
 import { redirect } from "@/i18n/navigation";
 import { requireOnboardedUser } from "@/modules/identity";
-import { AssistantPayments, OperationPanel } from "@/modules/operations";
+import {
+  AssistantPayments,
+  DisputePanel,
+  OperationPanel,
+} from "@/modules/operations";
 import { QueueBoard } from "@/modules/requests";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
 
@@ -18,8 +22,10 @@ async function QueueData({ params }: PageProps<"/[locale]/queue">) {
   prefetch(trpc.requests.queue.queryOptions());
   prefetch(trpc.operations.current.queryOptions());
   prefetch(trpc.operations.payments.queryOptions());
+  prefetch(trpc.operations.dispute.queryOptions());
   return (
     <HydrateClient>
+      <DisputePanel />
       <AssistantPayments />
       <QueueBoard operation={<OperationPanel />} />
     </HydrateClient>

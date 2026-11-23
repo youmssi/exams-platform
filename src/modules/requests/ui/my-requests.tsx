@@ -35,8 +35,9 @@ import {
 } from "@/components/ui/item";
 import { routes } from "@/config/routes";
 import { Link } from "@/i18n/navigation";
-import { amountDue } from "@/modules/operations/client";
+import { amountDue, DisputeSteps } from "@/modules/operations/client";
 import { type LiveState, LiveUpdates } from "@/modules/realtime/client";
+import { ReportDialog } from "@/modules/trust/client";
 import { track } from "@/shared/analytics";
 import { useTRPC } from "@/trpc/client";
 import { PaymentPanel } from "./payment-panel";
@@ -160,6 +161,16 @@ function statusOf(request: MyRequest): Status {
   return request.visibility;
 }
 
+/** An assistant is or was involved: the candidate can report them. */
+const REPORTABLE: Status[] = [
+  "inProgress",
+  "toConfirm",
+  "toPay",
+  "paymentSent",
+  "unpaid",
+  "disputed",
+];
+
 /** A confirmed booking: the candidate pays, then keeps the summary. */
 const PAYMENT_STATUSES: Status[] = ["toPay", "paymentSent", "unpaid", "closed"];
 
@@ -234,7 +245,7 @@ function RequestItem({
             <PresenceBadge online={online.has(operation.assistantKey)} />
           )}
         </ItemTitle>
-        <ItemDescription>
+        <ItemDescription className="line-clamp-none">
           {offer.center.name} · {offer.level} ·{" "}
           {request.isFullExam ? t("fullExam") : request.modules.join(", ")} ·{" "}
           {format.dateTime(new Date(request.session.examDate), {
@@ -294,12 +305,18 @@ function RequestItem({
             </AlertDescription>
           </Alert>
         )}
-        {status === "disputed" && (
-          <p className="text-muted-foreground text-sm">{t("disputedHint")}</p>
+        {status === "disputed" && operation?.disputeStatus && (
+          <div className="flex flex-col gap-2">
+            <DisputeSteps status={operation.disputeStatus} />
+            <p className="text-muted-foreground text-sm">{t("disputedHint")}</p>
+          </div>
         )}
       </ItemContent>
 
       <ItemActions className="flex-wrap">
+        {operation && REPORTABLE.includes(status) && (
+          <ReportDialog targetType="OPERATION" targetId={operation.id} />
+        )}
         {status === "toFix" && (
           <>
             <Button size="sm" render={<Link href={routes.beneficiaries} />}>

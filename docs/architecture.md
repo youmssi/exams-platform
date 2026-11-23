@@ -12,9 +12,9 @@
 | Langues | next-intl (fr par défaut, en) | Préfixe `as-needed` : `/` en français, `/en` en anglais |
 | Base de données | Neon (Postgres) + Prisma 7 + `@prisma/adapter-neon` | Serverless, branches par environnement |
 | Auth | Better Auth | Email + mot de passe, code par email, Google, Microsoft, plugin admin, 2FA, limite de tentatives |
-| Minuteurs et tâches | Inngest | `step.sleepUntil` / `step.waitForEvent` pour les délais 20 min, 15 min, 5 min, 24 h |
+| Délais | Échéances en base, vérifiées à la lecture (+ Vercel Cron pour les tâches quotidiennes) | Aucun service de plus ; chaque lecture applique les délais échus |
 | Temps réel et présence | Ably | File en direct et présence native |
-| Fichiers | Cloudflare R2 (S3) | 10 Go gratuits, sans frais de sortie, URL signées |
+| Fichiers | Vercel Blob, magasin **privé** | Relié au projet sans secret à manipuler, envoi direct depuis le navigateur avec progression |
 | Emails | Resend + React Email | Vérification, codes, notifications |
 | Appels HTTP sortants | ky | Client léger et typé |
 | Qualité | Biome, Vitest, Playwright, Sentry | Lint/format, règles métier, parcours, erreurs |
@@ -25,7 +25,7 @@
 ```
 src/
   app/[locale]/...        routes (pages minces : préchargent et composent)
-  app/api/trpc|auth|inngest|webhooks
+  app/api/trpc|auth|files|realtime|cron
   modules/<module>/       code métier (voir AGENTS.md pour la structure)
   trpc/                   init, client, serveur, router racine
   i18n/                   routing, request, navigation
@@ -44,18 +44,17 @@ src/
 |---|---|---|
 | `system` | Santé, utilitaires transverses | — |
 | `identity` | Session, rôles, profil, consentements | — |
+| `realtime` | Canaux Ably, présence, jetons | identity |
+| `trust` | Avertissements, suspension, signalements | — |
 | `catalog` | Pays, centres, niveaux, sessions, réglages économiques, demandes d'ajout | identity |
 | `beneficiaries` | Bénéficiaires, identifiants chiffrés | identity |
-| `requests` | Demandes, brouillons, publication, bonus, file | catalog, beneficiaries |
-| `operations` | Machine à états prise → clôture, minuteurs | requests, trust |
-| `payments` | Déclarations et confirmations de dépôt | operations |
-| `trust` | Avertissements, liste noire, litiges, signalements | identity |
-| `presence` | Présence en ligne (Ably) | identity |
-| `notifications` | Emails et notifications dans l'application | tous (via événements) |
-| `admin` | Back-office, journal d'audit | tous |
+| `assistants` | Profil assistant (Mobile Money), vérification | catalog |
+| `operations` | Prise → réservation → règlement → clôture, litiges, liste noire | assistants, beneficiaries, catalog, realtime, trust |
+| `requests` | Demandes, publication, bonus, file | operations, catalog, beneficiaries, realtime, trust |
+| `landing-page` | Page d'accueil publique | catalog |
 
 Règles :
-- Pas de dépendance circulaire. Un module qui doit réagir à un autre écoute un **événement Inngest** plutôt que de l'importer.
+- Pas de dépendance circulaire : un module bas niveau (ex. `trust`) n'importe jamais un module qui l'utilise (ex. `operations`).
 - Seul le `service` d'un module écrit dans ses tables. Les autres modules passent par son API publique.
 
 ## 3. Données (aperçu)
@@ -91,18 +90,21 @@ AuditLog(id, actorId, action, target, data, createdAt)
 ## 4. Machine à états
 
 - Les transitions sont définies dans `modules/operations/domain/` (fonction pure `transition(state, event) → state | error`), testées exhaustivement.
-- Le service applique la transition dans une transaction avec verrou optimiste, puis publie l'événement Inngest (`operation/claimed`, `operation/reserved`, …) et le message Ably.
+- Le service applique la transition dans une transaction avec verrou optimiste, puis publie le message Ably après la réponse (`after()`).
 
-## 5. Minuteurs (Inngest)
+## 5. Délais (échéances en base)
 
-| Fonction | Déclencheur | Attente | Effet |
-|---|---|---|---|
-| `publish-drafts` | cron chaque minute | `registrationOpensAt` atteint | brouillons → publiées |
-| `claim-timeout` | `operation/claimed` | `waitForEvent(operation/reserved, 20 min)` | remise en file + avertissement |
-| `release-assistant` | `operation/reserved` | `waitForEvent(operation/confirmed, 15 ou 5 min)` | assistant libéré, statut « à confirmer » |
-| `payment-deadline` | `operation/confirmed` | rappels H+1, H+12, échéance 24 h | liste noire + suspension |
+Chaque délai est une date en base, appliquée par la première lecture qui la trouve échue (idempotent : `UPDATE ... WHERE statut = ? AND échéance <= now()`).
 
-Les délais viennent de `Offer`. Chaque fonction relit l'état avant d'agir (idempotence).
+| Échéance | Champ | Effet |
+|---|---|---|
+| Publication | `Request.publishAt` | visible dans la file à l'ouverture des inscriptions |
+| Prise | `Operation.deadlineAt` | remise en file + avertissement à l'assistant |
+| Libération | `Operation.releaseAt` | assistant libre, demande « à confirmer » |
+| Règlement | `Operation.paymentDueAt` | « impayée » : liste noire + blocage |
+| Preuve de litige | `Dispute.proofDueAt` | passage en examen par l'admin |
+
+Les durées viennent de `Offer` ou de `src/config`. Les tâches qui ne dépendent d'aucune lecture (dates de session, EXM-023) tournent en Vercel Cron.
 
 ## 6. Temps réel (Ably)
 
@@ -122,7 +124,7 @@ Les délais viennent de `Offer`. Chaque fonction relit l'état avant d'agir (ide
 - Autorisation dans chaque procédure tRPC : `protectedProcedure`, `assistantProcedure`, `adminProcedure`, plus la vérification du propriétaire et du statut.
 - Better Auth : limite de tentatives, bannissement et révocation des sessions par le plugin admin.
 - Admins : 2FA par application d'authentification (TOTP) obligatoire. Une session n'est « admin » que si elle a été ouverte par mot de passe + code TOTP ou code de secours (`session.secondFactorAt`, posé à la création de la session). Le code par email et Google/Microsoft ouvrent une session normale, sans accès admin.
-- Preuves de litige sur R2 : bucket privé, envoi par URL signée (5 min), lecture par URL signée réservée à l'admin et aux parties.
+- Fichiers privés (preuves de litige, pièces d'identité) sur Vercel Blob en accès privé. Chemin `<type>/<propriétaire>/<nom>` : `/api/files` délivre un jeton d'envoi seulement à qui a le droit d'écrire ce chemin (images, 5 Mo max), puis relit le fichier pour l'admin et les parties uniquement.
 
 ## 8. Environnements
 

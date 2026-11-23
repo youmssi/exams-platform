@@ -26,3 +26,16 @@ export const paymentAnswerInput = z.object({
   id: z.string().min(1),
   received: z.boolean(),
 });
+
+/** The assistant's capture of the booking, already uploaded to private storage. */
+export const proofInput = z.object({
+  id: z.string().min(1),
+  path: z.string().min(1),
+});
+
+/** The admin's decision on a dispute; the note is kept in the audit trail. */
+export const decisionInput = z.object({
+  id: z.string().min(1),
+  outcome: z.enum(["BOOKED", "NOT_BOOKED"]),
+  note: z.string().trim().max(500, "tooLong"),
+});

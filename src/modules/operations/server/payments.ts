@@ -2,6 +2,7 @@ import "server-only";
 import { TRPCError } from "@trpc/server";
 import type { Prisma } from "@/generated/prisma/client";
 import { recordAudit } from "@/server/audit";
+import { publicId } from "@/server/crypto";
 import { db } from "@/server/db";
 import { transition } from "../domain/machine";
 import {
@@ -57,6 +58,50 @@ export async function openPayments(
       currency: request.currency,
     })),
   });
+}
+
+/** A request whose booking was left unpaid. */
+export const unpaidRequest = {
+  operations: { some: { status: "UNPAID" } },
+} satisfies Prisma.RequestWhereInput;
+
+/** Users with a booking left unpaid: the blacklist, lifted as soon as it is settled. */
+export const blacklisted = {
+  requests: { some: unpaidRequest },
+} satisfies Prisma.UserWhereInput;
+
+/**
+ * The blacklist shown to assistants: a public identifier, the level and the date, nothing personal.
+ */
+export async function listBlacklist() {
+  await lapseOverdue(db);
+  const operations = await db.operation.findMany({
+    where: { status: "UNPAID" },
+    orderBy: { paymentDueAt: "desc" },
+    select: {
+      id: true,
+      paymentDueAt: true,
+      request: {
+        select: {
+          ownerId: true,
+          session: {
+            select: {
+              offer: {
+                select: { level: true, center: { select: { name: true } } },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+  return operations.map(({ id, paymentDueAt, request }) => ({
+    id,
+    since: paymentDueAt,
+    account: publicId(request.ownerId),
+    level: request.session.offer.level,
+    center: request.session.offer.center.name,
+  }));
 }
 
 /** Whether this user has a booking left unpaid (blocks publishing and claiming). */

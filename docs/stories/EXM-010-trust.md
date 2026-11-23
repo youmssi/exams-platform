@@ -15,6 +15,14 @@ Sans conséquences, la mise en relation reproduit les abus actuels. Il faut des 
 | Signaler | Sur une session, une demande ou un utilisateur : catégorie + message |
 | Mon compte | Avertissements reçus, avec leur raison |
 
+#### Décisions d'implémentation
+- Fichiers : Vercel Blob en accès **privé** au lieu de R2 (relié au projet, sans clé à manipuler). Envoi direct depuis le navigateur avec progression ; `/api/files` délivre le jeton d'envoi seulement à l'assistant du litige et relit l'image pour l'admin et les deux parties.
+- Délais (preuve, prise, règlement) vérifiés à la lecture, comme ailleurs. Preuve non envoyée à temps ⇒ le litige passe « en examen ».
+- Liste noire **dérivée** des règlements impayés (pas de table à synchroniser) : levée dès le règlement confirmé. Identifiant public `U-XXXXXX`, niveau, date.
+- Suspension posée au 3e avertissement actif ; l'admin la lève, les avertissements en cours cessent alors de compter.
+- L'écran de décision des litiges est livré ici (fiche unique : chronologie, preuve, parties) pour ne laisser aucun service sans écran ; le reste du back-office reste en EXM-012.
+- Règles chiffrées dans `src/config/trust.ts`.
+
 #### Critères d'acceptation
 - [ ] Modèles `Dispute`, `Strike`, `Blacklist`, `Report` ; règles de sanction dans `trust/domain` (spec §9), testées.
 - [ ] 3 avertissements ⇒ suspension automatique (levée par l'admin) ; un litige ouvert bloque les prises de l'assistant.

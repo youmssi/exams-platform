@@ -2,7 +2,7 @@
  * Operation lifecycle. An assistant claims a request and books it before the deadline,
  * releases it, reports refused credentials, or loses it when the deadline passes; the
  * candidate can withdraw it meanwhile. Once booked, the candidate confirms the centre's
- * email or disputes the booking (handled in EXM-010). A confirmed booking is paid in two
+ * email or disputes the booking; an admin then upholds it (to pay) or cancels it. A confirmed booking is paid in two
  * deposits: received in time, it closes; otherwise it becomes unpaid until it is settled.
  */
 export type OperationStatus =
@@ -15,7 +15,8 @@ export type OperationStatus =
   | "CONFIRMED"
   | "DISPUTED"
   | "CLOSED"
-  | "UNPAID";
+  | "UNPAID"
+  | "CANCELLED";
 export type OperationEvent =
   | "release"
   | "withdraw"
@@ -25,7 +26,9 @@ export type OperationEvent =
   | "confirm"
   | "dispute"
   | "close"
-  | "lapse";
+  | "lapse"
+  | "uphold"
+  | "cancel";
 
 const TRANSITIONS: Record<
   OperationStatus,
@@ -45,8 +48,9 @@ const TRANSITIONS: Record<
   REPORTED: {},
   CONFIRMED: { close: "CLOSED", lapse: "UNPAID" },
   UNPAID: { close: "CLOSED" },
-  DISPUTED: {},
+  DISPUTED: { uphold: "CONFIRMED", cancel: "CANCELLED" },
   CLOSED: {},
+  CANCELLED: {},
 };
 
 /** The next status, or null when the event is not allowed. */

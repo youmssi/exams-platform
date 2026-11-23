@@ -14,7 +14,8 @@ export type AnalyticsEvent =
   | { name: "booking_disputed"; data?: never }
   | { name: "payment_declared"; data?: never }
   | { name: "payment_confirmed"; data?: never }
-  | { name: "payment_rejected"; data?: never };
+  | { name: "payment_rejected"; data?: never }
+  | { name: "report_sent"; data?: never };
 
 type AuthMethod = "code" | "password" | "google" | "microsoft";
 

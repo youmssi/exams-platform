@@ -10,10 +10,12 @@ export const routes = {
   sessions: "/sessions",
   requests: "/requests",
   queue: "/queue",
+  blacklist: "/blacklist",
   terms: "/terms",
   privacy: "/privacy",
   adminCatalog: "/admin/catalog",
   adminPayments: "/admin/payments",
+  adminDisputes: "/admin/disputes",
 } as const;
 
 /** Routes reachable without a session. */
