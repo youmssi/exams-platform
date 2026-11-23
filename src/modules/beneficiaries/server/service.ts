@@ -3,9 +3,11 @@ import { TRPCError } from "@trpc/server";
 import { Prisma } from "@/generated/prisma/client";
 import { encryptSecret } from "@/server/crypto";
 import { db } from "@/server/db";
+import { canResendConsent, isConsentPending } from "../domain/consent";
 import { canAddBeneficiary } from "../domain/limits";
 import { displayName, isReadyToBook } from "../domain/profile";
 import type { BeneficiaryInput } from "../schemas";
+import { requestConsent } from "./consent";
 
 /** What the owner may see: never the password, only whether one is saved. */
 const PUBLIC_FIELDS = {
@@ -21,6 +23,8 @@ const PUBLIC_FIELDS = {
   participantNumber: true,
   email: true,
   passwordCipher: true,
+  consentConfirmedAt: true,
+  consentRequestedAt: true,
   updatedAt: true,
 } as const;
 
@@ -31,11 +35,15 @@ const toPublic = ({
   ...beneficiary
 }: Prisma.BeneficiaryGetPayload<{ select: typeof PUBLIC_FIELDS }>) => {
   const hasPassword = passwordCipher !== null;
+  const consentPending = isConsentPending(beneficiary);
   return {
     ...beneficiary,
     name: displayName(beneficiary),
     hasPassword,
-    isReady: isReadyToBook({ ...beneficiary, hasPassword }),
+    consentPending,
+    canResendConsent:
+      consentPending && canResendConsent(beneficiary.consentRequestedAt),
+    isReady: !consentPending && isReadyToBook({ ...beneficiary, hasPassword }),
   };
 };
 
@@ -90,29 +98,39 @@ const profileData = ({ consent, password, ...input }: BeneficiaryInput) => ({
   ...(password ? { passwordCipher: encryptSecret(password) } : {}),
 });
 
+/** Adds a friend and emails them to confirm; the holder can resend if the email is lost. */
 export async function addFriend(ownerId: string, input: BeneficiaryInput) {
-  return db.$transaction(async (tx) => {
+  const created = await db.$transaction(async (tx) => {
     const count = await tx.beneficiary.count({ where: { ownerId } });
     if (!canAddBeneficiary(count))
       throw new TRPCError({ code: "FORBIDDEN", message: "limitReached" });
     const created = await tx.beneficiary.create({
       data: { ownerId, consentAt: new Date(), ...profileData(input) },
-      select: PUBLIC_FIELDS,
+      select: { id: true },
     });
-    return toPublic(created);
+    return created;
   });
+  await requestConsent(created.id).catch(reportEmailFailure);
 }
+
+/** The friend can still be asked again from the list; the failure is logged for the team. */
+const reportEmailFailure = (error: unknown) =>
+  console.error("[consent]", error);
 
 export async function updateBeneficiary(
   ownerId: string,
   id: string,
   input: BeneficiaryInput,
 ) {
-  const { count } = await db.beneficiary.updateMany({
+  const current = await db.beneficiary.findFirst({
     where: { id, ownerId },
-    data: profileData(input),
+    select: { email: true, isSelf: true },
   });
-  if (!count) throw new TRPCError({ code: "NOT_FOUND" });
+  if (!current) throw new TRPCError({ code: "NOT_FOUND" });
+  await db.beneficiary.update({ where: { id }, data: profileData(input) });
+  // A friend's new address must confirm again.
+  if (!current.isSelf && current.email !== input.email)
+    await requestConsent(id).catch(reportEmailFailure);
   // A corrected profile answers what an assistant reported: those requests go back to the queue (EXM-025).
   await db.request.updateMany({
     where: { beneficiaryId: id, status: "OPEN", issue: { not: null } },

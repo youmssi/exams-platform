@@ -44,6 +44,7 @@ import type { UpcomingSession } from "./types";
 
 const ERRORS = new Set([
   "alreadyRequested",
+  "consentPending",
   "unpaid",
   "incompleteProfile",
   "invalidModules",
@@ -180,13 +181,18 @@ export function PublishForm({
                   {requested.has(beneficiary.id) && (
                     <FieldDescription>{t("alreadyRequested")}</FieldDescription>
                   )}
-                  {!beneficiary.isReady && !requested.has(beneficiary.id) && (
-                    <FieldDescription>
-                      <Link href={routes.beneficiaries}>
-                        {t("completeProfile")}
-                      </Link>
-                    </FieldDescription>
+                  {beneficiary.consentPending && (
+                    <FieldDescription>{t("consentPending")}</FieldDescription>
                   )}
+                  {!beneficiary.isReady &&
+                    !beneficiary.consentPending &&
+                    !requested.has(beneficiary.id) && (
+                      <FieldDescription>
+                        <Link href={routes.beneficiaries}>
+                          {t("completeProfile")}
+                        </Link>
+                      </FieldDescription>
+                    )}
                 </FieldContent>
               </Field>
             ))}

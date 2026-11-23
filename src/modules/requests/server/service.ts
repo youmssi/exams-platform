@@ -1,7 +1,11 @@
 import "server-only";
 import { TRPCError } from "@trpc/server";
 import { Prisma } from "@/generated/prisma/client";
-import { displayName, isReadyToBook } from "@/modules/beneficiaries";
+import {
+  displayName,
+  isConsentPending,
+  isReadyToBook,
+} from "@/modules/beneficiaries";
 import {
   bookedModules,
   isFullExam,
@@ -74,10 +78,14 @@ export async function publishRequests(ownerId: string, input: PublishInput) {
       birthPlace: true,
       phone: true,
       passwordCipher: true,
+      isSelf: true,
+      consentConfirmedAt: true,
     },
   });
   if (beneficiaries.length !== input.beneficiaryIds.length)
     throw new TRPCError({ code: "NOT_FOUND" });
+  if (beneficiaries.some(isConsentPending))
+    throw new TRPCError({ code: "BAD_REQUEST", message: "consentPending" });
   if (
     beneficiaries.some(
       ({ passwordCipher, ...profile }) =>

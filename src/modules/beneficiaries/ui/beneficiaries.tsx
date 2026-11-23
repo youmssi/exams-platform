@@ -131,6 +131,18 @@ function BeneficiaryItem({
     }),
   );
 
+  const resend = useMutation(
+    trpc.beneficiaries.resendConsent.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: trpc.beneficiaries.list.queryKey(),
+        });
+        toast.success(t("consentSent", { email: beneficiary.email }));
+      },
+      onError: () => toast.error(tCommon("error")),
+    }),
+  );
+
   return (
     <Item variant="outline">
       <ItemMedia>
@@ -148,10 +160,25 @@ function BeneficiaryItem({
         <ItemDescription className="truncate">
           {beneficiary.email}
         </ItemDescription>
-        <div>
-          <Badge variant={beneficiary.isReady ? "outline" : "destructive"}>
-            {beneficiary.isReady ? t("status.ready") : t("status.incomplete")}
-          </Badge>
+        <div className="flex flex-wrap items-center gap-2">
+          {beneficiary.consentPending ? (
+            <Badge variant="secondary">{t("status.consentPending")}</Badge>
+          ) : (
+            <Badge variant={beneficiary.isReady ? "outline" : "destructive"}>
+              {beneficiary.isReady ? t("status.ready") : t("status.incomplete")}
+            </Badge>
+          )}
+          {beneficiary.consentPending && (
+            <Button
+              variant="link"
+              size="sm"
+              className="h-auto p-0"
+              disabled={!beneficiary.canResendConsent || resend.isPending}
+              onClick={() => resend.mutate({ id: beneficiary.id })}
+            >
+              {t("resendConsent")}
+            </Button>
+          )}
         </div>
       </ItemContent>
       <ItemActions>

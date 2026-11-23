@@ -212,26 +212,31 @@ model AuditLog {
 /// A person the account holder books for: themself ("self") or a friend who agreed.
 /// The exam-centre password is encrypted (AES-256-GCM) and never sent back to the owner.
 model Beneficiary {
-  id                String    @id @default(cuid())
-  ownerId           String
-  owner             User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  isSelf            Boolean   @default(false)
+  id                 String    @id @default(cuid())
+  ownerId            String
+  owner              User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  isSelf             Boolean   @default(false)
   /// Official names, as on the identity document.
-  firstName         String    @default("")
-  lastName          String    @default("")
-  birthDate         DateTime? @db.Date
-  birthPlace        String?
-  phone             String?
-  city              String?
-  district          String?
+  firstName          String    @default("")
+  lastName           String    @default("")
+  birthDate          DateTime? @db.Date
+  birthPlace         String?
+  phone              String?
+  city               String?
+  district           String?
   /// Exam-centre participant number, when the candidate already has one.
-  participantNumber String?
-  email             String
-  passwordCipher    String?
-  consentAt         DateTime?
-  requests          Request[]
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  participantNumber  String?
+  email              String
+  passwordCipher     String?
+  consentAt          DateTime?
+  /// The friend confirmed by email that the holder may book for them (EXM-024). Not needed for "self".
+  consentConfirmedAt DateTime?
+  /// SHA-256 of the one-time link sent to the friend; cleared once they answer.
+  consentTokenHash   String?   @unique
+  consentRequestedAt DateTime?
+  requests           Request[]
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   @@index([ownerId])
   @@map("beneficiary")
