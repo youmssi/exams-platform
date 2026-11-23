@@ -25,11 +25,19 @@ export function BeneficiaryForm({ beneficiary, onSaved }: Props) {
   const isNewFriend = !beneficiary;
 
   const handlers = {
-    onSuccess: async () => {
+    onSuccess: async (
+      _: unknown,
+      variables: { data: { email: string } } | { email: string },
+    ) => {
       await queryClient.invalidateQueries({
         queryKey: trpc.beneficiaries.list.queryKey(),
       });
-      toast.success(t("saved"));
+      // A new friend gets an email to confirm; say where it went.
+      toast.success(
+        "data" in variables
+          ? t("saved")
+          : t("consentSent", { email: variables.email }),
+      );
       onSaved();
     },
     onError: (error: { message: string }) =>

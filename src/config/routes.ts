@@ -13,6 +13,8 @@ export const routes = {
   blacklist: "/blacklist",
   terms: "/terms",
   privacy: "/privacy",
+  /** Public page a friend opens from the consent email (EXM-024). */
+  consent: "/consent",
   adminCatalog: "/admin/catalog",
   adminPayments: "/admin/payments",
   adminDisputes: "/admin/disputes",
@@ -26,6 +28,7 @@ export const publicRoutes: readonly string[] = [
   routes.resetPassword,
   routes.terms,
   routes.privacy,
+  routes.consent,
 ];
 
 /** Keeps a post-sign-in redirect inside the app. */

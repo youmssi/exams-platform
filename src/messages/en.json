@@ -196,6 +196,16 @@
       "intro": "Enter this code on Exams:",
       "expiry": "It expires in {minutes} minutes.",
       "ignore": "If you did not request this, ignore this email."
+    },
+    "consent": {
+      "subject": "{holder} wants to book an exam for you",
+      "preview": "Confirm in one click that {holder} can book for you.",
+      "title": "Do you agree?",
+      "intro": "{holder} added {name} on Exams to book an exam seat.",
+      "data": "Your details are only used for the booking and are erased afterwards. Nothing is published without your consent.",
+      "confirm": "Answer",
+      "refuse": "This is not me, or I refuse",
+      "expiry": "This link expires in {days} days."
     }
   },
   "legal": {
@@ -467,7 +477,8 @@
     "noName": "Name to complete",
     "status": {
       "ready": "Ready",
-      "incomplete": "Profile to complete"
+      "incomplete": "Profile to complete",
+      "consentPending": "Awaiting consent"
     },
     "limitReached": "Limit of 5 people reached. Remove one to add another.",
     "removeTitle": "Remove {name}?",
@@ -495,7 +506,9 @@
       "identity": "Identity (as on the ID)",
       "contact": "Contact",
       "centre": "Centre account"
-    }
+    },
+    "resendConsent": "Resend the email",
+    "consentSent": "Confirmation email sent to {email}."
   },
   "sessions": {
     "title": "Exam sessions",
@@ -574,14 +587,16 @@
       "incompleteProfile": "Complete each person's profile before publishing.",
       "invalidModules": "Choose modules from this level.",
       "unpaid": "Settle your unpaid booking before publishing.",
-      "suspended": "Account suspended: you cannot publish."
+      "suspended": "Account suspended: you cannot publish.",
+      "consentPending": "Someone has not confirmed their consent by email yet."
     },
     "completeProfile": "Complete the profile",
     "modules": "Modules",
     "fullExam": "Full exam.",
     "pickModules": "Only the selected modules.",
     "alreadyRequested": "Request already published for this session.",
-    "carryOver": "If it is not booked, carry it over to the next confirmed session"
+    "carryOver": "If it is not booked, carry it over to the next confirmed session",
+    "consentPending": "Waiting for their consent by email."
   },
   "myRequests": {
     "title": "My requests",
@@ -1289,6 +1304,29 @@
       "type": "Format not accepted: choose an image.",
       "size": "Image too large ({max} max).",
       "failed": "Upload failed. Try again."
+    }
+  },
+  "consent": {
+    "title": "{holder} wants to book an exam for you",
+    "description": "On Exams, in the name of {name}.",
+    "data": "Your details (identity, centre account) are only used for the booking and are erased afterwards.",
+    "privacy": "Privacy",
+    "accept": "I agree",
+    "refuse": "I refuse",
+    "refuseTitle": "Refuse?",
+    "refuseBody": "The details {holder} entered for you will be deleted.",
+    "back": "Back",
+    "accepted": {
+      "title": "Thanks, it's confirmed",
+      "description": "You can close this page."
+    },
+    "refused": {
+      "title": "Noted",
+      "description": "Your details have been deleted."
+    },
+    "invalid": {
+      "title": "Invalid or expired link",
+      "description": "Ask the person who sent it to send it again."
     }
   }
 }

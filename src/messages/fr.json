@@ -196,6 +196,16 @@
       "intro": "Saisissez ce code sur Exams :",
       "expiry": "Il expire dans {minutes} minutes.",
       "ignore": "Si vous n'êtes pas à l'origine de cette demande, ignorez cet email."
+    },
+    "consent": {
+      "subject": "{holder} veut réserver un examen pour vous",
+      "preview": "Confirmez en un clic que {holder} peut réserver pour vous.",
+      "title": "Confirmez-vous ?",
+      "intro": "{holder} a ajouté {name} sur Exams pour réserver une place d'examen.",
+      "data": "Vos informations ne servent qu'à la réservation et sont effacées ensuite. Sans votre accord, rien n'est publié.",
+      "confirm": "Répondre",
+      "refuse": "Ce n'est pas moi, ou je refuse",
+      "expiry": "Ce lien expire dans {days} jours."
     }
   },
   "legal": {
@@ -467,7 +477,8 @@
     "noName": "Nom à compléter",
     "status": {
       "ready": "Prêt",
-      "incomplete": "Profil à compléter"
+      "incomplete": "Profil à compléter",
+      "consentPending": "En attente d'accord"
     },
     "limitReached": "Limite de 5 personnes atteinte. Supprimez-en une pour en ajouter une autre.",
     "removeTitle": "Supprimer {name} ?",
@@ -495,7 +506,9 @@
       "identity": "Identité (comme sur la pièce)",
       "contact": "Contact",
       "centre": "Compte du centre"
-    }
+    },
+    "resendConsent": "Renvoyer l'email",
+    "consentSent": "Email de confirmation envoyé à {email}."
   },
   "sessions": {
     "title": "Sessions d'examen",
@@ -574,14 +587,16 @@
       "incompleteProfile": "Complétez le profil de chaque personne avant de publier.",
       "invalidModules": "Choisissez des modules de ce niveau.",
       "unpaid": "Réglez votre impayé avant de publier.",
-      "suspended": "Compte suspendu : impossible de publier."
+      "suspended": "Compte suspendu : impossible de publier.",
+      "consentPending": "Une personne n'a pas encore confirmé son accord par email."
     },
     "completeProfile": "Compléter le profil",
     "modules": "Modules",
     "fullExam": "Examen complet.",
     "pickModules": "Seulement les modules sélectionnés.",
     "alreadyRequested": "Demande déjà publiée pour cette session.",
-    "carryOver": "Si elle n'est pas réservée, la reporter à la prochaine session confirmée"
+    "carryOver": "Si elle n'est pas réservée, la reporter à la prochaine session confirmée",
+    "consentPending": "En attente de son accord par email."
   },
   "myRequests": {
     "title": "Mes demandes",
@@ -1289,6 +1304,29 @@
       "type": "Format non accepté : choisissez une image.",
       "size": "Image trop lourde ({max} max).",
       "failed": "Échec de l'envoi. Réessayez."
+    }
+  },
+  "consent": {
+    "title": "{holder} veut réserver un examen pour vous",
+    "description": "Sur Exams, au nom de {name}.",
+    "data": "Vos informations (identité, compte du centre) ne servent qu'à la réservation et sont effacées ensuite.",
+    "privacy": "Confidentialité",
+    "accept": "J'accepte",
+    "refuse": "Je refuse",
+    "refuseTitle": "Refuser ?",
+    "refuseBody": "Vos informations saisies par {holder} seront supprimées.",
+    "back": "Retour",
+    "accepted": {
+      "title": "Merci, c'est confirmé",
+      "description": "Vous pouvez fermer cette page."
+    },
+    "refused": {
+      "title": "C'est noté",
+      "description": "Vos informations ont été supprimées."
+    },
+    "invalid": {
+      "title": "Lien invalide ou expiré",
+      "description": "Demandez à la personne qui vous l'a envoyé de le renvoyer."
     }
   }
 }
