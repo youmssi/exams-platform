@@ -15,6 +15,7 @@ import { useFormatter, useTranslations } from "next-intl";
 import { useCallback } from "react";
 import { toast } from "sonner";
 import { ConfirmAction } from "@/components/confirm-action";
+import { CopyField } from "@/components/copy-field";
 import { Countdown } from "@/components/countdown";
 import { PresenceBadge } from "@/components/presence-badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -33,7 +34,6 @@ import { InputGroupButton } from "@/components/ui/input-group";
 import { type LiveState, LiveUpdates } from "@/modules/realtime/client";
 import { track } from "@/shared/analytics";
 import { useTRPC } from "@/trpc/client";
-import { CopyField } from "./copy-field";
 import { ReportProblem } from "./report-problem";
 
 const POLL_MS = 15_000;

@@ -5,6 +5,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
+import { WalletIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
@@ -34,9 +35,11 @@ import {
 } from "@/components/ui/item";
 import { routes } from "@/config/routes";
 import { Link } from "@/i18n/navigation";
+import { amountDue } from "@/modules/operations/client";
 import { type LiveState, LiveUpdates } from "@/modules/realtime/client";
 import { track } from "@/shared/analytics";
 import { useTRPC } from "@/trpc/client";
+import { PaymentPanel } from "./payment-panel";
 import { BonusPicker, ModulesPicker } from "./pickers";
 import type { MyRequest } from "./types";
 
@@ -68,11 +71,15 @@ function RequestList({
   refresh: () => void;
 }) {
   const t = useTranslations("myRequests");
+  const format = useFormatter();
   const trpc = useTRPC();
   const { data: requests } = useSuspenseQuery({
     ...trpc.requests.mine.queryOptions(),
     refetchInterval: state.live ? false : POLL_MS,
   });
+
+  const due = requests.flatMap((request) => request.operation?.payments ?? []);
+  const toPay = amountDue(due);
 
   return (
     <div className="flex flex-col gap-6">
@@ -80,6 +87,21 @@ function RequestList({
         <h1 className="font-semibold text-2xl">{t("title")}</h1>
         <Button render={<Link href={routes.sessions} />}>{t("new")}</Button>
       </div>
+      {toPay > 0 && (
+        <Alert>
+          <WalletIcon />
+          <AlertTitle>
+            {t("totalDue", {
+              total: format.number(toPay, {
+                style: "currency",
+                currency: due[0].currency,
+                maximumFractionDigits: 0,
+              }),
+            })}
+          </AlertTitle>
+          <AlertDescription>{t("totalDueHint")}</AlertDescription>
+        </Alert>
+      )}
       {requests.length === 0 ? (
         <Empty className="border">
           <EmptyHeader>
@@ -111,7 +133,10 @@ type Status =
   | "published"
   | "inProgress"
   | "toConfirm"
-  | "booked"
+  | "toPay"
+  | "paymentSent"
+  | "closed"
+  | "unpaid"
   | "disputed"
   | "toFix"
   | "elsewhere"
@@ -123,12 +148,20 @@ function statusOf(request: MyRequest): Status {
   if (request.status === "ELSEWHERE") return "elsewhere";
   const operation = request.operation;
   if (operation?.status === "RESERVED") return "toConfirm";
-  if (operation?.status === "CONFIRMED") return "booked";
+  if (operation?.status === "CONFIRMED")
+    return operation.payments.some((payment) => payment.status === "DUE")
+      ? "toPay"
+      : "paymentSent";
+  if (operation?.status === "UNPAID") return "unpaid";
+  if (operation?.status === "CLOSED") return "closed";
   if (operation?.status === "DISPUTED") return "disputed";
   if (operation) return "inProgress";
   if (request.issue) return "toFix";
   return request.visibility;
 }
+
+/** A confirmed booking: the candidate pays, then keeps the summary. */
+const PAYMENT_STATUSES: Status[] = ["toPay", "paymentSent", "unpaid", "closed"];
 
 const BADGE: Record<
   Status,
@@ -138,7 +171,10 @@ const BADGE: Record<
   published: "default",
   inProgress: "default",
   toConfirm: "default",
-  booked: "secondary",
+  toPay: "default",
+  paymentSent: "secondary",
+  closed: "secondary",
+  unpaid: "destructive",
   disputed: "destructive",
   toFix: "destructive",
   elsewhere: "outline",
@@ -229,7 +265,14 @@ function RequestItem({
             refresh={refresh}
           />
         )}
-        {operation?.centerFeeDeadline && status === "booked" && (
+        {operation && PAYMENT_STATUSES.includes(status) && (
+          <PaymentPanel
+            operation={operation}
+            timeZone={timeZone}
+            refresh={refresh}
+          />
+        )}
+        {operation?.centerFeeDeadline && PAYMENT_STATUSES.includes(status) && (
           <Alert>
             <AlertTitle>{t("centerFee.title")}</AlertTitle>
             <AlertDescription>

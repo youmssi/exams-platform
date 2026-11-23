@@ -6,6 +6,7 @@ import {
   ListChecksIcon,
   RadioTowerIcon,
   UsersIcon,
+  WalletIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LogoMark } from "@/components/brand/logo";
@@ -36,6 +37,7 @@ const NAV = {
 } as const;
 const ADMIN_NAV = [
   { href: routes.adminCatalog, key: "catalog", Icon: LibraryIcon },
+  { href: routes.adminPayments, key: "payments", Icon: WalletIcon },
 ] as const;
 
 type NavEntry =

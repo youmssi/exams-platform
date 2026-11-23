@@ -15,6 +15,7 @@ import {
   transition,
 } from "../domain/machine";
 import type { ReportInput } from "../schemas";
+import { hasUnpaid, openPayments } from "./payments";
 
 type Client = Prisma.TransactionClient | typeof db;
 
@@ -61,6 +62,8 @@ function next(status: OperationStatus, event: OperationEvent) {
 export async function claimRequest(assistantId: string, requestId: string) {
   if (!(await isAssistantReady(assistantId)))
     throw new TRPCError({ code: "FORBIDDEN", message: "profileIncomplete" });
+  if (await hasUnpaid(assistantId))
+    throw new TRPCError({ code: "FORBIDDEN", message: "unpaid" });
   return db.$transaction(async (tx) => {
     await expireOverdue(tx, { OR: [{ requestId }, { assistantId }] });
     const now = new Date();
@@ -346,7 +349,10 @@ export async function reportProblem(
   return { ownerId: operation.request.ownerId };
 }
 
-/** The candidate answers a booking: email received, or disputed (the dispute itself is EXM-010). */
+/**
+ * The candidate answers a booking: email received (both deposits become due), or disputed
+ * (the dispute itself is EXM-010). Either way the assistant is free.
+ */
 export async function answerBooking(
   ownerId: string,
   id: string,
@@ -354,21 +360,44 @@ export async function answerBooking(
 ) {
   const operation = await db.operation.findFirst({
     where: { id, status: "RESERVED", request: { ownerId } },
-    select: { version: true, assistantId: true },
+    select: {
+      version: true,
+      assistantId: true,
+      request: {
+        select: {
+          assistantShare: true,
+          commission: true,
+          currency: true,
+          session: {
+            select: { offer: { select: { paymentDeadlineH: true } } },
+          },
+        },
+      },
+    },
   });
   if (!operation) throw new TRPCError({ code: "NOT_FOUND" });
   const now = new Date();
-  const { count } = await db.operation.updateMany({
-    where: { id, version: operation.version, status: "RESERVED" },
-    data: {
-      status: next("RESERVED", answer),
-      ...(answer === "confirm" ? { confirmedAt: now } : {}),
-      // The assistant is free as soon as the candidate answers.
-      releaseAt: now,
-      version: { increment: 1 },
-    },
+  await db.$transaction(async (tx) => {
+    const { count } = await tx.operation.updateMany({
+      where: { id, version: operation.version, status: "RESERVED" },
+      data: {
+        status: next("RESERVED", answer),
+        ...(answer === "confirm" ? { confirmedAt: now } : {}),
+        releaseAt: now,
+        version: { increment: 1 },
+      },
+    });
+    if (!count)
+      throw new TRPCError({ code: "CONFLICT", message: "invalidTransition" });
+    if (answer === "confirm") {
+      const { session, ...amounts } = operation.request;
+      await openPayments(
+        tx,
+        id,
+        { ...amounts, paymentDeadlineH: session.offer.paymentDeadlineH },
+        now,
+      );
+    }
   });
-  if (!count)
-    throw new TRPCError({ code: "CONFLICT", message: "invalidTransition" });
   return { assistantId: operation.assistantId };
 }

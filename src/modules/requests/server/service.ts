@@ -8,7 +8,14 @@ import {
   isValidBonus,
   priceBreakdown,
 } from "@/modules/catalog";
-import { activeOperation, centerFeeDeadline } from "@/modules/operations";
+import {
+  activeOperation,
+  centerFeeDeadline,
+  hasUnpaid,
+  lapseOverdue,
+  PAYING,
+  paymentReference,
+} from "@/modules/operations";
 import { presenceKey } from "@/modules/realtime";
 import { db } from "@/server/db";
 import { publishAtFor, requestVisibility } from "../domain/visibility";
@@ -19,6 +26,8 @@ import type { PublishInput, UpdateRequestInput } from "../schemas";
  * Requests stay hidden from assistants until registrations open.
  */
 export async function publishRequests(ownerId: string, input: PublishInput) {
+  if (await hasUnpaid(ownerId))
+    throw new TRPCError({ code: "FORBIDDEN", message: "unpaid" });
   const session = await db.examSession.findUnique({
     where: { id: input.sessionId },
     select: {
@@ -108,6 +117,7 @@ export async function publishRequests(ownerId: string, input: PublishInput) {
 }
 
 export async function listMyRequests(ownerId: string) {
+  await lapseOverdue(db, { request: { ownerId } });
   const requests = await db.request.findMany({
     where: { ownerId },
     orderBy: [{ createdAt: "desc" }],
@@ -125,11 +135,15 @@ export async function listMyRequests(ownerId: string) {
       issueNote: true,
       beneficiary: { select: { firstName: true, lastName: true, email: true } },
       operations: {
-        // The claim in progress, or the booking the candidate answers or pays.
+        // The claim in progress, or the booking the candidate answers, pays or has paid.
         where: {
           OR: [
             activeOperation(),
-            { status: { in: ["RESERVED", "CONFIRMED", "DISPUTED"] } },
+            {
+              status: {
+                in: ["RESERVED", "DISPUTED", "CLOSED", ...PAYING],
+              },
+            },
           ],
         },
         orderBy: { claimedAt: "desc" },
@@ -140,7 +154,27 @@ export async function listMyRequests(ownerId: string) {
           claimedAt: true,
           deadlineAt: true,
           confirmedAt: true,
+          paymentDueAt: true,
+          closedAt: true,
           assistantId: true,
+          assistant: {
+            select: {
+              assistantProfile: {
+                select: { operator: true, momoNumber: true, momoName: true },
+              },
+            },
+          },
+          payments: {
+            orderBy: { recipient: "asc" },
+            select: {
+              id: true,
+              recipient: true,
+              amount: true,
+              currency: true,
+              status: true,
+              rejections: true,
+            },
+          },
         },
       },
       session: {
@@ -157,7 +191,14 @@ export async function listMyRequests(ownerId: string) {
                 select: {
                   name: true,
                   city: true,
-                  country: { select: { timeZone: true } },
+                  country: {
+                    select: {
+                      timeZone: true,
+                      platformOperator: true,
+                      platformMomoNumber: true,
+                      platformMomoName: true,
+                    },
+                  },
                 },
               },
             },
@@ -174,6 +215,17 @@ export async function listMyRequests(ownerId: string) {
         status: operation.status,
         claimedAt: operation.claimedAt,
         deadlineAt: operation.deadlineAt,
+        paymentDueAt: operation.paymentDueAt,
+        closedAt: operation.closedAt,
+        reference: paymentReference(operation.id),
+        payments: operation.payments.map((payment) => ({
+          ...payment,
+          account: accountFor(
+            payment.recipient,
+            operation.assistant.assistantProfile,
+            request.session.offer.center.country,
+          ),
+        })),
         assistantKey: presenceKey(operation.assistantId),
         centerFeeDeadline:
           operation.confirmedAt &&
@@ -188,6 +240,34 @@ export async function listMyRequests(ownerId: string) {
       visibility: requestVisibility(request.publishAt),
     }),
   );
+}
+
+/** Where a deposit goes: the assistant's Mobile Money account, or the platform's for its country. */
+function accountFor(
+  recipient: "ASSISTANT" | "PLATFORM",
+  assistant: { operator: string; momoNumber: string; momoName: string } | null,
+  country: {
+    platformOperator: string | null;
+    platformMomoNumber: string | null;
+    platformMomoName: string | null;
+  },
+) {
+  if (recipient === "ASSISTANT")
+    return assistant
+      ? {
+          operator: assistant.operator,
+          number: assistant.momoNumber,
+          name: assistant.momoName,
+        }
+      : null;
+  const { platformOperator, platformMomoNumber, platformMomoName } = country;
+  return platformOperator && platformMomoNumber && platformMomoName
+    ? {
+        operator: platformOperator,
+        number: platformMomoNumber,
+        name: platformMomoName,
+      }
+    : null;
 }
 
 /**

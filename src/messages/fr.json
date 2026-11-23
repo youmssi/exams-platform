@@ -4,7 +4,9 @@
     "description": "Une plateforme simple, transparente et au prix standard pour réserver vos examens de langue."
   },
   "common": {
-    "error": "Une erreur est survenue."
+    "error": "Une erreur est survenue.",
+    "copy": "Copier : {label}",
+    "copied": "Copié."
   },
   "validation": {
     "email": "Saisissez une adresse email valide, par exemple nom@exemple.com.",
@@ -33,7 +35,8 @@
     "pickBeneficiary": "Choisissez au moins une personne.",
     "pastDate": "Choisissez une date passée.",
     "phone": "Saisissez un numéro valide, par exemple 6 97 47 14 30.",
-    "pickModule": "Choisissez au moins un module."
+    "pickModule": "Choisissez au moins un module.",
+    "allOrNone": "Remplissez les trois champs, ou aucun."
   },
   "auth": {
     "title": "Connexion à Exams",
@@ -125,7 +128,8 @@
       "beneficiaries": "Bénéficiaires",
       "sessions": "Sessions",
       "requests": "Mes demandes",
-      "queue": "File"
+      "queue": "File",
+      "payments": "Commissions"
     },
     "signOut": "Se déconnecter",
     "roleLabel": {
@@ -358,7 +362,12 @@
         "timeZoneHint": "Par exemple Africa/Douala. Les heures sont affichées dans ce fuseau.",
         "active": "Visible par les utilisateurs",
         "operators": "Opérateurs Mobile Money",
-        "operatorsHint": "Séparés par des virgules, ex. MTN Mobile Money, Orange Money."
+        "operatorsHint": "Séparés par des virgules, ex. MTN Mobile Money, Orange Money.",
+        "platformAccount": "Compte de la plateforme",
+        "platformAccountHint": "Reçoit les commissions. Les trois champs ou aucun.",
+        "platformOperator": "Opérateur",
+        "platformMomoNumber": "Numéro",
+        "platformMomoName": "Nom du titulaire"
       },
       "center": {
         "title": "Centre",
@@ -533,7 +542,8 @@
       "sessionPast": "Cette session est passée.",
       "invalidBonus": "Ce bonus n'est pas autorisé.",
       "incompleteProfile": "Complétez le profil de chaque personne avant de publier.",
-      "invalidModules": "Choisissez des modules de ce niveau."
+      "invalidModules": "Choisissez des modules de ce niveau.",
+      "unpaid": "Réglez votre impayé avant de publier."
     },
     "completeProfile": "Compléter le profil",
     "modules": "Modules",
@@ -549,11 +559,14 @@
       "published": "Publiée",
       "inProgress": "En cours",
       "toConfirm": "À confirmer",
-      "booked": "Réservée",
       "disputed": "Contestée",
       "elsewhere": "Inscrit autrement",
       "cancelled": "Annulée",
-      "toFix": "À corriger"
+      "toFix": "À corriger",
+      "toPay": "À payer",
+      "paymentSent": "Paiement envoyé",
+      "closed": "Réglée",
+      "unpaid": "Impayée"
     },
     "publishesAt": "publiée le {date}",
     "cancel": "Annuler la demande",
@@ -614,7 +627,9 @@
       "title": "Modifier la demande",
       "save": "Enregistrer",
       "saved": "Demande modifiée."
-    }
+    },
+    "totalDue": "À payer : {total}",
+    "totalDueHint": "Chaque dépôt se confirme séparément."
   },
   "queue": {
     "title": "File des demandes",
@@ -635,7 +650,8 @@
     "claim": "Prendre",
     "errors": {
       "alreadyTaken": "Déjà prise par un autre assistant.",
-      "busy": "Vous avez déjà une opération en cours."
+      "busy": "Vous avez déjà une opération en cours.",
+      "unpaid": "Réglez votre impayé avant de prendre une demande."
     },
     "profileIncomplete": {
       "title": "Complétez votre profil assistant",
@@ -670,8 +686,6 @@
       "participantNumber": "N° de participant"
     },
     "show": "Afficher",
-    "copy": "Copier : {label}",
-    "copied": "Copié.",
     "release": "Libérer",
     "releaseTitle": "Libérer cette demande ?",
     "releaseBody": "Elle revient dans la file pour un autre assistant.",
@@ -1061,5 +1075,57 @@
       "contact": "Contact",
       "independent": "Service indépendant, sans lien avec les centres d'examen."
     }
+  },
+  "payment": {
+    "recipient": {
+      "ASSISTANT": "Part de l'assistant",
+      "PLATFORM": "Commission Exams"
+    },
+    "status": {
+      "DUE": "À envoyer",
+      "DECLARED": "Envoyé, en attente de confirmation",
+      "RECEIVED": "Reçu"
+    },
+    "assistantStatus": {
+      "DUE": "En attente du candidat",
+      "DECLARED": "À confirmer",
+      "RECEIVED": "Reçu"
+    },
+    "holder": "Au nom de {name}",
+    "noAccount": "Compte bientôt affiché. Revenez dans quelques minutes.",
+    "reference": "Référence à indiquer",
+    "declare": "J'ai envoyé",
+    "declared": "Merci. Le destinataire va confirmer.",
+    "deadline": "À régler avant le {date}. Après, le compte est suspendu jusqu'au règlement.",
+    "rejected": {
+      "title": "Pas reçu",
+      "description": "Vérifiez le numéro et la référence, puis renvoyez."
+    },
+    "unpaid": {
+      "title": "Délai dépassé",
+      "description": "Compte suspendu jusqu'au règlement. Envoyez les dépôts restants."
+    },
+    "closed": {
+      "title": "Réglée le {date}",
+      "description": "Pensez à changer le mot de passe de votre compte du centre."
+    },
+    "answer": {
+      "received": "Reçu",
+      "notReceived": "Pas reçu",
+      "notReceivedTitle": "Dépôt non reçu ?",
+      "notReceivedBody": "Le candidat sera invité à vérifier et à renvoyer.",
+      "keep": "Annuler",
+      "thanks": "Confirmé.",
+      "sentBack": "Le candidat va renvoyer."
+    },
+    "assistantTitle": "Paiements à recevoir",
+    "adminTitle": "Commissions",
+    "adminSubtitle": "Confirmez chaque dépôt déclaré.",
+    "adminEmpty": "Aucune commission en attente.",
+    "amount": "Montant",
+    "offer": "Centre et niveau",
+    "dueAt": "Échéance",
+    "statusLabel": "État",
+    "actions": "Actions"
   }
 }

@@ -37,6 +37,7 @@ import { track } from "@/shared/analytics";
 import { useTRPC } from "@/trpc/client";
 import type { QueueRequest } from "./types";
 
+const CLAIM_ERRORS = new Set(["alreadyTaken", "busy", "unpaid"]);
 const POLL_LIVE_MS = 60_000;
 const POLL_FALLBACK_MS = 15_000;
 
@@ -237,10 +238,9 @@ function RequestRow({
           router.push(routes.account);
           return;
         }
-        if (error.message === "busy") toast.error(t("errors.busy"));
         toast.error(
-          error.message === "alreadyTaken"
-            ? t("errors.alreadyTaken")
+          CLAIM_ERRORS.has(error.message)
+            ? t(`errors.${error.message}`)
             : tCommon("error"),
         );
         queryClient.invalidateQueries({
