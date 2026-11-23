@@ -139,7 +139,8 @@
       "operations": "Opérations",
       "users": "Utilisateurs",
       "reports": "Signalements",
-      "audit": "Journal"
+      "audit": "Journal",
+      "help": "Aide"
     },
     "signOut": "Se déconnecter",
     "roleLabel": {
@@ -262,7 +263,9 @@
           "title": "Données que nous collectons",
           "body": [
             "Compte : nom, adresse email, photo de profil si vous vous connectez avec Google ou Microsoft, langue et rôle choisis, date d'acceptation des conditions.",
-            "Bénéficiaires : nom, email et mot de passe du compte du centre d'examen des personnes pour qui vous réservez, avec leur accord.",
+            "Bénéficiaires : nom, date et lieu de naissance, téléphone, email et mot de passe du compte du centre d'examen des personnes pour qui vous réservez. Chaque camarade confirme son accord par email.",
+            "Assistants : téléphone, compte Mobile Money et photo de la pièce d'identité, vue uniquement par l'équipe et utilisée seulement en cas de litige.",
+            "Litiges : capture de réservation envoyée par l'assistant, vue uniquement par l'équipe et les deux parties.",
             "Demandes : session, niveau, montants, statuts et dates.",
             "Sécurité : appareils connectés (navigateur, système, adresse IP) et journaux de connexion.",
             "Mesure d'audience : pages vues et événements anonymes via Umami, sans cookie ni identification personnelle."
@@ -288,7 +291,7 @@
           "title": "Partage",
           "body": [
             "Le mot de passe du centre d'un bénéficiaire n'est visible que par l'assistant qui prend la demande, le temps de la réservation. Le candidat et l'assistant ne voient jamais l'identité l'un de l'autre, sauf le compte de dépôt nécessaire au règlement.",
-            "Nos sous-traitants techniques : Vercel (hébergement), Neon (base de données, Union européenne), Resend (envoi d'emails), Umami (mesure d'audience). Nous ne vendons aucune donnée."
+            "Nos sous-traitants techniques : Vercel (hébergement et fichiers privés), Neon (base de données, Union européenne), Resend (envoi d'emails), Ably (temps réel), Umami (mesure d'audience), Sentry (suivi des erreurs, sans donnée personnelle, si activé). Nous ne vendons aucune donnée."
           ]
         },
         {
@@ -1050,7 +1053,6 @@
     }
   },
   "landing": {
-    "soon": "Bientôt",
     "nav": {
       "howItWorks": "Comment ça marche",
       "assistants": "Assistants",
@@ -1157,8 +1159,7 @@
             "Assistant  Mobile Money",
             "Plateforme Mobile Money",
             "→ opération clôturée"
-          ],
-          "soon": true
+          ]
         }
       ]
     },
@@ -1308,8 +1309,7 @@
             "Mail confirmé par le candidat",
             "Paiement   Mobile Money",
             "→ libéré pour la prochaine demande"
-          ],
-          "soon": true
+          ]
         }
       ],
       "join": "Devenir assistant",
@@ -1338,11 +1338,19 @@
         },
         {
           "q": "Puis-je inscrire des camarades ?",
-          "a": "Oui, jusqu'à {others} personnes en plus de toi, avec leur accord. Chaque demande est traitée séparément."
+          "a": "Oui, jusqu'à {others} personnes en plus de toi. Chacune confirme son accord par email avant toute publication, et chaque demande est traitée séparément."
         },
         {
           "q": "Comment devenir assistant ?",
-          "a": "Crée ton compte, passe en mode Assistant en haut de l'écran et complète ton profil : téléphone et Mobile Money."
+          "a": "Crée ton compte, passe en mode Assistant en haut de l'écran, complète ton profil (téléphone et Mobile Money) et envoie ta pièce d'identité. L'équipe la valide, en général sous 24 h."
+        },
+        {
+          "q": "Et si le mail du centre n'arrive pas ?",
+          "a": "Vérifie ta boîte, les spams et ton compte du centre, puis signale-le. L'assistant a {proof} h pour envoyer une preuve et l'équipe décide. Un signalement abusif vaut un avertissement."
+        },
+        {
+          "q": "Que se passe-t-il si quelqu'un ne joue pas le jeu ?",
+          "a": "Délai de réservation dépassé, litige abusif ou réservation déclarée sans être faite : un avertissement. Au {strikes}e, le compte est suspendu. Un règlement en retard place le compte sur la liste noire jusqu'au paiement."
         }
       ]
     },
@@ -1635,6 +1643,21 @@
         "title": "Pièce d'identité à renvoyer",
         "body": "Motif : {reason}. Envoyez une nouvelle photo depuis votre compte."
       }
+    }
+  },
+  "system": {
+    "notFound": {
+      "title": "Page introuvable",
+      "description": "Le lien est peut-être ancien ou mal copié.",
+      "requests": "Mes demandes",
+      "home": "Accueil"
+    },
+    "error": {
+      "title": "Un problème est survenu",
+      "description": "Rien n'est perdu. Réessayez dans un instant.",
+      "code": "Code : {code}",
+      "retry": "Réessayer",
+      "home": "Retour à l'accueil"
     }
   }
 }

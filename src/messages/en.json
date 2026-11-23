@@ -139,7 +139,8 @@
       "operations": "Operations",
       "users": "Users",
       "reports": "Reports",
-      "audit": "Audit log"
+      "audit": "Audit log",
+      "help": "Help"
     },
     "signOut": "Sign out",
     "roleLabel": {
@@ -262,7 +263,9 @@
           "title": "Data we collect",
           "body": [
             "Account: name, email address, profile picture if you sign in with Google or Microsoft, chosen language and role, date you accepted the terms.",
-            "Beneficiaries: name, email and exam-centre account password of the people you book for, with their consent.",
+            "Beneficiaries: name, date and place of birth, phone, email and exam-centre account password of the people you book for. Each friend confirms their consent by email.",
+            "Assistants: phone, Mobile Money account and a photo of their identity document, seen only by the team and used only in a dispute.",
+            "Disputes: capture of the booking sent by the assistant, seen only by the team and both parties.",
             "Requests: session, level, amounts, statuses and dates.",
             "Security: signed-in devices (browser, system, IP address) and sign-in logs.",
             "Analytics: page views and anonymous events via Umami, without cookies or personal identification."
@@ -288,7 +291,7 @@
           "title": "Sharing",
           "body": [
             "A beneficiary's exam-centre password is only visible to the assistant who takes the request, during the booking. Candidates and assistants never see each other's identity, except the deposit account needed for payment.",
-            "Our technical processors: Vercel (hosting), Neon (database, European Union), Resend (email delivery), Umami (analytics). We never sell data."
+            "Our technical processors: Vercel (hosting and private files), Neon (database, European Union), Resend (email), Ably (real time), Umami (audience measurement), Sentry (error tracking, without personal data, when enabled). We sell no data."
           ]
         },
         {
@@ -1050,7 +1053,6 @@
     }
   },
   "landing": {
-    "soon": "Soon",
     "nav": {
       "howItWorks": "How it works",
       "assistants": "Assistants",
@@ -1157,8 +1159,7 @@
             "Assistant  Mobile Money",
             "Platform   Mobile Money",
             "→ operation closed"
-          ],
-          "soon": true
+          ]
         }
       ]
     },
@@ -1308,8 +1309,7 @@
             "Email confirmed by the candidate",
             "Payment    Mobile Money",
             "→ free for the next request"
-          ],
-          "soon": true
+          ]
         }
       ],
       "join": "Become an assistant",
@@ -1338,11 +1338,19 @@
         },
         {
           "q": "Can I register classmates?",
-          "a": "Yes, up to {others} people besides you, with their consent. Each request is handled separately."
+          "a": "Yes, up to {others} people besides you. Each one confirms their consent by email before anything is published, and each request is handled separately."
         },
         {
           "q": "How do I become an assistant?",
-          "a": "Create your account, switch to Assistant at the top of the screen and complete your profile: phone and Mobile Money."
+          "a": "Create your account, switch to Assistant at the top of the screen, complete your profile (phone and Mobile Money) and send your ID. The team validates it, usually within 24 h."
+        },
+        {
+          "q": "What if the centre's email never arrives?",
+          "a": "Check your inbox, spam and your centre account, then report it. The assistant has {proof} h to send a proof and the team decides. An abusive report earns a strike."
+        },
+        {
+          "q": "What if someone does not play by the rules?",
+          "a": "Booking time run out, abusive dispute or booking declared but not made: a strike. At the {strikes}th, the account is suspended. A late payment puts the account on the blacklist until it is paid."
         }
       ]
     },
@@ -1635,6 +1643,21 @@
         "title": "Identity document to send again",
         "body": "Reason: {reason}. Send a new photo from your account."
       }
+    }
+  },
+  "system": {
+    "notFound": {
+      "title": "Page not found",
+      "description": "The link may be old or mistyped.",
+      "requests": "My requests",
+      "home": "Home"
+    },
+    "error": {
+      "title": "Something went wrong",
+      "description": "Nothing is lost. Try again in a moment.",
+      "code": "Code: {code}",
+      "retry": "Try again",
+      "home": "Back home"
     }
   }
 }
