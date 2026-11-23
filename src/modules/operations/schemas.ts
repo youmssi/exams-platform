@@ -20,3 +20,9 @@ export const reportInput = z
     message: "required",
   });
 export type ReportInput = z.infer<typeof reportInput>;
+
+/** A recipient answers a declared deposit. */
+export const paymentAnswerInput = z.object({
+  id: z.string().min(1),
+  received: z.boolean(),
+});

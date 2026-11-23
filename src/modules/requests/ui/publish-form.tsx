@@ -44,6 +44,7 @@ import type { UpcomingSession } from "./types";
 
 const ERRORS = new Set([
   "alreadyRequested",
+  "unpaid",
   "incompleteProfile",
   "invalidModules",
   "sessionPast",

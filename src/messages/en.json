@@ -4,7 +4,9 @@
     "description": "A simple, transparent, standard-priced platform to book your language exams."
   },
   "common": {
-    "error": "Something went wrong."
+    "error": "Something went wrong.",
+    "copy": "Copy: {label}",
+    "copied": "Copied."
   },
   "validation": {
     "email": "Enter a valid email address, for example name@example.com.",
@@ -33,7 +35,8 @@
     "pickBeneficiary": "Pick at least one person.",
     "pastDate": "Choose a past date.",
     "phone": "Enter a valid number, for example 6 97 47 14 30.",
-    "pickModule": "Choose at least one module."
+    "pickModule": "Choose at least one module.",
+    "allOrNone": "Fill in all three fields, or none."
   },
   "auth": {
     "title": "Sign in to Exams",
@@ -125,7 +128,8 @@
       "beneficiaries": "Beneficiaries",
       "sessions": "Sessions",
       "requests": "My requests",
-      "queue": "Queue"
+      "queue": "Queue",
+      "payments": "Commissions"
     },
     "signOut": "Sign out",
     "roleLabel": {
@@ -358,7 +362,12 @@
         "timeZoneHint": "For example Africa/Douala. Times are shown in this zone.",
         "active": "Visible to users",
         "operators": "Mobile Money operators",
-        "operatorsHint": "Comma-separated, e.g. MTN Mobile Money, Orange Money."
+        "operatorsHint": "Comma-separated, e.g. MTN Mobile Money, Orange Money.",
+        "platformAccount": "Platform account",
+        "platformAccountHint": "Receives the commissions. All three fields or none.",
+        "platformOperator": "Operator",
+        "platformMomoNumber": "Number",
+        "platformMomoName": "Account holder"
       },
       "center": {
         "title": "Centre",
@@ -533,7 +542,8 @@
       "sessionPast": "This session is over.",
       "invalidBonus": "This bonus is not allowed.",
       "incompleteProfile": "Complete each person's profile before publishing.",
-      "invalidModules": "Choose modules from this level."
+      "invalidModules": "Choose modules from this level.",
+      "unpaid": "Settle your unpaid booking before publishing."
     },
     "completeProfile": "Complete the profile",
     "modules": "Modules",
@@ -549,11 +559,14 @@
       "published": "Published",
       "inProgress": "In progress",
       "toConfirm": "To confirm",
-      "booked": "Booked",
       "disputed": "Disputed",
       "elsewhere": "Booked elsewhere",
       "cancelled": "Cancelled",
-      "toFix": "To fix"
+      "toFix": "To fix",
+      "toPay": "To pay",
+      "paymentSent": "Payment sent",
+      "closed": "Settled",
+      "unpaid": "Unpaid"
     },
     "publishesAt": "posted on {date}",
     "cancel": "Cancel the request",
@@ -614,7 +627,9 @@
       "title": "Edit the request",
       "save": "Save",
       "saved": "Request updated."
-    }
+    },
+    "totalDue": "To pay: {total}",
+    "totalDueHint": "Each deposit is confirmed separately."
   },
   "queue": {
     "title": "Request queue",
@@ -635,7 +650,8 @@
     "claim": "Take",
     "errors": {
       "alreadyTaken": "Already taken by another assistant.",
-      "busy": "You already have an operation in progress."
+      "busy": "You already have an operation in progress.",
+      "unpaid": "Settle your unpaid booking before taking a request."
     },
     "profileIncomplete": {
       "title": "Complete your assistant profile",
@@ -670,8 +686,6 @@
       "participantNumber": "Participant no."
     },
     "show": "Show",
-    "copy": "Copy: {label}",
-    "copied": "Copied.",
     "release": "Release",
     "releaseTitle": "Release this request?",
     "releaseBody": "It goes back to the queue for another assistant.",
@@ -1061,5 +1075,57 @@
       "contact": "Contact",
       "independent": "Independent service, not affiliated with exam centres."
     }
+  },
+  "payment": {
+    "recipient": {
+      "ASSISTANT": "Assistant's share",
+      "PLATFORM": "Exams commission"
+    },
+    "status": {
+      "DUE": "To send",
+      "DECLARED": "Sent, awaiting confirmation",
+      "RECEIVED": "Received"
+    },
+    "assistantStatus": {
+      "DUE": "Waiting for the candidate",
+      "DECLARED": "To confirm",
+      "RECEIVED": "Received"
+    },
+    "holder": "In the name of {name}",
+    "noAccount": "Account shown shortly. Check back in a few minutes.",
+    "reference": "Reference to include",
+    "declare": "I sent it",
+    "declared": "Thanks. The recipient will confirm.",
+    "deadline": "Pay before {date}. After that, the account is suspended until settled.",
+    "rejected": {
+      "title": "Not received",
+      "description": "Check the number and the reference, then send again."
+    },
+    "unpaid": {
+      "title": "Deadline passed",
+      "description": "Account suspended until settled. Send the remaining deposits."
+    },
+    "closed": {
+      "title": "Settled on {date}",
+      "description": "Remember to change your exam-centre account password."
+    },
+    "answer": {
+      "received": "Received",
+      "notReceived": "Not received",
+      "notReceivedTitle": "Deposit not received?",
+      "notReceivedBody": "The candidate will be asked to check and send again.",
+      "keep": "Cancel",
+      "thanks": "Confirmed.",
+      "sentBack": "The candidate will send it again."
+    },
+    "assistantTitle": "Payments to receive",
+    "adminTitle": "Commissions",
+    "adminSubtitle": "Confirm each declared deposit.",
+    "adminEmpty": "No commission pending.",
+    "amount": "Amount",
+    "offer": "Centre and level",
+    "dueAt": "Due",
+    "statusLabel": "Status",
+    "actions": "Actions"
   }
 }

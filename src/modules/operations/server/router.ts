@@ -3,11 +3,18 @@ import { after } from "next/server";
 import { z } from "zod";
 import { publishQueueChange, publishUserChange } from "@/modules/realtime";
 import {
+  adminProcedure,
   assistantProcedure,
   createTRPCRouter,
   protectedProcedure,
 } from "@/trpc/init";
-import { reportInput } from "../schemas";
+import { paymentAnswerInput, reportInput } from "../schemas";
+import {
+  answerPayment,
+  assistantPayments,
+  declarePayment,
+  platformPayments,
+} from "./payments";
 import {
   answerBooking,
   claimRequest,
@@ -82,5 +89,43 @@ export const operationsRouter = createTRPCRouter({
         input.answer,
       );
       notify([assistantId, ctx.session.user.id]);
+    }),
+  /** The candidate sent one deposit. */
+  declarePayment: protectedProcedure
+    .input(byId)
+    .mutation(async ({ ctx, input }) => {
+      const { ownerId, assistantId } = await declarePayment(
+        ctx.session.user.id,
+        input.id,
+      );
+      notify([ownerId, assistantId]);
+    }),
+  /** The assistant's shares still to receive. */
+  payments: assistantProcedure.query(({ ctx }) =>
+    assistantPayments(ctx.session.user.id),
+  ),
+  answerPayment: assistantProcedure
+    .input(paymentAnswerInput)
+    .mutation(async ({ ctx, input }) => {
+      const { ownerId, assistantId } = await answerPayment(
+        ctx.session.user.id,
+        input.id,
+        input.received,
+        "ASSISTANT",
+      );
+      notify([ownerId, assistantId]);
+    }),
+  /** Commissions still to receive (admin). */
+  platformPayments: adminProcedure.query(() => platformPayments()),
+  answerPlatformPayment: adminProcedure
+    .input(paymentAnswerInput)
+    .mutation(async ({ ctx, input }) => {
+      const { ownerId, assistantId } = await answerPayment(
+        ctx.session.user.id,
+        input.id,
+        input.received,
+        "PLATFORM",
+      );
+      notify([ownerId, assistantId]);
     }),
 });

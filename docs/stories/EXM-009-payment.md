@@ -13,6 +13,14 @@ La plateforme ne touche pas l'argent, mais elle doit rendre le règlement évide
 | Assistant | **Reçu** / **Pas reçu** pour sa part |
 | Admin | **Reçu** / **Pas reçu** pour la commission |
 
+#### Décisions d'implémentation
+- Pas d'Inngest pour l'instant (décision EXM-007) : l'échéance est vérifiée à la lecture. Une opération confirmée dont les deux dépôts ne sont pas reçus à `paymentDueAt` passe « impayée ».
+- Rappels H+1 et H+12 : dans l'app seulement (échéance affichée sur la carte) ; les emails viendront avec EXM-011.
+- Impayé : le candidat ne peut plus publier, ni prendre de demande comme assistant, jusqu'au règlement. Liste noire visible : EXM-010.
+- Compte de la plateforme : réglé par pays dans le catalogue (opérateur, numéro, titulaire).
+- Référence : `EX-` suivi des 6 derniers caractères de l'opération.
+- Les identifiants du centre sont effacés à la clôture, sauf si une autre demande ouverte du bénéficiaire en a encore besoin.
+
 #### Critères d'acceptation
 - [ ] Les montants viennent de `priceSnapshot` (jamais recalculés).
 - [ ] Clôture seulement quand les deux dépôts sont confirmés ; « pas reçu » ⇒ retour « à payer » et notification au candidat.

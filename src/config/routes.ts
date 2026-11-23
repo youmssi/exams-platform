@@ -13,6 +13,7 @@ export const routes = {
   terms: "/terms",
   privacy: "/privacy",
   adminCatalog: "/admin/catalog",
+  adminPayments: "/admin/payments",
 } as const;
 
 /** Routes reachable without a session. */
