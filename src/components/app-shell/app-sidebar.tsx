@@ -2,6 +2,7 @@
 
 import {
   BanIcon,
+  CalendarCheckIcon,
   CalendarDaysIcon,
   LibraryIcon,
   ListChecksIcon,
@@ -42,6 +43,7 @@ const NAV = {
 } as const;
 const ADMIN_NAV = [
   { href: routes.adminCatalog, key: "catalog", Icon: LibraryIcon },
+  { href: routes.adminSessions, key: "adminSessions", Icon: CalendarCheckIcon },
   { href: routes.adminPayments, key: "payments", Icon: WalletIcon },
   { href: routes.adminDisputes, key: "disputes", Icon: ScaleIcon },
 ] as const;

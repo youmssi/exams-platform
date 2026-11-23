@@ -28,11 +28,14 @@ export function CenterForm({ center, countries, onSaved }: Props) {
       name: center?.name ?? "",
       city: center?.city ?? "",
       officialUrl: center?.officialUrl ?? "",
+      datesUrl: center?.datesUrl ?? "",
+      autoDates: center?.autoDates ?? false,
       active: center?.active ?? true,
     },
     validators: { onSubmit: centerInput },
     onSubmit: ({ value }) =>
-      save.mutateAsync({ id: center?.id, data: centerInput.parse(value) }),
+      // The server parses the input (empty dates page → none).
+      save.mutateAsync({ id: center?.id, data: value }),
   });
 
   return (
@@ -61,6 +64,24 @@ export function CenterForm({ center, countries, onSaved }: Props) {
               label={t("center.officialUrl")}
               type="url"
               inputMode="url"
+            />
+          )}
+        </form.AppField>
+        <form.AppField name="datesUrl">
+          {(field) => (
+            <field.TextField
+              label={t("center.datesUrl")}
+              description={t("center.datesUrlHint")}
+              type="url"
+              inputMode="url"
+            />
+          )}
+        </form.AppField>
+        <form.AppField name="autoDates">
+          {(field) => (
+            <field.SwitchField
+              label={t("center.autoDates")}
+              description={t("center.autoDatesHint")}
             />
           )}
         </form.AppField>

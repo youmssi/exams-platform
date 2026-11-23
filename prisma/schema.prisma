@@ -143,16 +143,23 @@ model Country {
 }
 
 model Center {
-  id          String   @id @default(cuid())
-  countryId   String
-  country     Country  @relation(fields: [countryId], references: [id], onDelete: Restrict)
-  name        String
-  city        String
-  officialUrl String
-  active      Boolean  @default(true)
-  offers      Offer[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String    @id @default(cuid())
+  countryId      String
+  country        Country   @relation(fields: [countryId], references: [id], onDelete: Restrict)
+  name           String
+  city           String
+  officialUrl    String
+  /// Page listing the centre's exam dates, read daily when `autoDates` is on (EXM-023).
+  datesUrl       String?
+  /// Turned on by an admin once the site's terms allow automated reading.
+  autoDates      Boolean   @default(false)
+  datesCheckedAt DateTime?
+  /// Why the last reading failed; the admin sees it, manual entry keeps working.
+  datesError     String?
+  active         Boolean   @default(true)
+  offers         Offer[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@unique([countryId, name])
   @@map("center")
@@ -161,9 +168,9 @@ model Center {
 /// A level offered by a center (e.g. Goethe Yaoundé B1) with its economic settings.
 /// Amounts are integers in the country's currency unit; the commission rate is in basis points.
 model Offer {
-  id                String        @id @default(cuid())
+  id                String         @id @default(cuid())
   centerId          String
-  center            Center        @relation(fields: [centerId], references: [id], onDelete: Restrict)
+  center            Center         @relation(fields: [centerId], references: [id], onDelete: Restrict)
   level             String
   modules           String[]
   standardPrice     Int
@@ -176,11 +183,12 @@ model Offer {
   confirmOfflineMin Int
   paymentDeadlineH  Int
   /// Days the centre gives to pay exam fees after booking; 0 hides the reminder.
-  centerFeeDays     Int           @default(0)
-  active            Boolean       @default(true)
+  centerFeeDays     Int            @default(0)
+  active            Boolean        @default(true)
   sessions          ExamSession[]
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  dateProposals     DateProposal[]
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
 
   @@unique([centerId, level])
   @@map("offer")
@@ -526,4 +534,19 @@ model Report {
 
   @@index([handledAt])
   @@map("report")
+}
+
+/// An exam date found on the centre's official page, waiting for an admin to create the session.
+model DateProposal {
+  id        String    @id @default(cuid())
+  offerId   String
+  offer     Offer     @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  examDate  DateTime  @db.Date
+  sourceUrl String
+  /// Created as a session, or dismissed: never proposed again.
+  handledAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@unique([offerId, examDate])
+  @@map("date_proposal")
 }

@@ -131,7 +131,8 @@
       "queue": "File",
       "payments": "Commissions",
       "blacklist": "Liste noire",
-      "disputes": "Litiges"
+      "disputes": "Litiges",
+      "adminSessions": "Sessions"
     },
     "signOut": "Se déconnecter",
     "roleLabel": {
@@ -377,7 +378,11 @@
         "name": "Nom du centre",
         "city": "Ville",
         "officialUrl": "Page officielle des inscriptions",
-        "active": "Visible par les utilisateurs"
+        "active": "Visible par les utilisateurs",
+        "datesUrl": "Page des dates d'examen",
+        "datesUrlHint": "Facultatif. Lue chaque jour si l'option ci-dessous est active.",
+        "autoDates": "Proposer les dates automatiquement",
+        "autoDatesHint": "N'activez qu'après avoir vérifié que les conditions du site le permettent."
       },
       "offer": {
         "title": "Niveau",
@@ -416,6 +421,28 @@
       },
       "save": "Enregistrer",
       "cancel": "Annuler"
+    },
+    "sessions": {
+      "title": "Sessions",
+      "subtitle": "Dates détectées et sessions à valider.",
+      "empty": {
+        "title": "Rien à valider",
+        "description": "Les dates détectées et les sessions ajoutées apparaîtront ici."
+      },
+      "failing": "Lecture des dates impossible : {center}",
+      "noDates": "Aucune date trouvée : la page a sans doute changé. La saisie manuelle reste possible.",
+      "readError": "Erreur : {error}. La saisie manuelle reste possible.",
+      "proposals": "Dates détectées",
+      "source": "Source",
+      "dismiss": "Ignorer",
+      "dismissed": "Date ignorée.",
+      "create": "Créer la session",
+      "createTitle": "Créer la session",
+      "created": "Session créée et confirmée.",
+      "unverified": "Sessions à valider",
+      "confirmations": "{count, plural, =0 {Aucune confirmation} one {# confirmation} other {# confirmations}}",
+      "verify": "Valider",
+      "verified": "Session validée."
     }
   },
   "share": {
@@ -501,7 +528,8 @@
       "officialUrlHint": "Facultatif.",
       "submit": "Ajouter la session",
       "created": "Session ajoutée.",
-      "existing": "Cette session existe déjà : vous pouvez publier directement."
+      "existing": "Cette session existe déjà : vous pouvez publier directement.",
+      "opensAfterExam": "Les inscriptions ouvrent avant la date de l'examen."
     },
     "catalogRequest": {
       "kind": "Que manque-t-il ?",

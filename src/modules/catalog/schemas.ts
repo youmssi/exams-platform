@@ -70,6 +70,11 @@ export const centerInput = z.object({
   name: z.string().trim().min(1, "required").max(120, "tooLong"),
   city: z.string().trim().min(1, "required").max(80, "tooLong"),
   officialUrl: z.url("url"),
+  /** Page of exam dates, read daily once `autoDates` is on (EXM-023). */
+  datesUrl: z
+    .union([z.url("url"), z.literal("")])
+    .transform((url) => url || null),
+  autoDates: z.boolean(),
   active: z.boolean(),
 });
 
@@ -187,3 +192,10 @@ export const catalogRequestInput = z.object({
   officialUrl: z.union([z.url("url"), z.literal("")]),
 });
 export type CatalogRequestInput = z.infer<typeof catalogRequestInput>;
+
+/** The admin creates a session from a detected date: only the opening time is missing. */
+export const proposalSessionInput = z.object({
+  id,
+  registrationOpensAt: localDateTime,
+  officialUrl: z.union([z.url("url"), z.literal("")]),
+});
