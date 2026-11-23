@@ -6,7 +6,8 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "@/trpc/init";
-import { publishInput, updateRequestInput } from "../schemas";
+import { carryInput, publishInput, updateRequestInput } from "../schemas";
+import { carryRequest } from "./carry-over";
 import { listQueue } from "./queue";
 import {
   cancelRequest,
@@ -51,6 +52,14 @@ export const requestsRouter = createTRPCRouter({
     .input(z.object({ id: z.string().min(1) }))
     .mutation(async ({ ctx, input }) =>
       notifyQueue(await markBookedElsewhere(ctx.session.user.id, input.id)),
+    ),
+  /** Move a request to a later session of the same centre and level. */
+  carry: protectedProcedure
+    .input(carryInput)
+    .mutation(async ({ ctx, input }) =>
+      notifyQueue(
+        await carryRequest(ctx.session.user.id, input.id, input.sessionId),
+      ),
     ),
   queue: assistantProcedure.query(({ ctx }) => listQueue(ctx.session.user.id)),
 });

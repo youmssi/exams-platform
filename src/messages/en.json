@@ -552,7 +552,8 @@
     "modules": "Modules",
     "fullExam": "Full exam.",
     "pickModules": "Only the selected modules.",
-    "alreadyRequested": "Request already published for this session."
+    "alreadyRequested": "Request already published for this session.",
+    "carryOver": "If it is not booked, carry it over to the next confirmed session"
   },
   "myRequests": {
     "title": "My requests",
@@ -569,7 +570,8 @@
       "toPay": "To pay",
       "paymentSent": "Payment sent",
       "closed": "Settled",
-      "unpaid": "Unpaid"
+      "unpaid": "Unpaid",
+      "unbooked": "Not booked"
     },
     "publishesAt": "posted on {date}",
     "cancel": "Cancel the request",
@@ -632,7 +634,15 @@
       "saved": "Request updated."
     },
     "totalDue": "To pay: {total}",
-    "totalDueHint": "Each deposit is confirmed separately."
+    "totalDueHint": "Each deposit is confirmed separately.",
+    "carried": "Carried over",
+    "carry": {
+      "action": "Carry over",
+      "to": "Carry over to {date}",
+      "title": "Carry over to which session?",
+      "done": "Request carried over.",
+      "alreadyRequested": "A request already exists for that session."
+    }
   },
   "queue": {
     "title": "Request queue",

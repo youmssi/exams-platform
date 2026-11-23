@@ -9,6 +9,8 @@ export const publishInput = z.object({
   beneficiaryIds: z.array(z.string().min(1)).min(1, "pickBeneficiary").max(5),
   modules,
   bonus,
+  /** Move it to the next confirmed session if nobody books it (EXM-022). */
+  carryOver: z.boolean(),
 });
 export type PublishInput = z.infer<typeof publishInput>;
 
@@ -19,3 +21,9 @@ export const updateRequestInput = z.object({
   bonus,
 });
 export type UpdateRequestInput = z.infer<typeof updateRequestInput>;
+
+/** Move a request to a later session of the same centre and level. */
+export const carryInput = z.object({
+  id: z.string().min(1),
+  sessionId: z.string().min(1),
+});

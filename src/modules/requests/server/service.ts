@@ -19,8 +19,10 @@ import {
 import { presenceKey } from "@/modules/realtime";
 import { isSuspended } from "@/modules/trust";
 import { db } from "@/server/db";
+import { laterSessions } from "../domain/carry-over";
 import { publishAtFor, requestVisibility } from "../domain/visibility";
 import type { PublishInput, UpdateRequestInput } from "../schemas";
+import { sweepUnbooked, upcomingSessionsOf } from "./carry-over";
 
 /**
  * Creates one request per beneficiary, with the price frozen from the offer.
@@ -95,6 +97,7 @@ export async function publishRequests(ownerId: string, input: PublishInput) {
         ownerId,
         publishAt,
         modules,
+        carryOver: input.carryOver,
         currency: session.offer.center.country.currency,
         standardPrice: session.offer.standardPrice,
         bonus: input.bonus,
@@ -120,7 +123,10 @@ export async function publishRequests(ownerId: string, input: PublishInput) {
 }
 
 export async function listMyRequests(ownerId: string) {
-  await lapseOverdue(db, { request: { ownerId } });
+  await Promise.all([
+    lapseOverdue(db, { request: { ownerId } }),
+    sweepUnbooked({ ownerId }),
+  ]);
   const requests = await db.request.findMany({
     where: { ownerId },
     orderBy: [{ createdAt: "desc" }],
@@ -136,6 +142,9 @@ export async function listMyRequests(ownerId: string) {
       modules: true,
       issue: true,
       issueNote: true,
+      carryOver: true,
+      carriedFromId: true,
+      carriedTo: { select: { id: true } },
       beneficiary: { select: { firstName: true, lastName: true, email: true } },
       operations: {
         // The claim in progress, or the booking the candidate answers, pays or has paid.
@@ -184,6 +193,7 @@ export async function listMyRequests(ownerId: string) {
       session: {
         select: {
           examDate: true,
+          offerId: true,
           offer: {
             select: {
               level: true,
@@ -211,9 +221,22 @@ export async function listMyRequests(ownerId: string) {
       },
     },
   });
+  const sessions = await upcomingSessionsOf([
+    ...new Set(requests.map((request) => request.session.offerId)),
+  ]);
   return requests.map(
-    ({ beneficiary, operations: [operation], ...request }) => ({
+    ({ beneficiary, operations: [operation], carriedTo, ...request }) => ({
       ...request,
+      /** Later sessions an unbooked request can be moved to. */
+      carryTargets:
+        !carriedTo && request.status === "UNBOOKED"
+          ? laterSessions(
+              sessions.filter(
+                (session) => session.offerId === request.session.offerId,
+              ),
+              request.session.examDate,
+            ).map(({ id, examDate }) => ({ id, examDate }))
+          : [],
       operation: operation && {
         id: operation.id,
         status: operation.status,

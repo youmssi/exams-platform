@@ -266,6 +266,8 @@ enum RequestStatus {
   /// The candidate got a seat another way.
   ELSEWHERE
   CANCELLED
+  /// The session passed before anyone booked it ("non réservée").
+  UNBOOKED
 }
 
 /// A booking request for one beneficiary and one session.
@@ -295,6 +297,12 @@ model Request {
   commission     Int
   assistantShare Int
   version        Int           @default(0)
+  /// Carry the request to the next session of the same centre and level if it is not booked.
+  carryOver      Boolean       @default(true)
+  /// The unbooked request this one continues (EXM-022).
+  carriedFromId  String?       @unique
+  carriedFrom    Request?      @relation("CarryOver", fields: [carriedFromId], references: [id], onDelete: SetNull)
+  carriedTo      Request?      @relation("CarryOver")
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
