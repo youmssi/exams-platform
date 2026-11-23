@@ -3,11 +3,11 @@ import { get, head } from "@vercel/blob";
 import { trustConfig } from "@/config/trust";
 
 /**
- * Private files (dispute proofs) on Vercel Blob, never public.
- * A path is `<kind>/<ownerId>/<name>`: the owner is what the file belongs to (e.g. the dispute),
+ * Private files (dispute proofs, identity documents) on Vercel Blob, never public.
+ * A path is `<kind>/<ownerId>/<name>`: the owner is what the file belongs to (dispute or user),
  * so access rules are checked from the path alone.
  */
-export const FILE_KINDS = ["proof"] as const;
+export const FILE_KINDS = ["proof", "identity"] as const;
 export type FileKind = (typeof FILE_KINDS)[number];
 
 export function parseFilePath(path: string) {

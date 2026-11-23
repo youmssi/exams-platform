@@ -4,6 +4,7 @@ import {
   BanIcon,
   CalendarCheckIcon,
   CalendarDaysIcon,
+  IdCardIcon,
   LibraryIcon,
   ListChecksIcon,
   RadioTowerIcon,
@@ -46,6 +47,7 @@ const ADMIN_NAV = [
   { href: routes.adminSessions, key: "adminSessions", Icon: CalendarCheckIcon },
   { href: routes.adminPayments, key: "payments", Icon: WalletIcon },
   { href: routes.adminDisputes, key: "disputes", Icon: ScaleIcon },
+  { href: routes.adminAssistants, key: "assistants", Icon: IdCardIcon },
 ] as const;
 
 type NavEntry =

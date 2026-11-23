@@ -13,7 +13,9 @@ export type NotificationType =
   | "PAYMENT_REJECTED"
   | "OPERATION_CLOSED"
   | "DISPUTE_DECIDED"
-  | "STRIKE";
+  | "STRIKE"
+  | "ASSISTANT_VERIFIED"
+  | "ASSISTANT_REJECTED";
 
 export type EmailLevel = "none" | "update" | "critical";
 
@@ -29,6 +31,8 @@ export const EMAIL_LEVEL: Record<NotificationType, EmailLevel> = {
   OPERATION_CLOSED: "none",
   DISPUTE_DECIDED: "critical",
   STRIKE: "critical",
+  ASSISTANT_VERIFIED: "update",
+  ASSISTANT_REJECTED: "update",
 };
 
 export const shouldEmail = (type: NotificationType, emailUpdates: boolean) =>
