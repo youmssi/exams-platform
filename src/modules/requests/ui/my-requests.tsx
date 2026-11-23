@@ -33,6 +33,7 @@ import {
   ItemGroup,
   ItemTitle,
 } from "@/components/ui/item";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { routes } from "@/config/routes";
 import { Link } from "@/i18n/navigation";
 import { amountDue, DisputeSteps } from "@/modules/operations/client";
@@ -141,12 +142,14 @@ type Status =
   | "disputed"
   | "toFix"
   | "elsewhere"
+  | "unbooked"
   | "cancelled";
 
 /** One status per request, read from the request and its latest operation. */
 function statusOf(request: MyRequest): Status {
   if (request.status === "CANCELLED") return "cancelled";
   if (request.status === "ELSEWHERE") return "elsewhere";
+  if (request.status === "UNBOOKED") return "unbooked";
   const operation = request.operation;
   if (operation?.status === "RESERVED") return "toConfirm";
   if (operation?.status === "CONFIRMED")
@@ -189,6 +192,7 @@ const BADGE: Record<
   disputed: "destructive",
   toFix: "destructive",
   elsewhere: "outline",
+  unbooked: "outline",
   cancelled: "outline",
 };
 
@@ -241,6 +245,9 @@ function RequestItem({
         <ItemTitle className="flex-wrap">
           {name}
           <Badge variant={BADGE[status]}>{t(`status.${status}`)}</Badge>
+          {request.carriedFromId && (
+            <Badge variant="outline">{t("carried")}</Badge>
+          )}
           {operation && status === "inProgress" && (
             <PresenceBadge online={online.has(operation.assistantKey)} />
           )}
@@ -314,6 +321,9 @@ function RequestItem({
       </ItemContent>
 
       <ItemActions className="flex-wrap">
+        {request.carryTargets.length > 0 && (
+          <CarryRequest request={request} refresh={refresh} />
+        )}
         {operation && REPORTABLE.includes(status) && (
           <ReportDialog targetType="OPERATION" targetId={operation.id} />
         )}
@@ -556,6 +566,82 @@ function EditRequest({
             onClick={() => update.mutate({ id: request.id, modules, bonus })}
           >
             {t("save")}
+          </Button>
+        </FieldGroup>
+      </ResponsiveDialog>
+    </>
+  );
+}
+
+/** Moves an unbooked request to a later session: one tap when there is one, a choice otherwise. */
+function CarryRequest({
+  request,
+  refresh,
+}: {
+  request: MyRequest;
+  refresh: () => void;
+}) {
+  const t = useTranslations("myRequests.carry");
+  const tCommon = useTranslations("common");
+  const format = useFormatter();
+  const trpc = useTRPC();
+  const targets = request.carryTargets;
+  const [open, setOpen] = useState(false);
+  const [sessionId, setSessionId] = useState(targets[0].id);
+  const date = (examDate: Date | string) =>
+    format.dateTime(new Date(examDate), { dateStyle: "long", timeZone: "UTC" });
+  const carry = useMutation(
+    trpc.requests.carry.mutationOptions({
+      onSuccess: async () => {
+        setOpen(false);
+        await refresh();
+        toast.success(t("done"));
+      },
+      onError: (error) =>
+        toast.error(
+          error.message === "alreadyRequested"
+            ? t("alreadyRequested")
+            : tCommon("error"),
+        ),
+    }),
+  );
+  const move = (id: string) => carry.mutate({ id: request.id, sessionId: id });
+
+  if (targets.length === 1)
+    return (
+      <Button
+        size="sm"
+        disabled={carry.isPending}
+        onClick={() => move(targets[0].id)}
+      >
+        {t("to", { date: date(targets[0].examDate) })}
+      </Button>
+    );
+  return (
+    <>
+      <Button size="sm" onClick={() => setOpen(true)}>
+        {t("action")}
+      </Button>
+      <ResponsiveDialog open={open} onOpenChange={setOpen} title={t("title")}>
+        <FieldGroup>
+          <RadioGroup
+            value={sessionId}
+            onValueChange={(value) => setSessionId(value as string)}
+          >
+            {targets.map((target) => (
+              <Field key={target.id} orientation="horizontal">
+                <RadioGroupItem value={target.id} id={`carry-${target.id}`} />
+                <FieldLabel
+                  htmlFor={`carry-${target.id}`}
+                  className="font-normal"
+                >
+                  {date(target.examDate)}
+                </FieldLabel>
+              </Field>
+            ))}
+          </RadioGroup>
+          <Button disabled={carry.isPending} onClick={() => move(sessionId)}>
+            {t("action")}
           </Button>
         </FieldGroup>
       </ResponsiveDialog>

@@ -552,7 +552,8 @@
     "modules": "Modules",
     "fullExam": "Examen complet.",
     "pickModules": "Seulement les modules sélectionnés.",
-    "alreadyRequested": "Demande déjà publiée pour cette session."
+    "alreadyRequested": "Demande déjà publiée pour cette session.",
+    "carryOver": "Si elle n'est pas réservée, la reporter à la prochaine session confirmée"
   },
   "myRequests": {
     "title": "Mes demandes",
@@ -569,7 +570,8 @@
       "toPay": "À payer",
       "paymentSent": "Paiement envoyé",
       "closed": "Réglée",
-      "unpaid": "Impayée"
+      "unpaid": "Impayée",
+      "unbooked": "Non réservée"
     },
     "publishesAt": "publiée le {date}",
     "cancel": "Annuler la demande",
@@ -632,7 +634,15 @@
       "saved": "Demande modifiée."
     },
     "totalDue": "À payer : {total}",
-    "totalDueHint": "Chaque dépôt se confirme séparément."
+    "totalDueHint": "Chaque dépôt se confirme séparément.",
+    "carried": "Reportée",
+    "carry": {
+      "action": "Reporter",
+      "to": "Reporter au {date}",
+      "title": "Reporter à quelle session ?",
+      "done": "Demande reportée.",
+      "alreadyRequested": "Une demande existe déjà pour cette session."
+    }
   },
   "queue": {
     "title": "File des demandes",

@@ -83,6 +83,7 @@ export function PublishForm({
   );
   const [modules, setModules] = useState(offer.modules);
   const [bonus, setBonus] = useState(0);
+  const [carryOver, setCarryOver] = useState(true);
 
   const money = (amount: number) =>
     format.number(amount, {
@@ -144,6 +145,7 @@ export function PublishForm({
             beneficiaryIds: selected,
             modules,
             bonus,
+            carryOver,
           });
       }}
     >
@@ -241,6 +243,17 @@ export function PublishForm({
             </CardContent>
           )}
         </Card>
+
+        <Field orientation="horizontal">
+          <Checkbox
+            id="carry-over"
+            checked={carryOver}
+            onCheckedChange={(checked) => setCarryOver(checked)}
+          />
+          <FieldLabel htmlFor="carry-over" className="font-normal">
+            {t("carryOver")}
+          </FieldLabel>
+        </Field>
 
         <FieldDescription>{t("payLater")}</FieldDescription>
 
