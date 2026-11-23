@@ -78,7 +78,12 @@ export async function listUpcomingSessions(userId: string) {
  * Creates a session, or returns the existing one for the same offer and date
  * so the user can join it instead of duplicating it.
  */
-export async function createSession(userId: string, input: SessionInput) {
+export async function createSession(
+  userId: string,
+  input: SessionInput,
+  /** Set when an admin creates it: no confirmations needed. */
+  verified = false,
+) {
   const offer = await db.offer.findFirst({
     where: { id: input.offerId, active: true },
     select: { center: { select: { country: { select: { timeZone: true } } } } },
@@ -97,6 +102,7 @@ export async function createSession(userId: string, input: SessionInput) {
         ),
         officialUrl: input.officialUrl || null,
         createdById: userId,
+        verifiedAt: verified ? new Date() : null,
       },
       select: { id: true },
     });

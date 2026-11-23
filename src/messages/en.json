@@ -131,7 +131,8 @@
       "queue": "Queue",
       "payments": "Commissions",
       "blacklist": "Blacklist",
-      "disputes": "Disputes"
+      "disputes": "Disputes",
+      "adminSessions": "Sessions"
     },
     "signOut": "Sign out",
     "roleLabel": {
@@ -377,7 +378,11 @@
         "name": "Centre name",
         "city": "City",
         "officialUrl": "Official registration page",
-        "active": "Visible to users"
+        "active": "Visible to users",
+        "datesUrl": "Exam dates page",
+        "datesUrlHint": "Optional. Read daily when the option below is on.",
+        "autoDates": "Suggest dates automatically",
+        "autoDatesHint": "Only turn on after checking the site's terms allow it."
       },
       "offer": {
         "title": "Level",
@@ -416,6 +421,28 @@
       },
       "save": "Save",
       "cancel": "Cancel"
+    },
+    "sessions": {
+      "title": "Sessions",
+      "subtitle": "Detected dates and sessions to validate.",
+      "empty": {
+        "title": "Nothing to validate",
+        "description": "Detected dates and sessions added by users show up here."
+      },
+      "failing": "Could not read dates: {center}",
+      "noDates": "No date found: the page probably changed. Manual entry still works.",
+      "readError": "Error: {error}. Manual entry still works.",
+      "proposals": "Detected dates",
+      "source": "Source",
+      "dismiss": "Dismiss",
+      "dismissed": "Date dismissed.",
+      "create": "Create the session",
+      "createTitle": "Create the session",
+      "created": "Session created and confirmed.",
+      "unverified": "Sessions to validate",
+      "confirmations": "{count, plural, =0 {No confirmation} one {# confirmation} other {# confirmations}}",
+      "verify": "Validate",
+      "verified": "Session validated."
     }
   },
   "share": {
@@ -501,7 +528,8 @@
       "officialUrlHint": "Optional.",
       "submit": "Add the session",
       "created": "Session added.",
-      "existing": "This session already exists: you can post right away."
+      "existing": "This session already exists: you can post right away.",
+      "opensAfterExam": "Registrations open before the exam date."
     },
     "catalogRequest": {
       "kind": "What is missing?",
