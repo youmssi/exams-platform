@@ -125,12 +125,7 @@ export function PublishForm({
   const submitLabel = scheduled
     ? t("schedule", {
         count: selected.length,
-        date: format.dateTime(opensAt, {
-          dateStyle: "medium",
-          timeStyle: "short",
-          timeZone,
-          timeZoneName: "short",
-        }),
+        date: format.dateTime(opensAt, "zoned", { timeZone }),
       })
     : t("submit", {
         count: selected.length,

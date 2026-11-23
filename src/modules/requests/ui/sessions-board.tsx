@@ -221,12 +221,13 @@ function SessionItem({
           })}
           <br />
           {t("opensAt", {
-            date: format.dateTime(new Date(session.registrationOpensAt), {
-              dateStyle: "medium",
-              timeStyle: "short",
-              timeZone,
-              timeZoneName: "short",
-            }),
+            date: format.dateTime(
+              new Date(session.registrationOpensAt),
+              "zoned",
+              {
+                timeZone,
+              },
+            ),
           })}
         </ItemDescription>
       </ItemContent>
