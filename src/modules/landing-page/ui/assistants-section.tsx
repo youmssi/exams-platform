@@ -5,11 +5,10 @@ import { useState } from "react";
 import { routes } from "@/config/routes";
 import { Link } from "@/i18n/navigation";
 import { Eyebrow } from "./eyebrow";
-import { SoonBadge } from "./soon-badge";
 import { TerminalLines } from "./terminal-lines";
 import { reveal, useInView } from "./use-in-view";
 
-type Tab = { label: string; lines: string[]; soon?: boolean };
+type Tab = { label: string; lines: string[] };
 type Feature = { title: string; description: string };
 
 /** For assistants: what they get, and a replay of the operation screen. */
@@ -76,7 +75,6 @@ export function AssistantsSection() {
                     }`}
                   >
                     {tab.label}
-                    {tab.soon && <SoonBadge />}
                     {active === index && (
                       <span className="absolute inset-x-0 bottom-0 h-px bg-foreground" />
                     )}

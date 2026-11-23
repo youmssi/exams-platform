@@ -3,12 +3,13 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { getTranslations } from "next-intl/server";
 import { LOGO_MARK_DATA_URI } from "@/components/brand/mark";
+import { palette } from "@/components/brand/palette";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = "Exams";
 
-/** Shared-link preview: clean, neutral, readable at thumbnail size. */
+/** Shared-link preview in the landing's identity: warm paper, editorial serif, readable as a thumbnail. */
 export default async function OpenGraphImage({
   params,
 }: {
@@ -16,9 +17,9 @@ export default async function OpenGraphImage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "share" });
-  const [regular, bold] = await Promise.all(
-    ["Geist-Regular.ttf", "Geist-Bold.ttf"].map((file) =>
-      readFile(join(process.cwd(), "src/assets/fonts", file)),
+  const [regular, bold, serif] = await Promise.all(
+    ["Geist-Regular.ttf", "Geist-Bold.ttf", "InstrumentSerif-Regular.ttf"].map(
+      (file) => readFile(join(process.cwd(), "src/assets/fonts", file)),
     ),
   );
 
@@ -30,40 +31,45 @@ export default async function OpenGraphImage({
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        padding: 80,
-        background: "#ffffff",
-        color: "#0a0a0a",
+        padding: "72px 80px",
+        background: palette.background,
+        color: palette.foreground,
         fontFamily: "Geist",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
         {/* biome-ignore lint/performance/noImgElement: ImageResponse renders plain HTML */}
-        <img src={LOGO_MARK_DATA_URI} width={96} height={96} alt="" />
-        <span style={{ fontSize: 56, fontWeight: 700, letterSpacing: -2 }}>
+        <img src={LOGO_MARK_DATA_URI} width={72} height={72} alt="" />
+        <span style={{ fontSize: 44, fontWeight: 700, letterSpacing: -1.5 }}>
           Exams
         </span>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
         <span
           style={{
-            fontSize: 64,
-            fontWeight: 700,
+            fontFamily: "Instrument Serif",
+            fontSize: 88,
+            lineHeight: 1.02,
             letterSpacing: -2,
-            lineHeight: 1.1,
+            maxWidth: 1000,
           }}
         >
           {t("title")}
         </span>
-        <span style={{ fontSize: 32, color: "#737373" }}>{t("subtitle")}</span>
+        <span style={{ fontSize: 30, color: palette.muted }}>
+          {t("subtitle")}
+        </span>
       </div>
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
-          borderTop: "2px solid #e5e5e5",
-          paddingTop: 28,
-          fontSize: 26,
-          color: "#737373",
+          borderTop: `2px solid ${palette.foreground}`,
+          paddingTop: 24,
+          fontSize: 24,
+          letterSpacing: 1,
+          textTransform: "uppercase",
+          color: palette.muted,
         }}
       >
         <span>{t("points")}</span>
@@ -75,6 +81,7 @@ export default async function OpenGraphImage({
       fonts: [
         { name: "Geist", data: regular, weight: 400, style: "normal" },
         { name: "Geist", data: bold, weight: 700, style: "normal" },
+        { name: "Instrument Serif", data: serif, weight: 400, style: "normal" },
       ],
     },
   );

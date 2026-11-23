@@ -1,5 +1,5 @@
 /**
- * Landing colours for effects that cannot read CSS variables (canvas-based text shine).
+ * Landing colours where CSS variables cannot be read (canvas text shine, share image).
  * Same values as the `.landing` tokens in landing.css.
  */
 export const palette = {

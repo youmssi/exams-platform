@@ -2,6 +2,7 @@
 
 import {
   ChevronsUpDownIcon,
+  CircleHelpIcon,
   LogOutIcon,
   ShieldIcon,
   UserIcon,
@@ -104,6 +105,12 @@ export function NavUser({
               <DropdownMenuItem render={<Link href={routes.account} />}>
                 <UserIcon />
                 {t("nav.account")}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                render={<Link href={`${routes.landing}#faq`} />}
+              >
+                <CircleHelpIcon />
+                {t("nav.help")}
               </DropdownMenuItem>
               {isAdmin && (
                 <DropdownMenuItem render={<Link href={routes.admin} />}>
