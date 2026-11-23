@@ -18,12 +18,24 @@ L'admin n'intervient qu'aux moments critiques. Il doit tout voir en temps réel 
 | Signalements | File à traiter |
 | Journal d'audit | Toutes les actions admin |
 
+#### Décisions d'implémentation
+- Console dans l'app, groupe « Admin » du menu et entrée « Console admin » du menu du compte, réservée aux admins avec session 2FA (comme avant).
+- Déjà livrés par leurs stories : Catalogue (EXM-003), Commissions (EXM-009), Litiges (EXM-010), Sessions (EXM-023), Assistants à vérifier (EXM-014). Cette story ajoute la vue d'ensemble, les opérations, les utilisateurs, les signalements (avec les demandes d'ajout) et le journal.
+- Vue d'ensemble rafraîchie toutes les 30 s avec l'heure affichée, plutôt qu'un canal `admin:live` : moins de connexions Ably, même lisibilité.
+- Suppression : par Better Auth ; si des opérations passées y font référence, le compte est anonymisé et banni. Export JSON sans mot de passe du centre, journalisé.
+
 #### Critères d'acceptation
 - [ ] Accès `adminProcedure` uniquement, avec 2FA obligatoire.
 - [ ] Bannir et révoquer passent par le plugin admin de Better Auth.
 - [ ] Chaque action admin écrit une entrée dans `AuditLog` (acteur, cible, avant/après).
 - [ ] Canal Ably `admin:live`.
 - [ ] Suppression de compte et export des données d'un utilisateur, à sa demande.
+
+#### Décisions d'implémentation
+- Console dans l'app, groupe « Admin » du menu et entrée « Console admin » du menu du compte, réservée aux admins avec session 2FA (comme avant).
+- Déjà livrés par leurs stories : Catalogue (EXM-003), Commissions (EXM-009), Litiges (EXM-010), Sessions (EXM-023), Assistants à vérifier (EXM-014). Cette story ajoute la vue d'ensemble, les opérations, les utilisateurs, les signalements (avec les demandes d'ajout) et le journal.
+- Vue d'ensemble rafraîchie toutes les 30 s avec l'heure affichée, plutôt qu'un canal `admin:live` : moins de connexions Ably, même lisibilité.
+- Suppression : par Better Auth ; si des opérations passées y font référence, le compte est anonymisé et banni. Export JSON sans mot de passe du centre, journalisé.
 
 #### Critères d'acceptation UX
 - [ ] La console est séparée de l'app et accessible depuis le menu du compte pour les admins seulement. [ADMIN-01, IA-01]

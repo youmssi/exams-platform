@@ -133,7 +133,13 @@
       "blacklist": "Liste noire",
       "disputes": "Litiges",
       "adminSessions": "Sessions",
-      "assistants": "Assistants"
+      "assistants": "Assistants",
+      "adminConsole": "Console admin",
+      "overview": "Vue d'ensemble",
+      "operations": "Opérations",
+      "users": "Utilisateurs",
+      "reports": "Signalements",
+      "audit": "Journal"
     },
     "signOut": "Se déconnecter",
     "roleLabel": {
@@ -471,6 +477,191 @@
       "reasonHint": "Ce qu'il faut corriger, ex. photo floue, nom différent.",
       "verified": "Assistant validé.",
       "rejected": "Refus envoyé avec le motif."
+    },
+    "overview": {
+      "title": "Vue d'ensemble",
+      "updatedAt": "Mis à jour à {time}",
+      "week": "{count} demandes cette semaine ({previous} la précédente)",
+      "cards": {
+        "published": "Demandes en file",
+        "active": "Prises en cours",
+        "toConfirm": "À confirmer",
+        "toPay": "À payer",
+        "disputes": "Litiges",
+        "unpaid": "Impayés",
+        "assistants": "Assistants à vérifier",
+        "reports": "Signalements"
+      },
+      "hints": {
+        "published": "Publiées, sans assistant",
+        "active": "Un assistant réserve",
+        "toConfirm": "Le candidat vérifie le mail",
+        "toPay": "Dépôts attendus",
+        "disputes": "À décider",
+        "unpaid": "Liste noire",
+        "assistants": "Pièces à contrôler",
+        "reports": "À traiter"
+      }
+    },
+    "operations": {
+      "title": "Opérations",
+      "reference": "Réf.",
+      "offer": "Centre et niveau",
+      "status": "Statut",
+      "claimed": "Prise",
+      "details": "Détails",
+      "empty": "Aucune opération.",
+      "candidate": "Candidat",
+      "assistant": "Assistant",
+      "reserved": "Réservation déclarée",
+      "confirmed": "Confirmée",
+      "paymentDue": "Échéance du règlement",
+      "closed": "Clôturée",
+      "ended": "Terminée",
+      "filters": {
+        "active": "En cours",
+        "toConfirm": "À confirmer",
+        "toPay": "À payer",
+        "disputed": "En litige",
+        "unpaid": "Impayées",
+        "closed": "Clôturées",
+        "all": "Toutes"
+      },
+      "statuses": {
+        "CLAIMED": "Prise",
+        "RELEASED": "Libérée",
+        "WITHDRAWN": "Retirée",
+        "EXPIRED": "Délai dépassé",
+        "REPORTED": "Signalée",
+        "RESERVED": "À confirmer",
+        "CONFIRMED": "À payer",
+        "DISPUTED": "En litige",
+        "CLOSED": "Clôturée",
+        "UNPAID": "Impayée",
+        "CANCELLED": "Annulée"
+      },
+      "payments": {
+        "ASSISTANT": "Part assistant",
+        "PLATFORM": "Commission"
+      },
+      "paymentStatus": {
+        "DUE": "À envoyer",
+        "DECLARED": "Déclaré",
+        "RECEIVED": "Reçu"
+      }
+    },
+    "users": {
+      "title": "Utilisateurs",
+      "search": "Rechercher par nom ou email",
+      "user": "Utilisateur",
+      "role": "Rôle et statut",
+      "manage": "Gérer",
+      "empty": "Aucun utilisateur.",
+      "roles": {
+        "admin": "Admin",
+        "user": "Utilisateur"
+      },
+      "verification": {
+        "NONE": "Pièce à envoyer",
+        "PENDING": "Pièce en vérification",
+        "VERIFIED": "Assistant vérifié",
+        "REJECTED": "Pièce refusée"
+      },
+      "strikes": "{count, plural, one {# avertissement} other {# avertissements}}",
+      "suspended": "Suspendu",
+      "banned": "Banni",
+      "since": "Inscrit le",
+      "activeSpace": "Espace actif",
+      "spaces": {
+        "candidate": "Candidat",
+        "assistant": "Assistant"
+      },
+      "permissions": "Permissions",
+      "adminWith2fa": "Console admin (2FA active)",
+      "adminWithout2fa": "Console admin bloquée tant que la 2FA n'est pas activée",
+      "userPermissions": "Publier, prendre selon le rôle actif",
+      "activity": "Activité",
+      "counts": "{requests} demandes · {operations} opérations",
+      "export": "Exporter ses données (JSON)",
+      "cancel": "Annuler",
+      "actions": {
+        "suspend": "Suspendre",
+        "unsuspend": "Lever la suspension",
+        "revokeSessions": "Déconnecter partout",
+        "ban": "Bannir",
+        "unban": "Lever le bannissement",
+        "delete": "Supprimer le compte"
+      },
+      "confirm": {
+        "suspend": {
+          "title": "Suspendre {name} ?",
+          "body": "Plus de publication ni de prise jusqu'à la levée. La personne peut se connecter et régler."
+        },
+        "unsuspend": {
+          "title": "Lever la suspension de {name} ?",
+          "body": "Ses avertissements en cours cessent de compter."
+        },
+        "revokeSessions": {
+          "title": "Déconnecter {name} partout ?",
+          "body": "Toutes ses sessions sont fermées ; la personne devra se reconnecter."
+        },
+        "ban": {
+          "title": "Bannir {name} ?",
+          "body": "La personne ne peut plus se connecter. Ses sessions sont fermées."
+        },
+        "unban": {
+          "title": "Lever le bannissement de {name} ?",
+          "body": "La personne pourra de nouveau se connecter."
+        },
+        "delete": {
+          "title": "Supprimer le compte de {name} ?",
+          "body": "Définitif. Si des opérations passées y font référence, le compte est anonymisé et banni."
+        }
+      },
+      "done": {
+        "suspend": "Compte suspendu.",
+        "unsuspend": "Suspension levée.",
+        "revokeSessions": "Sessions fermées.",
+        "ban": "Compte banni.",
+        "unban": "Bannissement levé.",
+        "delete": "Compte supprimé."
+      }
+    },
+    "inbox": {
+      "title": "Signalements",
+      "reports": "Signalements",
+      "catalogRequests": "Demandes d'ajout",
+      "markHandled": "Traité",
+      "handled": "Marqué comme traité.",
+      "empty": {
+        "title": "Rien à traiter",
+        "description": "Les nouveaux éléments apparaîtront ici."
+      },
+      "categories": {
+        "WRONG_SESSION": "Session erronée",
+        "ABUSE": "Comportement abusif",
+        "FRAUD": "Fraude",
+        "OTHER": "Autre"
+      },
+      "targets": {
+        "SESSION": "Session",
+        "OPERATION": "Opération"
+      },
+      "kinds": {
+        "COUNTRY": "Pays",
+        "CENTER": "Centre",
+        "LEVEL": "Niveau",
+        "OTHER": "Autre"
+      }
+    },
+    "audit": {
+      "title": "Journal",
+      "subtitle": "Actions des admins et lectures sensibles, les plus récentes en premier.",
+      "when": "Quand",
+      "actor": "Par",
+      "action": "Action",
+      "target": "Cible",
+      "empty": "Aucune entrée."
     }
   },
   "share": {

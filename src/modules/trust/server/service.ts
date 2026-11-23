@@ -67,6 +67,22 @@ export async function myStanding(userId: string) {
   };
 }
 
+/** An admin suspends an account by hand (fraud, abuse); only an admin lifts it. */
+export async function suspendUser(adminId: string, userId: string) {
+  await db.$transaction(async (tx) => {
+    await tx.user.update({
+      where: { id: userId },
+      data: { suspendedAt: new Date() },
+    });
+    await recordAudit(tx, {
+      actorId: adminId,
+      action: "user.suspend",
+      targetType: "user",
+      targetId: userId,
+    });
+  });
+}
+
 /** An admin lifts a suspension: current strikes stop counting. */
 export async function liftSuspension(adminId: string, userId: string) {
   await db.$transaction(async (tx) => {

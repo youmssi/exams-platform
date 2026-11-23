@@ -15,6 +15,11 @@ export const routes = {
   privacy: "/privacy",
   /** Public page a friend opens from the consent email (EXM-024). */
   consent: "/consent",
+  admin: "/admin",
+  adminOperations: "/admin/operations",
+  adminUsers: "/admin/users",
+  adminReports: "/admin/reports",
+  adminAudit: "/admin/audit",
   adminCatalog: "/admin/catalog",
   adminPayments: "/admin/payments",
   adminDisputes: "/admin/disputes",
