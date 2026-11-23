@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { db } from "@/server/db";
 import type { AssistantProfileInput } from "../schemas";
 
-/** An assistant can take requests once their profile exists (identity check comes with EXM-014). */
+/** The profile (phone, Mobile Money) exists; the identity check is separate (`verificationOf`). */
 export async function isAssistantReady(userId: string) {
   const count = await db.assistantProfile.count({ where: { userId } });
   return count > 0;
@@ -20,6 +20,8 @@ export async function getAssistantProfile(userId: string) {
         operator: true,
         momoNumber: true,
         momoName: true,
+        verification: true,
+        rejectionReason: true,
       },
     }),
     db.country.findMany({
@@ -28,7 +30,7 @@ export async function getAssistantProfile(userId: string) {
       select: { id: true, code: true, mobileMoneyOperators: true },
     }),
   ]);
-  return { profile, countries };
+  return { userId, profile, countries };
 }
 
 export async function saveAssistantProfile(

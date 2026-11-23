@@ -2,7 +2,7 @@ import "server-only";
 import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import { type OperationStatus, Prisma } from "@/generated/prisma/client";
-import { isAssistantReady } from "@/modules/assistants";
+import { isAssistantReady, verificationOf } from "@/modules/assistants";
 import { displayName } from "@/modules/beneficiaries";
 import { isFullExam } from "@/modules/catalog";
 import { type NotificationInput, notify } from "@/modules/notifications";
@@ -22,10 +22,12 @@ import { hasOpenDispute, openDispute } from "./disputes";
 import { blacklisted, hasUnpaid, openPayments } from "./payments";
 
 /**
- * Why an assistant cannot take requests right now, or null: an unpaid booking of their own,
- * a suspension, or a dispute waiting for a decision.
+ * Why an assistant cannot take requests right now, or null: identity not verified yet, an unpaid
+ * booking of their own, a suspension, or a dispute waiting for a decision.
  */
 export async function claimBlocker(assistantId: string) {
+  if ((await verificationOf(assistantId)) !== "VERIFIED")
+    return "notVerified" as const;
   if (await hasUnpaid(assistantId)) return "unpaid" as const;
   if (await isSuspended(assistantId)) return "suspended" as const;
   if (await hasOpenDispute(assistantId)) return "disputeOpen" as const;

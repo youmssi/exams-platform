@@ -132,7 +132,8 @@
       "payments": "Commissions",
       "blacklist": "Blacklist",
       "disputes": "Disputes",
-      "adminSessions": "Sessions"
+      "adminSessions": "Sessions",
+      "assistants": "Assistants"
     },
     "signOut": "Sign out",
     "roleLabel": {
@@ -453,6 +454,23 @@
       "confirmations": "{count, plural, =0 {No confirmation} one {# confirmation} other {# confirmations}}",
       "verify": "Validate",
       "verified": "Session validated."
+    },
+    "assistants": {
+      "title": "Assistants to verify",
+      "subtitle": "Compare the document, the name and the Mobile Money holder.",
+      "empty": {
+        "title": "No assistant waiting",
+        "description": "Documents sent show up here."
+      },
+      "documentAlt": "Identity document of {name}",
+      "momo": "{operator} · {number} · {name}",
+      "verify": "Validate",
+      "reject": "Refuse",
+      "rejectTitle": "Refuse {name}'s document?",
+      "reason": "Reason",
+      "reasonHint": "What to fix, e.g. blurry photo, different name.",
+      "verified": "Assistant validated.",
+      "rejected": "Refusal sent with the reason."
     }
   },
   "share": {
@@ -709,7 +727,8 @@
       "busy": "You already have an operation in progress.",
       "unpaid": "Settle your unpaid booking before taking a request.",
       "suspended": "Account suspended: you cannot take a request.",
-      "disputeOpen": "A dispute is in progress: wait for the decision."
+      "disputeOpen": "A dispute is in progress: wait for the decision.",
+      "notVerified": "Your identity document must be validated before you take a request."
     },
     "profileIncomplete": {
       "title": "Complete your assistant profile",
@@ -729,6 +748,10 @@
       "disputeOpen": {
         "title": "Dispute in progress",
         "description": "You will take requests again after the decision."
+      },
+      "notVerified": {
+        "title": "Identity document to validate",
+        "description": "Send it from \"My account\"; you can take requests once it is validated."
       }
     }
   },
@@ -816,7 +839,24 @@
     "momoName": "Account holder name",
     "momoNameHint": "As shown in the Mobile Money app.",
     "save": "Save",
-    "saved": "Assistant profile saved."
+    "saved": "Assistant profile saved.",
+    "identity": {
+      "title": "Identity document",
+      "status": {
+        "NONE": "To send",
+        "PENDING": "Being checked",
+        "VERIFIED": "Verified",
+        "REJECTED": "Send again"
+      },
+      "hint": {
+        "NONE": "A readable photo of your ID card or passport. Only used in a dispute; candidates never see it.",
+        "PENDING": "Checked by the team, usually within 24 h.",
+        "VERIFIED": "You can take requests.",
+        "REJECTED": "Send a new photo."
+      },
+      "rejected": "To fix: {reason}. Send a new photo.",
+      "sent": "Document sent. Usually checked within 24 h."
+    }
   },
   "landing": {
     "soon": "Soon",
@@ -1395,6 +1435,14 @@
       "STRIKE": {
         "title": "Strike ({count} of {threshold})",
         "body": "{reason, select, CLAIM_TIMEOUT {Booking time ran out.} ABUSIVE_DISPUTE {Dispute found abusive.} other {Booking declared but not made.}} At {threshold}, the account is suspended."
+      },
+      "ASSISTANT_VERIFIED": {
+        "title": "Assistant account validated",
+        "body": "You can take requests in the queue."
+      },
+      "ASSISTANT_REJECTED": {
+        "title": "Identity document to send again",
+        "body": "Reason: {reason}. Send a new photo from your account."
       }
     }
   }

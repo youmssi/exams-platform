@@ -19,6 +19,9 @@ const ACCESS: Record<
   proof: async (viewer, disputeId, mode) =>
     (mode === "read" && viewer.isAdmin) ||
     canAccessProof(viewer.id, disputeId, mode),
+  // Identity documents: the assistant sends their own, only admins read them.
+  identity: async (viewer, userId, mode) =>
+    mode === "write" ? viewer.id === userId : viewer.isAdmin,
 };
 
 async function viewerOf(request: Request): Promise<Viewer | null> {

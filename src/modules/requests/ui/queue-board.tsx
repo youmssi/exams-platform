@@ -38,6 +38,7 @@ import { useTRPC } from "@/trpc/client";
 import type { QueueRequest } from "./types";
 
 const CLAIM_ERRORS = new Set([
+  "notVerified",
   "alreadyTaken",
   "busy",
   "unpaid",

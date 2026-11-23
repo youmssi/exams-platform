@@ -434,20 +434,36 @@ model PaymentDeclaration {
 
 /// What an assistant needs before taking a request: how to reach them and how they are paid.
 model AssistantProfile {
-  userId     String   @id
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  countryId  String
-  country    Country  @relation(fields: [countryId], references: [id], onDelete: Restrict)
-  phone      String
+  userId          String                @id
+  user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  countryId       String
+  country         Country               @relation(fields: [countryId], references: [id], onDelete: Restrict)
+  phone           String
   /// One of the country's `mobileMoneyOperators`.
-  operator   String
-  momoNumber String
+  operator        String
+  momoNumber      String
   /// Account holder name, as the Mobile Money app shows it.
-  momoName   String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  momoName        String
+  /// Identity check by an admin before the first request (EXM-014).
+  verification    AssistantVerification @default(NONE)
+  /// Private file path of the identity document photo, readable by admins only.
+  identityPath    String?
+  submittedAt     DateTime?
+  verifiedAt      DateTime?
+  /// Why the document was refused, shown to the assistant.
+  rejectionReason String?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
 
   @@map("assistant_profile")
+}
+
+enum AssistantVerification {
+  /// No identity document sent yet.
+  NONE
+  PENDING
+  VERIFIED
+  REJECTED
 }
 
 /// Why an assistant handed a request back to the candidate (EXM-025).
@@ -573,6 +589,8 @@ enum NotificationType {
   OPERATION_CLOSED
   DISPUTE_DECIDED
   STRIKE
+  ASSISTANT_VERIFIED
+  ASSISTANT_REJECTED
 }
 
 /// Something that happened to the user, with where to act on it (EXM-011).

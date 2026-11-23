@@ -132,7 +132,8 @@
       "payments": "Commissions",
       "blacklist": "Liste noire",
       "disputes": "Litiges",
-      "adminSessions": "Sessions"
+      "adminSessions": "Sessions",
+      "assistants": "Assistants"
     },
     "signOut": "Se déconnecter",
     "roleLabel": {
@@ -453,6 +454,23 @@
       "confirmations": "{count, plural, =0 {Aucune confirmation} one {# confirmation} other {# confirmations}}",
       "verify": "Valider",
       "verified": "Session validée."
+    },
+    "assistants": {
+      "title": "Assistants à vérifier",
+      "subtitle": "Comparez la pièce, le nom et le titulaire Mobile Money.",
+      "empty": {
+        "title": "Aucun assistant en attente",
+        "description": "Les pièces envoyées apparaîtront ici."
+      },
+      "documentAlt": "Pièce d'identité de {name}",
+      "momo": "{operator} · {number} · {name}",
+      "verify": "Valider",
+      "reject": "Refuser",
+      "rejectTitle": "Refuser la pièce de {name} ?",
+      "reason": "Motif",
+      "reasonHint": "Ce qu'il faut corriger, ex. photo floue, nom différent.",
+      "verified": "Assistant validé.",
+      "rejected": "Refus envoyé avec le motif."
     }
   },
   "share": {
@@ -709,7 +727,8 @@
       "busy": "Vous avez déjà une opération en cours.",
       "unpaid": "Réglez votre impayé avant de prendre une demande.",
       "suspended": "Compte suspendu : impossible de prendre une demande.",
-      "disputeOpen": "Un litige est en cours : attendez la décision."
+      "disputeOpen": "Un litige est en cours : attendez la décision.",
+      "notVerified": "Votre pièce d'identité doit être validée avant de prendre une demande."
     },
     "profileIncomplete": {
       "title": "Complétez votre profil assistant",
@@ -729,6 +748,10 @@
       "disputeOpen": {
         "title": "Litige en cours",
         "description": "Vous reprendrez des demandes après la décision."
+      },
+      "notVerified": {
+        "title": "Pièce d'identité à valider",
+        "description": "Envoyez-la depuis « Mon compte » ; vous pourrez prendre des demandes une fois validée."
       }
     }
   },
@@ -816,7 +839,24 @@
     "momoName": "Nom du titulaire",
     "momoNameHint": "Tel qu'il s'affiche dans l'application Mobile Money.",
     "save": "Enregistrer",
-    "saved": "Profil assistant enregistré."
+    "saved": "Profil assistant enregistré.",
+    "identity": {
+      "title": "Pièce d'identité",
+      "status": {
+        "NONE": "À envoyer",
+        "PENDING": "En vérification",
+        "VERIFIED": "Vérifiée",
+        "REJECTED": "À renvoyer"
+      },
+      "hint": {
+        "NONE": "Photo lisible de votre CNI ou passeport. Elle sert uniquement en cas de litige ; le candidat ne la voit jamais.",
+        "PENDING": "Vérification par l'équipe, en général sous 24 h.",
+        "VERIFIED": "Vous pouvez prendre des demandes.",
+        "REJECTED": "Envoyez une nouvelle photo."
+      },
+      "rejected": "À corriger : {reason}. Envoyez une nouvelle photo.",
+      "sent": "Pièce envoyée. Vérification en général sous 24 h."
+    }
   },
   "landing": {
     "soon": "Bientôt",
@@ -1395,6 +1435,14 @@
       "STRIKE": {
         "title": "Avertissement ({count} sur {threshold})",
         "body": "{reason, select, CLAIM_TIMEOUT {Délai de réservation dépassé.} ABUSIVE_DISPUTE {Litige jugé abusif.} other {Réservation déclarée mais non faite.}} Au {threshold}e, le compte est suspendu."
+      },
+      "ASSISTANT_VERIFIED": {
+        "title": "Compte assistant validé",
+        "body": "Vous pouvez prendre des demandes dans la file."
+      },
+      "ASSISTANT_REJECTED": {
+        "title": "Pièce d'identité à renvoyer",
+        "body": "Motif : {reason}. Envoyez une nouvelle photo depuis votre compte."
       }
     }
   }
