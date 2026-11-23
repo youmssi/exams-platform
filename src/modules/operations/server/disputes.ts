@@ -198,7 +198,7 @@ export async function decideDispute(
         where: { id: operation.requestId },
         data: { status: "OPEN", version: { increment: 1 } },
       });
-    await issueStrike(
+    const strike = await issueStrike(
       tx,
       effects.warn === "candidate" ? ownerId : operation.assistantId,
       effects.reason,
@@ -221,7 +221,7 @@ export async function decideDispute(
       targetId: id,
       after: { outcome },
     });
-    return { ownerId, assistantId: operation.assistantId };
+    return { ownerId, assistantId: operation.assistantId, strike };
   });
 }
 

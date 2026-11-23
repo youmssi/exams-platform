@@ -8,47 +8,66 @@ import {
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RoleSwitch, requireOnboardedUser } from "@/modules/identity";
+import { NotificationCenter, rememberLocale } from "@/modules/notifications";
 import { channelsFor } from "@/modules/realtime";
 import { RealtimeProvider } from "@/modules/realtime/client";
+import { HydrateClient, prefetch, trpc } from "@/trpc/server";
 
-async function Shell({ children }: { children: React.ReactNode }) {
-  const user = await requireOnboardedUser();
+async function Shell({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: LayoutProps<"/[locale]">["params"];
+}) {
+  const [user, { locale }] = await Promise.all([
+    requireOnboardedUser(),
+    params,
+  ]);
+  if (user.locale !== locale) await rememberLocale(user.id, locale);
+  prefetch(trpc.notifications.list.queryOptions());
   return (
-    <RealtimeProvider channels={channelsFor(user.id)}>
-      <SidebarProvider>
-        <AppSidebar
-          isAdmin={user.role === "admin"}
-          user={{
-            name: user.name,
-            email: user.email,
-            image: user.image,
-            activeRole: user.activeRole,
-          }}
-        />
-        <SidebarInset>
-          <header className="flex h-14 shrink-0 items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator
-              orientation="vertical"
-              className="mr-2 data-vertical:h-4 data-vertical:self-auto"
-            />
-            <div className="ml-auto">
-              <RoleSwitch activeRole={user.activeRole} />
+    <HydrateClient>
+      <RealtimeProvider channels={channelsFor(user.id)}>
+        <SidebarProvider>
+          <AppSidebar
+            isAdmin={user.role === "admin"}
+            user={{
+              name: user.name,
+              email: user.email,
+              image: user.image,
+              activeRole: user.activeRole,
+            }}
+          />
+          <SidebarInset>
+            <header className="flex h-14 shrink-0 items-center gap-2 px-4">
+              <SidebarTrigger className="-ml-1" />
+              <Separator
+                orientation="vertical"
+                className="mr-2 data-vertical:h-4 data-vertical:self-auto"
+              />
+              <div className="ml-auto flex items-center gap-2">
+                <NotificationCenter />
+                <RoleSwitch activeRole={user.activeRole} />
+              </div>
+            </header>
+            <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 p-4 pt-0">
+              {children}
             </div>
-          </header>
-          <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 p-4 pt-0">
-            {children}
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
-    </RealtimeProvider>
+          </SidebarInset>
+        </SidebarProvider>
+      </RealtimeProvider>
+    </HydrateClient>
   );
 }
 
-export default function AppLayout({ children }: LayoutProps<"/[locale]">) {
+export default function AppLayout({
+  children,
+  params,
+}: LayoutProps<"/[locale]">) {
   return (
     <Suspense fallback={<Skeleton className="m-4 h-[calc(100svh-2rem)]" />}>
-      <Shell>{children}</Shell>
+      <Shell params={params}>{children}</Shell>
     </Suspense>
   );
 }

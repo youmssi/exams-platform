@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AssistantProfileCard } from "@/modules/assistants";
 import { SelfProfileCard } from "@/modules/beneficiaries";
 import { AccountSettings, requireOnboardedUser } from "@/modules/identity";
+import { EmailPreferencesCard } from "@/modules/notifications";
 import { StandingCard } from "@/modules/trust";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
 
@@ -13,6 +14,7 @@ async function Account() {
   prefetch(trpc.beneficiaries.list.queryOptions());
   prefetch(trpc.assistants.profile.queryOptions());
   prefetch(trpc.trust.standing.queryOptions());
+  prefetch(trpc.notifications.preferences.queryOptions());
   return (
     <HydrateClient>
       <AccountSettings
@@ -21,6 +23,7 @@ async function Account() {
             <SelfProfileCard />
             <AssistantProfileCard />
             <StandingCard />
+            <EmailPreferencesCard />
           </>
         }
         admin={

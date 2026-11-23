@@ -215,19 +215,29 @@ async function closeIfSettled(
     });
 }
 
-/** Who to refresh after a payment changes: the candidate and the assistant. */
+/** Who is involved in a payment, and where it stands, to notify them. */
 async function paymentParties(id: string) {
-  const { operation } = await db.paymentDeclaration.findUniqueOrThrow({
-    where: { id },
-    select: {
-      operation: {
-        select: { assistantId: true, request: { select: { ownerId: true } } },
+  const { operation, recipient } =
+    await db.paymentDeclaration.findUniqueOrThrow({
+      where: { id },
+      select: {
+        recipient: true,
+        operation: {
+          select: {
+            id: true,
+            status: true,
+            assistantId: true,
+            request: { select: { ownerId: true } },
+          },
+        },
       },
-    },
-  });
+    });
   return {
     ownerId: operation.request.ownerId,
     assistantId: operation.assistantId,
+    recipient,
+    reference: paymentReference(operation.id),
+    closed: operation.status === "CLOSED",
   };
 }
 

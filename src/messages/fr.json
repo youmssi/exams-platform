@@ -1328,5 +1328,74 @@
       "title": "Lien invalide ou expiré",
       "description": "Demandez à la personne qui vous l'a envoyé de le renvoyer."
     }
+  },
+  "notifications": {
+    "label": "{count, plural, =0 {Notifications} one {Notifications, # non lue} other {Notifications, # non lues}}",
+    "title": "Notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "unread": "Non lue : ",
+    "empty": {
+      "title": "Rien de nouveau",
+      "description": "Vous serez prévenu ici à chaque étape."
+    },
+    "actions": {
+      "requests": "Voir mes demandes",
+      "queue": "Ouvrir la file",
+      "account": "Voir mon compte"
+    },
+    "preferences": {
+      "title": "Emails",
+      "description": "Tout s'affiche aussi dans l'application.",
+      "updates": "Emails de suivi",
+      "updatesHint": "Réservation déclarée, problème à corriger, dépôt à confirmer.",
+      "critical": "Paiements, litiges et avertissements sont toujours envoyés.",
+      "saved": "Préférence enregistrée."
+    },
+    "types": {
+      "REQUEST_CLAIMED": {
+        "title": "Un assistant s'occupe de votre demande",
+        "body": "Il a quelques minutes pour réserver. Vous pouvez suivre l'avancement."
+      },
+      "REQUEST_RETURNED": {
+        "title": "Votre demande est de retour dans la file",
+        "body": "Rien à faire : un autre assistant peut la prendre."
+      },
+      "BOOKING_DECLARED": {
+        "title": "Réservation déclarée : vérifiez le mail du centre",
+        "body": "Confirmez dès que possible si vous avez reçu le mail du centre."
+      },
+      "PROBLEM_REPORTED": {
+        "title": "Votre demande est à corriger",
+        "body": "L'assistant n'a pas pu réserver. Voyez la raison et corrigez."
+      },
+      "BOOKING_CONFIRMED": {
+        "title": "Réservation confirmée par le candidat",
+        "body": "Vous êtes libre de prendre une autre demande."
+      },
+      "DISPUTE_OPENED": {
+        "title": "Réservation contestée : envoyez une preuve",
+        "body": "Le candidat n'a pas reçu le mail du centre. Envoyez une capture de la réservation."
+      },
+      "PAYMENT_DECLARED": {
+        "title": "Dépôt déclaré ({reference})",
+        "body": "Vérifiez votre compte Mobile Money puis confirmez la réception."
+      },
+      "PAYMENT_REJECTED": {
+        "title": "Dépôt non reçu ({reference})",
+        "body": "Vérifiez le numéro et la référence, puis renvoyez avant l'échéance."
+      },
+      "OPERATION_CLOSED": {
+        "title": "Opération réglée ({reference})",
+        "body": "Les deux dépôts sont confirmés. Merci !"
+      },
+      "DISPUTE_DECIDED": {
+        "title": "Litige décidé",
+        "body": "{outcome, select, BOOKED {La réservation a été faite : le règlement s'ouvre.} other {La réservation n'a pas été faite : la demande revient dans la file.}}"
+      },
+      "STRIKE": {
+        "title": "Avertissement ({count} sur {threshold})",
+        "body": "{reason, select, CLAIM_TIMEOUT {Délai de réservation dépassé.} ABUSIVE_DISPUTE {Litige jugé abusif.} other {Réservation déclarée mais non faite.}} Au {threshold}e, le compte est suspendu."
+      }
+    }
   }
 }

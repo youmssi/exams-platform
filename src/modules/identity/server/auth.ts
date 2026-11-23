@@ -88,6 +88,8 @@ export const auth = betterAuth({
         input: false,
       },
       termsAcceptedAt: { type: "date", required: false, input: false },
+      /** Language of the emails sent to the user (EXM-011). */
+      locale: { type: "string", required: false, input: false },
     },
   },
   session: {
