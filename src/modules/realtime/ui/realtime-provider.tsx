@@ -16,8 +16,9 @@ export const useRealtimeChannels = () => use(ChannelsContext);
 
 /**
  * Opens one Ably connection per tab, authenticated by `/api/realtime/token`, and keeps the user
- * present on the presence channel while the app is open. The presence channel is provided here,
- * once: Ably refuses two nested providers for the same channel. Without channels, renders children as is.
+ * present on the presence channel while the app is open. The presence and personal channels are
+ * provided here, once: Ably refuses two nested providers for the same channel, and several parts of
+ * a page listen to them. Without channels, renders children as is.
  */
 export function RealtimeProvider({
   channels,
@@ -39,8 +40,10 @@ export function RealtimeProvider({
     <PubSubClientProvider client={client}>
       <ChannelsContext value={channels}>
         <ChannelProvider channelName={channels.presence}>
-          <EnterPresence channel={channels.presence} />
-          {children}
+          <ChannelProvider channelName={channels.user}>
+            <EnterPresence channel={channels.presence} />
+            {children}
+          </ChannelProvider>
         </ChannelProvider>
       </ChannelsContext>
     </PubSubClientProvider>

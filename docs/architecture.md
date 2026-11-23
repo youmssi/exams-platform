@@ -45,7 +45,8 @@ src/
 | `system` | Santé, utilitaires transverses | — |
 | `identity` | Session, rôles, profil, consentements | — |
 | `realtime` | Canaux Ably, présence, jetons | identity |
-| `trust` | Avertissements, suspension, signalements | — |
+| `notifications` | Notifications dans l'application et emails produit | realtime |
+| `trust` | Avertissements, suspension, signalements | notifications |
 | `catalog` | Pays, centres, niveaux, sessions, réglages économiques, demandes d'ajout | identity |
 | `beneficiaries` | Bénéficiaires, identifiants chiffrés | identity |
 | `assistants` | Profil assistant (Mobile Money), vérification | catalog |

@@ -1,9 +1,11 @@
 import "server-only";
 import { TRPCError } from "@trpc/server";
+import { after } from "next/server";
 import { type OperationStatus, Prisma } from "@/generated/prisma/client";
 import { isAssistantReady } from "@/modules/assistants";
 import { displayName } from "@/modules/beneficiaries";
 import { isFullExam } from "@/modules/catalog";
+import { type NotificationInput, notify } from "@/modules/notifications";
 import { isUserOnline, presenceKey } from "@/modules/realtime";
 import { isSuspended, issueStrike } from "@/modules/trust";
 import { recordAudit } from "@/server/audit";
@@ -54,8 +56,14 @@ async function expireOverdue(
   const now = new Date();
   const overdue = await client.operation.findMany({
     where: { ...where, status: "CLAIMED", deadlineAt: { lte: now } },
-    select: { id: true, version: true, assistantId: true },
+    select: {
+      id: true,
+      version: true,
+      assistantId: true,
+      request: { select: { ownerId: true } },
+    },
   });
+  const notifications: NotificationInput[] = [];
   for (const operation of overdue) {
     const { count } = await client.operation.updateMany({
       where: {
@@ -69,14 +77,22 @@ async function expireOverdue(
         version: { increment: 1 },
       },
     });
-    if (count)
+    if (!count) continue;
+    notifications.push(
       await issueStrike(
         client,
         operation.assistantId,
         "CLAIM_TIMEOUT",
         operation.id,
-      );
+      ),
+      {
+        userId: operation.request.ownerId,
+        type: "REQUEST_RETURNED",
+        to: "requests",
+      },
+    );
   }
+  if (notifications.length) after(() => notify(notifications));
 }
 
 function next(status: OperationStatus, event: OperationEvent) {

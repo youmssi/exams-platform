@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import { z } from "zod";
+import { type NotificationInput, notify } from "@/modules/notifications";
 import { publishQueueChange, publishUserChange } from "@/modules/realtime";
 import {
   adminProcedure,
@@ -40,11 +41,48 @@ import {
 
 const byId = z.object({ id: z.string().min(1) });
 
-/** After the response: the queue changed, and both people involved see it at once. */
-const notify = (userIds: string[]) =>
+/**
+ * After the response: the queue changed, both people involved see it at once, and the other
+ * person gets a notification (in the app, and by email when its type calls for one).
+ */
+const refresh = (userIds: string[], notifications: NotificationInput[] = []) =>
   after(() =>
-    Promise.all([publishQueueChange(), ...userIds.map(publishUserChange)]),
+    Promise.all([
+      publishQueueChange(),
+      ...userIds.map(publishUserChange),
+      notify(notifications),
+    ]),
   );
+
+/** A deposit not received asks the candidate to send it again; both received closes the operation. */
+const paymentAnswered = (
+  payment: Awaited<ReturnType<typeof answerPayment>>,
+  received: boolean,
+) => {
+  const { ownerId, assistantId, reference, closed } = payment;
+  const values = { reference };
+  refresh(
+    [ownerId, assistantId],
+    !received
+      ? [{ userId: ownerId, type: "PAYMENT_REJECTED", to: "requests", values }]
+      : closed
+        ? [
+            {
+              userId: ownerId,
+              type: "OPERATION_CLOSED",
+              to: "requests",
+              values,
+            },
+            {
+              userId: assistantId,
+              type: "OPERATION_CLOSED",
+              to: "queue",
+              values,
+            },
+          ]
+        : [],
+  );
+};
 
 export const operationsRouter = createTRPCRouter({
   current: assistantProcedure.query(({ ctx }) =>
@@ -52,7 +90,10 @@ export const operationsRouter = createTRPCRouter({
   ),
   claim: assistantProcedure.input(byId).mutation(async ({ ctx, input }) => {
     const { ownerId } = await claimRequest(ctx.session.user.id, input.id);
-    notify([ownerId, ctx.session.user.id]);
+    refresh(
+      [ctx.session.user.id],
+      [{ userId: ownerId, type: "REQUEST_CLAIMED", to: "requests" }],
+    );
   }),
   reveal: assistantProcedure
     .input(byId.extend({ detail: z.enum(["password", "phone"]) }))
@@ -61,24 +102,33 @@ export const operationsRouter = createTRPCRouter({
     ),
   release: assistantProcedure.input(byId).mutation(async ({ ctx, input }) => {
     const { ownerId } = await releaseOperation(ctx.session.user.id, input.id);
-    notify([ownerId, ctx.session.user.id]);
+    refresh(
+      [ctx.session.user.id],
+      [{ userId: ownerId, type: "REQUEST_RETURNED", to: "requests" }],
+    );
   }),
   reserve: assistantProcedure.input(byId).mutation(async ({ ctx, input }) => {
     const { ownerId } = await reserveOperation(ctx.session.user.id, input.id);
-    notify([ownerId, ctx.session.user.id]);
+    refresh(
+      [ctx.session.user.id],
+      [{ userId: ownerId, type: "BOOKING_DECLARED", to: "requests" }],
+    );
   }),
   report: assistantProcedure
     .input(reportInput)
     .mutation(async ({ ctx, input }) => {
       const { ownerId } = await reportProblem(ctx.session.user.id, input);
-      notify([ownerId, ctx.session.user.id]);
+      refresh(
+        [ctx.session.user.id],
+        [{ userId: ownerId, type: "PROBLEM_REPORTED", to: "requests" }],
+      );
     }),
   withdraw: protectedProcedure.input(byId).mutation(async ({ ctx, input }) => {
     const { assistantId } = await withdrawOperation(
       ctx.session.user.id,
       input.id,
     );
-    notify([assistantId, ctx.session.user.id]);
+    refresh([assistantId, ctx.session.user.id]);
   }),
   /** The candidate confirms the centre's email, or disputes after the checklist. */
   answer: protectedProcedure
@@ -100,17 +150,39 @@ export const operationsRouter = createTRPCRouter({
         input.id,
         input.answer,
       );
-      notify([assistantId, ctx.session.user.id]);
+      refresh(
+        [ctx.session.user.id],
+        [
+          {
+            userId: assistantId,
+            type:
+              input.answer === "confirm"
+                ? "BOOKING_CONFIRMED"
+                : "DISPUTE_OPENED",
+            to: "queue",
+          },
+        ],
+      );
     }),
   /** The candidate sent one deposit. */
   declarePayment: protectedProcedure
     .input(byId)
     .mutation(async ({ ctx, input }) => {
-      const { ownerId, assistantId } = await declarePayment(
-        ctx.session.user.id,
-        input.id,
+      const { ownerId, assistantId, recipient, reference } =
+        await declarePayment(ctx.session.user.id, input.id);
+      refresh(
+        [ownerId, assistantId],
+        recipient === "ASSISTANT"
+          ? [
+              {
+                userId: assistantId,
+                type: "PAYMENT_DECLARED",
+                to: "queue",
+                values: { reference },
+              },
+            ]
+          : [],
       );
-      notify([ownerId, assistantId]);
     }),
   /** The assistant's shares still to receive. */
   payments: assistantProcedure.query(({ ctx }) =>
@@ -119,26 +191,30 @@ export const operationsRouter = createTRPCRouter({
   answerPayment: assistantProcedure
     .input(paymentAnswerInput)
     .mutation(async ({ ctx, input }) => {
-      const { ownerId, assistantId } = await answerPayment(
-        ctx.session.user.id,
-        input.id,
+      paymentAnswered(
+        await answerPayment(
+          ctx.session.user.id,
+          input.id,
+          input.received,
+          "ASSISTANT",
+        ),
         input.received,
-        "ASSISTANT",
       );
-      notify([ownerId, assistantId]);
     }),
   /** Commissions still to receive (admin). */
   platformPayments: adminProcedure.query(() => platformPayments()),
   answerPlatformPayment: adminProcedure
     .input(paymentAnswerInput)
     .mutation(async ({ ctx, input }) => {
-      const { ownerId, assistantId } = await answerPayment(
-        ctx.session.user.id,
-        input.id,
+      paymentAnswered(
+        await answerPayment(
+          ctx.session.user.id,
+          input.id,
+          input.received,
+          "PLATFORM",
+        ),
         input.received,
-        "PLATFORM",
       );
-      notify([ownerId, assistantId]);
     }),
   /** The assistant's undecided dispute, if any. */
   dispute: assistantProcedure.query(({ ctx }) =>
@@ -152,7 +228,7 @@ export const operationsRouter = createTRPCRouter({
         input.id,
         input.path,
       );
-      notify([ownerId]);
+      refresh([ownerId]);
     }),
   /** Accounts with an unpaid booking, without personal data. */
   blacklist: assistantProcedure.query(() => listBlacklist()),
@@ -160,12 +236,20 @@ export const operationsRouter = createTRPCRouter({
   decideDispute: adminProcedure
     .input(decisionInput)
     .mutation(async ({ ctx, input }) => {
-      const { ownerId, assistantId } = await decideDispute(
+      const { ownerId, assistantId, strike } = await decideDispute(
         ctx.session.user.id,
         input.id,
         input.outcome,
         input.note,
       );
-      notify([ownerId, assistantId]);
+      const values = { outcome: input.outcome };
+      refresh(
+        [],
+        [
+          { userId: ownerId, type: "DISPUTE_DECIDED", to: "requests", values },
+          { userId: assistantId, type: "DISPUTE_DECIDED", to: "queue", values },
+          strike,
+        ],
+      );
     }),
 });

@@ -29,6 +29,10 @@ model User {
   termsAcceptedAt  DateTime?
   /// Set at the third strike; only an admin lifts it (EXM-010).
   suspendedAt      DateTime?
+  /// Language of the emails sent to this user, from their last visit.
+  locale           String                @default("fr")
+  /// Follow-up emails (booking declared, problem to fix, deposit declared). Critical ones are always sent.
+  emailUpdates     Boolean               @default(true)
   sessions         Session[]
   accounts         Account[]
   twofactors       TwoFactor[]
@@ -41,6 +45,7 @@ model User {
   catalogRequests  CatalogRequest[]
   strikes          Strike[]
   reports          Report[]
+  notifications    Notification[]
 
   @@unique([email])
   @@map("user")
@@ -554,4 +559,33 @@ model DateProposal {
 
   @@unique([offerId, examDate])
   @@map("date_proposal")
+}
+
+enum NotificationType {
+  REQUEST_CLAIMED
+  REQUEST_RETURNED
+  BOOKING_DECLARED
+  PROBLEM_REPORTED
+  BOOKING_CONFIRMED
+  DISPUTE_OPENED
+  PAYMENT_DECLARED
+  PAYMENT_REJECTED
+  OPERATION_CLOSED
+  DISPUTE_DECIDED
+  STRIKE
+}
+
+/// Something that happened to the user, with where to act on it (EXM-011).
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  /// Values for the message (reference, outcome, reason…), never personal data.
+  data      Json?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  @@index([userId, readAt])
+  @@map("notification")
 }

@@ -1328,5 +1328,74 @@
       "title": "Invalid or expired link",
       "description": "Ask the person who sent it to send it again."
     }
+  },
+  "notifications": {
+    "label": "{count, plural, =0 {Notifications} one {Notifications, # unread} other {Notifications, # unread}}",
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "unread": "Unread: ",
+    "empty": {
+      "title": "Nothing new",
+      "description": "You will be told here at each step."
+    },
+    "actions": {
+      "requests": "See my requests",
+      "queue": "Open the queue",
+      "account": "See my account"
+    },
+    "preferences": {
+      "title": "Emails",
+      "description": "Everything also shows in the app.",
+      "updates": "Follow-up emails",
+      "updatesHint": "Booking declared, problem to fix, deposit to confirm.",
+      "critical": "Payments, disputes and strikes are always sent.",
+      "saved": "Preference saved."
+    },
+    "types": {
+      "REQUEST_CLAIMED": {
+        "title": "An assistant is on your request",
+        "body": "They have a few minutes to book. You can follow the progress."
+      },
+      "REQUEST_RETURNED": {
+        "title": "Your request is back in the queue",
+        "body": "Nothing to do: another assistant can take it."
+      },
+      "BOOKING_DECLARED": {
+        "title": "Booking declared: check the centre's email",
+        "body": "Confirm as soon as possible whether you received the centre's email."
+      },
+      "PROBLEM_REPORTED": {
+        "title": "Your request needs a fix",
+        "body": "The assistant could not book. See the reason and fix it."
+      },
+      "BOOKING_CONFIRMED": {
+        "title": "Booking confirmed by the candidate",
+        "body": "You are free to take another request."
+      },
+      "DISPUTE_OPENED": {
+        "title": "Booking disputed: send a proof",
+        "body": "The candidate did not receive the centre's email. Send a capture of the booking."
+      },
+      "PAYMENT_DECLARED": {
+        "title": "Deposit declared ({reference})",
+        "body": "Check your Mobile Money account, then confirm receipt."
+      },
+      "PAYMENT_REJECTED": {
+        "title": "Deposit not received ({reference})",
+        "body": "Check the number and the reference, then send again before the deadline."
+      },
+      "OPERATION_CLOSED": {
+        "title": "Operation settled ({reference})",
+        "body": "Both deposits are confirmed. Thank you!"
+      },
+      "DISPUTE_DECIDED": {
+        "title": "Dispute decided",
+        "body": "{outcome, select, BOOKED {The booking was made: payment opens.} other {The booking was not made: the request is back in the queue.}}"
+      },
+      "STRIKE": {
+        "title": "Strike ({count} of {threshold})",
+        "body": "{reason, select, CLAIM_TIMEOUT {Booking time ran out.} ABUSIVE_DISPUTE {Dispute found abusive.} other {Booking declared but not made.}} At {threshold}, the account is suspended."
+      }
+    }
   }
 }

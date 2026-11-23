@@ -2,6 +2,7 @@ import "server-only";
 import { TRPCError } from "@trpc/server";
 import { trustConfig } from "@/config/trust";
 import type { Prisma, StrikeReason } from "@/generated/prisma/client";
+import type { NotificationInput } from "@/modules/notifications";
 import { recordAudit } from "@/server/audit";
 import { db } from "@/server/db";
 import { reachesSuspension, strikeCount } from "../domain/strikes";
@@ -9,13 +10,16 @@ import type { ReportInput } from "../schemas";
 
 const ACTIVE = { liftedAt: null } satisfies Prisma.StrikeWhereInput;
 
-/** Warns a user; the strike that reaches the threshold suspends the account. */
+/**
+ * Warns a user; the strike that reaches the threshold suspends the account. Returns the
+ * notification to send once the change is saved.
+ */
 export async function issueStrike(
   tx: Prisma.TransactionClient,
   userId: string,
   reason: StrikeReason,
   operationId?: string,
-) {
+): Promise<NotificationInput> {
   await tx.strike.create({ data: { userId, reason, operationId } });
   const active = await tx.strike.count({ where: { userId, ...ACTIVE } });
   if (reachesSuspension(active, trustConfig.strikesToSuspend))
@@ -23,6 +27,16 @@ export async function issueStrike(
       where: { id: userId, suspendedAt: null },
       data: { suspendedAt: new Date() },
     });
+  const { count, threshold } = strikeCount(
+    active,
+    trustConfig.strikesToSuspend,
+  );
+  return {
+    userId,
+    type: "STRIKE",
+    to: "account",
+    values: { reason, count: String(count), threshold: String(threshold) },
+  };
 }
 
 export async function isSuspended(userId: string) {

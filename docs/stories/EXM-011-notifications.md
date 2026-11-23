@@ -17,6 +17,16 @@ Les délais (15 min, 24 h) supposent que chacun soit prévenu au bon moment, ave
 | Litige : preuve demandée, décision | Les deux | in-app + email |
 | Avertissement, suspension | Concerné | in-app + email |
 
+#### Décisions d'implémentation
+- Pas d'Inngest : chaque action enregistre ses notifications après la réponse (`after()`), le module `notifications` est le seul à envoyer les emails produit. Les emails de compte (code de connexion, accord d'un camarade) restent dans leur module.
+- Emails réduits au nécessaire (coût d'envoi) :
+  - critiques, jamais coupés : dépôt non reçu, litige (preuve demandée, décision), avertissement et suspension ;
+  - de suivi, coupables en un interrupteur : réservation déclarée, demande à corriger, dépôt déclaré à l'assistant ;
+  - le reste n'est que dans l'application (centre de notifications, temps réel par le canal personnel Ably).
+- Rappels de paiement H+1 / H+12 : l'échéance est affichée en permanence sur la carte de règlement ; des rappels horaires demanderaient une tâche horaire (Vercel Pro ou file d'attente), reportée.
+- Langue des emails : la dernière langue utilisée par le destinataire (`User.locale`).
+- Le canal personnel est ouvert une seule fois par `RealtimeProvider`, partagé par la cloche et les pages.
+
 #### Critères d'acceptation
 - [ ] Module `notifications` qui écoute les événements Inngest ; aucun autre module n'envoie d'email directement.
 - [ ] Modèles d'emails React Email, en fr et en, dans la langue du destinataire.
