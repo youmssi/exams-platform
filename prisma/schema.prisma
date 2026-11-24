@@ -353,26 +353,28 @@ model CatalogRequest {
 /// One assistant working on one request, from the claim to its end.
 /// At most one active operation per assistant and per request (partial unique indexes in SQL).
 model Operation {
-  id           String               @id @default(cuid())
-  requestId    String
-  request      Request              @relation(fields: [requestId], references: [id], onDelete: Cascade)
-  assistantId  String
-  assistant    User                 @relation(fields: [assistantId], references: [id], onDelete: Restrict)
-  status       OperationStatus      @default(CLAIMED)
-  claimedAt    DateTime             @default(now())
+  id               String               @id @default(cuid())
+  requestId        String
+  request          Request              @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  assistantId      String
+  assistant        User                 @relation(fields: [assistantId], references: [id], onDelete: Restrict)
+  status           OperationStatus      @default(CLAIMED)
+  claimedAt        DateTime             @default(now())
   /// Book before this time, or the request goes back to the queue.
-  deadlineAt   DateTime
-  reservedAt   DateTime?
+  deadlineAt       DateTime
+  reservedAt       DateTime?
   /// Once booked, the assistant is free after this time even if the candidate has not confirmed.
-  releaseAt    DateTime?
-  confirmedAt  DateTime?
+  releaseAt        DateTime?
+  confirmedAt      DateTime?
   /// Both deposits must be confirmed before this time, or the operation becomes unpaid.
-  paymentDueAt DateTime?
-  closedAt     DateTime?
-  endedAt      DateTime?
-  version      Int                  @default(0)
-  payments     PaymentDeclaration[]
-  dispute      Dispute?
+  paymentDueAt     DateTime?
+  /// Payment reminders already sent (H+1, H+12), so none is sent twice (EXM-026).
+  paymentReminders Int                  @default(0)
+  closedAt         DateTime?
+  endedAt          DateTime?
+  version          Int                  @default(0)
+  payments         PaymentDeclaration[]
+  dispute          Dispute?
 
   @@index([requestId])
   @@index([assistantId, status])
@@ -591,6 +593,7 @@ enum NotificationType {
   STRIKE
   ASSISTANT_VERIFIED
   ASSISTANT_REJECTED
+  PAYMENT_REMINDER
 }
 
 /// Something that happened to the user, with where to act on it (EXM-011).

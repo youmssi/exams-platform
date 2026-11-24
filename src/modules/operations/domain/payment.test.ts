@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   amountDue,
+  isReminderDue,
   isSettled,
   paymentDeadline,
   paymentReference,
@@ -43,5 +44,25 @@ describe("payments", () => {
         { status: "DUE", amount: 4500 },
       ]),
     ).toBe(7200);
+  });
+
+  it("sends each reminder once, in order, at its hour", () => {
+    const confirmed = new Date("2027-01-10T09:00:00Z");
+    const at = (iso: string) => new Date(iso);
+    expect(
+      isReminderDue(confirmed, 0, [1, 12], at("2027-01-10T09:59:00Z")),
+    ).toBe(false);
+    expect(
+      isReminderDue(confirmed, 0, [1, 12], at("2027-01-10T10:00:00Z")),
+    ).toBe(true);
+    expect(
+      isReminderDue(confirmed, 1, [1, 12], at("2027-01-10T15:00:00Z")),
+    ).toBe(false);
+    expect(
+      isReminderDue(confirmed, 1, [1, 12], at("2027-01-10T21:00:00Z")),
+    ).toBe(true);
+    expect(
+      isReminderDue(confirmed, 2, [1, 12], at("2027-01-11T09:00:00Z")),
+    ).toBe(false);
   });
 });

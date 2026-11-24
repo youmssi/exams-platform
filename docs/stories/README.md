@@ -20,6 +20,7 @@ Chaque story vit dans sa branche `exm-<code>-<titre>`, part de `develop` et y re
 | [EXM-023](EXM-023-session-dates-helper.md) | Aide automatique pour les dates de session | 005 | M |
 | [EXM-024](EXM-024-third-party-consent.md) | Consentement des camarades par email | 004 | S |
 | [EXM-025](EXM-025-reports-edits-navigation.md) | Signalements, modification des demandes et navigation par rôle | 008 | M |
+| [EXM-026](EXM-026-payment-reminders.md) | Rappels de paiement H+1 et H+12 | 009, 011 | S |
 | [EXM-005](EXM-005-sessions-and-requests.md) | Sessions et publication des demandes | 003, 004 | L |
 | [EXM-006](EXM-006-live-queue.md) | File publique en temps réel et présence | 005 | M |
 | [EXM-007](EXM-007-claim.md) | Prendre une demande : un assistant, un client | 006 | L |
@@ -30,4 +31,4 @@ Chaque story vit dans sa branche `exm-<code>-<titre>`, part de `develop` et y re
 | [EXM-012](EXM-012-admin.md) | Back-office | 010 | L |
 | [EXM-013](EXM-013-launch.md) | Déploiement, pages système et lancement | 001–012 | M |
 
-Release 1 (MVP) = EXM-001 à EXM-025, puis fusion de `develop` dans `main`.
+Release 1 (MVP) = EXM-001 à EXM-025, fusionnée dans `main`. Suivis après lancement : EXM-026.
