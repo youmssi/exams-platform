@@ -1642,6 +1642,10 @@
       "ASSISTANT_REJECTED": {
         "title": "Pièce d'identité à renvoyer",
         "body": "Motif : {reason}. Envoyez une nouvelle photo depuis votre compte."
+      },
+      "PAYMENT_REMINDER": {
+        "title": "Rappel : règlement à faire ({reference})",
+        "body": "Envoyez les dépôts restants avant l'échéance affichée, sinon le compte est suspendu."
       }
     }
   },

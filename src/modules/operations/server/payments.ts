@@ -1,11 +1,14 @@
 import "server-only";
 import { TRPCError } from "@trpc/server";
+import { paymentConfig } from "@/config/payments";
 import type { Prisma } from "@/generated/prisma/client";
+import { type NotificationInput, notify } from "@/modules/notifications";
 import { recordAudit } from "@/server/audit";
 import { publicId } from "@/server/crypto";
 import { db } from "@/server/db";
 import { transition } from "../domain/machine";
 import {
+  isReminderDue,
   isSettled,
   type PaymentRecipient,
   paymentDeadline,
@@ -310,4 +313,53 @@ export async function platformPayments() {
     select: paymentRow,
   });
   return payments.map(toRow);
+}
+
+/**
+ * Hourly job: reminds candidates who still have a deposit to send, at H+1 then H+12 after the
+ * confirmation. Never after the closure, never twice (optimistic counter).
+ */
+export async function sendPaymentReminders(now = new Date()) {
+  await lapseOverdue(db);
+  const { reminderHours } = paymentConfig;
+  const operations = await db.operation.findMany({
+    where: {
+      status: "CONFIRMED",
+      confirmedAt: { not: null },
+      paymentReminders: { lt: reminderHours.length },
+      payments: { some: { status: "DUE" } },
+    },
+    select: {
+      id: true,
+      confirmedAt: true,
+      paymentReminders: true,
+      request: { select: { ownerId: true } },
+    },
+  });
+  const reminders: NotificationInput[] = [];
+  for (const operation of operations) {
+    if (
+      !operation.confirmedAt ||
+      !isReminderDue(
+        operation.confirmedAt,
+        operation.paymentReminders,
+        reminderHours,
+        now,
+      )
+    )
+      continue;
+    const { count } = await db.operation.updateMany({
+      where: { id: operation.id, paymentReminders: operation.paymentReminders },
+      data: { paymentReminders: { increment: 1 } },
+    });
+    if (count)
+      reminders.push({
+        userId: operation.request.ownerId,
+        type: "PAYMENT_REMINDER",
+        to: "requests",
+        values: { reference: paymentReference(operation.id) },
+      });
+  }
+  await notify(reminders);
+  return reminders.length;
 }

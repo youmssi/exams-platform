@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { proposeSessionDates } from "@/modules/catalog";
 import { sweepUnbooked } from "@/modules/requests";
-import { env } from "@/server/env";
+import { isCronRequest } from "@/server/cron";
 
 export const maxDuration = 60;
 
@@ -11,11 +11,7 @@ export const maxDuration = 60;
  * Only Vercel's scheduler, holding `CRON_SECRET`, may run it.
  */
 export async function GET(request: Request) {
-  if (
-    !env.CRON_SECRET ||
-    request.headers.get("authorization") !== `Bearer ${env.CRON_SECRET}`
-  )
-    return new NextResponse(null, { status: 401 });
+  if (!isCronRequest(request)) return new NextResponse(null, { status: 401 });
   await proposeSessionDates();
   await sweepUnbooked();
   return NextResponse.json({ ok: true });

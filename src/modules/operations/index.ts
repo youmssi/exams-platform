@@ -7,6 +7,7 @@ export {
   hasUnpaid,
   lapseOverdue,
   PAYING,
+  sendPaymentReminders,
   unpaidRequest,
 } from "./server/payments";
 export { operationsRouter } from "./server/router";
