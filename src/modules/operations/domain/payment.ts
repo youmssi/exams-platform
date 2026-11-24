@@ -35,3 +35,16 @@ export const amountDue = (
   payments
     .filter((payment) => payment.status === "DUE")
     .reduce((sum, payment) => sum + payment.amount, 0);
+
+/**
+ * Whether the next payment reminder is due: reminders go out in order, once each, at the given
+ * hours after the confirmation.
+ */
+export const isReminderDue = (
+  confirmedAt: Date,
+  sent: number,
+  hours: readonly number[],
+  now = new Date(),
+) =>
+  sent < hours.length &&
+  now.getTime() >= confirmedAt.getTime() + hours[sent] * 3_600_000;

@@ -37,5 +37,5 @@ Aucun P0 connu. Mais plusieurs parcours critiques n'ont pas encore été vérifi
 ## P1 à suivre (pas bloquants)
 
 - Parcours connectés F1 à F5 en Playwright : demandent des comptes de test et la lecture des codes OTP en CI. Les tests de fumée publics tournent déjà sur chaque preview (secret `VERCEL_AUTOMATION_BYPASS_SECRET` requis si la preview est protégée).
-- Rappels de paiement H+1 / H+12 par email : demandent une tâche horaire (Vercel Pro ou file d'attente).
+- Rappels de paiement H+1 / H+12 : livrés par EXM-026 (tâche horaire GitHub Actions, secret `CRON_SECRET` à ajouter aussi dans GitHub).
 - Lecture automatique des dates : à activer centre par centre après vérification des conditions du site officiel.

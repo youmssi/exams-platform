@@ -105,7 +105,7 @@ Chaque délai est une date en base, appliquée par la première lecture qui la t
 | Règlement | `Operation.paymentDueAt` | « impayée » : liste noire + blocage |
 | Preuve de litige | `Dispute.proofDueAt` | passage en examen par l'admin |
 
-Les durées viennent de `Offer` ou de `src/config`. Les tâches qui ne dépendent d'aucune lecture (dates de session, EXM-023) tournent en Vercel Cron.
+Les durées viennent de `Offer` ou de `src/config`. Les tâches qui ne dépendent d'aucune lecture tournent planifiées, protégées par `CRON_SECRET` : dates de session et report (Vercel Cron, quotidien, `/api/cron/daily`), rappels de paiement (GitHub Actions, horaire, `/api/cron/hourly`).
 
 ## 6. Temps réel (Ably)
 

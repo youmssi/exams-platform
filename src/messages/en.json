@@ -1642,6 +1642,10 @@
       "ASSISTANT_REJECTED": {
         "title": "Identity document to send again",
         "body": "Reason: {reason}. Send a new photo from your account."
+      },
+      "PAYMENT_REMINDER": {
+        "title": "Reminder: payment due ({reference})",
+        "body": "Send the remaining deposits before the deadline shown, or the account is suspended."
       }
     }
   },

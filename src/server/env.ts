@@ -22,7 +22,7 @@ const schema = z.object({
   /** Set by Vercel; keeps preview and production realtime channels apart. */
   VERCEL_ENV: z.enum(["production", "preview", "development"]).optional(),
   EMAIL_FROM: z.string().min(1),
-  /** Sent by Vercel Cron to `/api/cron/daily`; without it the daily job never runs. */
+  /** Authenticates scheduled jobs (`/api/cron/*`); without it no job runs. */
   CRON_SECRET: z.string().min(32).optional(),
   /** Vercel Blob (private store): dispute proofs and identity documents. */
   BLOB_READ_WRITE_TOKEN: z.string().optional(),
